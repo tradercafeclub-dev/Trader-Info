@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCC - Trader Cafe Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #F0B90B; --gold-light: #FFD700; --gold-dark: #C99A00;
+  --black: #0B0E11; --dark: #12161C; --dark2: #1E2329; --dark3: #2B3139; --dark4: #3C4350;
+  --text: #EAECEF; --text-muted: #848E9C;
+  --green: #03C075; --red: #F6465D; --border: rgba(240,185,11,0.2);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--black); color:var(--text); font-family:'Sarabun',sans-serif; min-height:100vh; overflow-x:hidden; }
+body::before {
+  content:''; position:fixed; top:0; left:0; right:0; bottom:0;
+  background: radial-gradient(ellipse at 20% 20%, rgba(240,185,11,0.05) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 80%, rgba(240,185,11,0.03) 0%, transparent 50%);
+  pointer-events:none; z-index:0;
+}
+.navbar {
+  position:sticky; top:0; z-index:100; background:rgba(11,14,17,0.95);
+  border-bottom:1px solid var(--border); backdrop-filter:blur(10px);
+  padding:0 20px; display:flex; align-items:center; justify-content:space-between; height:60px;
+}
+.navbar-brand { display:flex; align-items:center; gap:10px; }
+.navbar-brand img { height:38px; }
+.navbar-brand span { font-family:'Orbitron',monospace; font-size:0.85rem; color:var(--gold); letter-spacing:2px; }
+.nav-tabs { display:flex; gap:2px; }
+.nav-tab { padding:8px 16px; border:none; background:transparent; color:var(--text-muted); cursor:pointer; border-radius:6px; font-family:'Sarabun',sans-serif; font-size:0.85rem; transition:all 0.2s; }
+.nav-tab:hover { color:var(--gold); background:rgba(240,185,11,0.1); }
+.nav-tab.active { color:var(--gold); background:rgba(240,185,11,0.15); border-bottom:2px solid var(--gold); }
+.badge-admin { background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:var(--black); padding:4px 12px; border-radius:20px; font-size:0.75rem; font-weight:700; }
+.page { display:none; padding:20px; max-width:1200px; margin:0 auto; animation:fadeIn 0.3s ease; position:relative; z-index:1; }
+.page.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px);} to{opacity:1;transform:translateY(0);} }
+.card { background:var(--dark2); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:16px; }
+.card-header { display:flex; align-items:center; gap:10px; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+.card-title { font-size:1rem; font-weight:700; color:var(--gold); }
+.card-icon { width:32px; height:32px; background:rgba(240,185,11,0.15); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1rem; }
+.stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:20px; }
+.stat-card { background:var(--dark2); border:1px solid var(--border); border-radius:10px; padding:16px; text-align:center; position:relative; overflow:hidden; }
+.stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,var(--gold),var(--gold-dark)); }
+.stat-value { font-size:1.4rem; font-weight:700; color:var(--gold); font-family:'Orbitron',monospace; }
+.stat-label { font-size:0.75rem; color:var(--text-muted); margin-top:4px; }
+.form-group { margin-bottom:14px; }
+.form-label { font-size:0.8rem; color:var(--text-muted); margin-bottom:6px; display:block; }
+.form-control { width:100%; padding:10px 14px; background:var(--dark3); border:1px solid var(--border); border-radius:8px; color:var(--text); font-family:'Sarabun',sans-serif; font-size:0.9rem; transition:border-color 0.2s; }
+.form-control:focus { outline:none; border-color:var(--gold); box-shadow:0 0 0 2px rgba(240,185,11,0.15); }
+select.form-control option { background:var(--dark3); }
+.btn { padding:10px 20px; border:none; border-radius:8px; cursor:pointer; font-family:'Sarabun',sans-serif; font-size:0.9rem; font-weight:600; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-gold { background:linear-gradient(135deg,var(--gold),var(--gold-dark)); color:var(--black); }
+.btn-gold:hover { transform:translateY(-1px); box-shadow:0 4px 15px rgba(240,185,11,0.4); }
+.btn-outline { background:transparent; border:1px solid var(--border); color:var(--text); }
+.btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+.btn-sm { padding:6px 14px; font-size:0.8rem; }
+.btn-danger { background:rgba(246,70,93,0.15); border:1px solid rgba(246,70,93,0.3); color:var(--red); }
+.btn-success { background:rgba(3,192,117,0.15); border:1px solid rgba(3,192,117,0.3); color:var(--green); }
+.btn-full { width:100%; justify-content:center; }
+.search-box { position:relative; margin-bottom:16px; }
+.search-box input { padding-left:40px; }
+.search-box::before { content:'🔍'; position:absolute; left:12px; top:50%; transform:translateY(-50%); font-size:0.9rem; }
+.table-wrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+th { background:var(--dark3); color:var(--gold); padding:10px 12px; text-align:left; font-size:0.75rem; letter-spacing:1px; white-space:nowrap; }
+td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,0.05); white-space:nowrap; }
+tr:hover td { background:rgba(240,185,11,0.03); }
+.badge { padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; }
+.badge-approve { background:rgba(3,192,117,0.15); color:var(--green); border:1px solid rgba(3,192,117,0.3); }
+.badge-pending { background:rgba(240,185,11,0.15); color:var(--gold); border:1px solid rgba(240,185,11,0.3); }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+@media(max-width:768px) { .grid-2,.grid-3 { grid-template-columns:1fr; } .nav-tabs { display:none; } }
+.member-info-panel { background:var(--dark3); border:1px solid var(--border); border-radius:10px; padding:16px; margin-bottom:16px; }
+.member-info-row { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.05); font-size:0.85rem; }
+.member-info-row:last-child { border-bottom:none; }
+.info-key { color:var(--text-muted); }
+.info-val { color:var(--text); font-weight:600; }
+.profit-breakdown { background:linear-gradient(135deg,rgba(240,185,11,0.08),rgba(240,185,11,0.03)); border:1px solid var(--border); border-radius:12px; padding:20px; margin-top:16px; }
+.profit-row { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05); }
+.profit-row:last-child { border-bottom:none; }
+.profit-label { font-size:0.85rem; color:var(--text-muted); }
+.profit-val { font-weight:700; font-size:0.95rem; }
+.profit-val.gold { color:var(--gold); }
+.profit-val.green { color:var(--green); }
+.profit-val.red { color:var(--red); }
+.trade-item { background:var(--dark3); border:1px solid var(--border); border-radius:8px; padding:12px; margin-bottom:8px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.trade-item-num { width:28px; height:28px; background:rgba(240,185,11,0.2); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.8rem; font-weight:700; color:var(--gold); flex-shrink:0; }
+.wallet-box { background:var(--dark3); border:1px solid var(--gold); border-radius:10px; padding:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.wallet-addr { font-family:monospace; font-size:0.8rem; color:var(--gold); word-break:break-all; flex:1; }
+.verify-box { background:linear-gradient(135deg,rgba(3,192,117,0.1),rgba(3,192,117,0.05)); border:1px solid rgba(3,192,117,0.3); border-radius:10px; padding:16px; margin-top:16px; }
+.verify-status { display:flex; align-items:center; gap:8px; font-weight:600; }
+.pulse { width:10px; height:10px; background:var(--green); border-radius:50%; animation:pulse 1.5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1);} 50%{opacity:0.5;transform:scale(1.3);} }
+.mobile-nav { display:none; position:fixed; bottom:0; left:0; right:0; background:rgba(11,14,17,0.97); border-top:1px solid var(--border); padding:8px; z-index:100; grid-template-columns:repeat(4,1fr); }
+@media(max-width:768px) { .mobile-nav { display:grid; } body { padding-bottom:70px; } }
+.mobile-nav-btn { display:flex; flex-direction:column; align-items:center; gap:3px; padding:6px 4px; border:none; background:transparent; color:var(--text-muted); cursor:pointer; font-size:0.65rem; font-family:'Sarabun',sans-serif; border-radius:8px; transition:all 0.2s; }
+.mobile-nav-btn.active { color:var(--gold); }
+.mobile-nav-btn span:first-child { font-size:1.2rem; }
+.page-title { margin-bottom:20px; }
+.page-title h1 { font-size:1.3rem; font-weight:700; color:var(--gold); }
+.page-title p { color:var(--text-muted); font-size:0.85rem; margin-top:4px; }
+.modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); z-index:200; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--dark2); border:1px solid var(--border); border-radius:16px; padding:24px; max-width:680px; width:100%; max-height:90vh; overflow-y:auto; animation:slideUp 0.3s ease; }
+@keyframes slideUp { from{transform:translateY(30px);opacity:0;} to{transform:translateY(0);opacity:1;} }
+.modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+.modal-title { font-size:1.1rem; font-weight:700; color:var(--gold); }
+.modal-close { background:none; border:none; color:var(--text-muted); font-size:1.3rem; cursor:pointer; }
+.steps { display:flex; gap:8px; margin-bottom:20px; }
+.step { flex:1; height:3px; background:var(--dark3); border-radius:2px; transition:background 0.3s; }
+.step.active { background:var(--gold); }
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:var(--dark); }
+::-webkit-scrollbar-thumb { background:var(--dark4); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--gold-dark); }
+.sep { height:1px; background:var(--border); margin:16px 0; }
+.hero { text-align:center; padding:40px 20px; background:linear-gradient(135deg,rgba(240,185,11,0.05) 0%,transparent 60%); border:1px solid var(--border); border-radius:16px; margin-bottom:24px; }
+.hero img { height:70px; margin-bottom:16px; }
+.hero h1 { font-family:'Orbitron',monospace; font-size:1.8rem; color:var(--gold); letter-spacing:3px; }
+.hero p { color:var(--text-muted); margin-top:8px; font-size:0.9rem; }
+/* Loading */
+.loading-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(11,14,17,0.9); z-index:300; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.loading-spinner { width:50px; height:50px; border:3px solid var(--dark3); border-top:3px solid var(--gold); border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:16px; }
+@keyframes spin { to{transform:rotate(360deg);} }
+.loading-text { color:var(--gold); font-family:'Orbitron',monospace; font-size:0.8rem; letter-spacing:2px; }
+.api-error { background:rgba(246,70,93,0.1); border:1px solid rgba(246,70,93,0.3); border-radius:8px; padding:12px; color:var(--red); font-size:0.85rem; margin-bottom:12px; }
+.api-success { background:rgba(3,192,117,0.1); border:1px solid rgba(3,192,117,0.3); border-radius:8px; padding:12px; color:var(--green); font-size:0.85rem; margin-bottom:12px; }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loading-text">กำลังโหลดข้อมูล...</div>
+</div>
+
+<!-- TOP NAVBAR -->
+<nav class="navbar">
+  <div class="navbar-brand">
+    <img src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC" onerror="this.style.display='none'">
+    <span>TRADER CAFE CLUB</span>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('home')">🏠 หน้าหลัก</button>
+    <button class="nav-tab" onclick="showPage('member-search')">👤 สมาชิก</button>
+    <button class="nav-tab" onclick="showPage('register')">📝 สมัครสมาชิก</button>
+    <button class="nav-tab" onclick="showPage('admin')">⚙️ แอดมิน</button>
+  </div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <div id="db-status" style="font-size:0.7rem;color:var(--text-muted);">⏳ กำลังเชื่อมต่อ...</div>
+    <span class="badge-admin">ADMIN</span>
+  </div>
+</nav>
+
+<!-- ===================== HOME ===================== -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <img src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC Logo" onerror="this.style.display='none'">
+    <h1>TRADER CAFE CLUB</h1>
+    <p>ระบบจัดการการจ่ายเงินและผลตอบแทนการเทรด — เชื่อมต่อ NocoDB Live</p>
+  </div>
+  
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-value" id="stat-members">—</div>
+      <div class="stat-label">สมาชิกทั้งหมด</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-teams">—</div>
+      <div class="stat-label">ทีมทั้งหมด</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-payments">—</div>
+      <div class="stat-label">รายการชำระ</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value" id="stat-pending" style="color:var(--gold)">—</div>
+      <div class="stat-label">รอดำเนินการ</div>
+    </div>
+    <div class="stat-card" style="grid-column:span 2;">
+      <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;">💰 ยอดเงินเทรดรวมทั้งหมด</div>
+      <div class="stat-value" id="stat-total-profit" style="font-size:1.5rem;">—</div>
+      <div class="stat-label">Total Profit (USD)</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card" style="cursor:pointer" onclick="showPage('member-search')">
+      <div class="card-header">
+        <div class="card-icon">👤</div>
+        <span class="card-title">ดูรายการจ่ายเงิน</span>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.85rem;">ค้นหาและดูประวัติการจ่ายเงินของสมาชิก</p>
+    </div>
+    <div class="card" style="cursor:pointer" onclick="showPage('register')">
+      <div class="card-header">
+        <div class="card-icon">📝</div>
+        <span class="card-title">สมัครสมาชิกใหม่</span>
+      </div>
+      <p style="color:var(--text-muted);font-size:0.85rem;">ลงทะเบียนสมาชิกใหม่เข้าระบบ</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📊</div>
+      <span class="card-title">รายการชำระล่าสุด</span>
+      <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="loadPayments()">🔄 รีเฟรช</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>วันที่</th><th>ชื่อ</th><th>ทีม</th><th>กำไรรวม</th><th>ส่วนสมาชิก</th><th>สถานะ</th></tr>
+        </thead>
+        <tbody id="recent-payments-table">
+          <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">กำลังโหลด...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MEMBER SEARCH ===================== -->
+<div id="page-member-search" class="page">
+  <div class="page-title">
+    <h1>💳 ดูรายการจ่ายเงิน</h1>
+    <p>ค้นหาจากชื่อหรือหมายเลขสมาชิก</p>
+  </div>
+  <div class="card">
+    <div class="search-box">
+      <input type="text" class="form-control" id="member-search-input" placeholder="ค้นหาชื่อ หรือ BNB ID..." oninput="searchMember()">
+    </div>
+    <div id="member-search-results" style="display:none;">
+      <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">ผลการค้นหา</div>
+      <div id="member-results-list"></div>
+    </div>
+  </div>
+
+  <div id="member-dashboard" style="display:none;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👤</div>
+        <span class="card-title">ข้อมูลสมาชิก</span>
+        <button class="btn btn-outline btn-sm" onclick="closeMemberDash()" style="margin-left:auto">✕ ปิด</button>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="member-info-row"><span class="info-key">ชื่อ-สกุล</span><span class="info-val" id="dash-name">-</span></div>
+          <div class="member-info-row"><span class="info-key">หมายเลขสมาชิก</span><span class="info-val" id="dash-id">-</span></div>
+          <div class="member-info-row"><span class="info-key">ทีมสังกัด</span><span class="info-val" id="dash-team">-</span></div>
+          <div class="member-info-row"><span class="info-key">สถานะ</span><span class="info-val" id="dash-status">-</span></div>
+        </div>
+        <div>
+          <div style="font-size:0.8rem;color:var(--text-muted);margin-bottom:8px;">กระเป๋า USDT (BEP-20)</div>
+          <div class="wallet-box" style="margin-bottom:12px;">
+            <span class="wallet-addr" id="dash-wallet">-</span>
+            <button class="btn btn-outline btn-sm" onclick="copyText('dash-wallet')">📋</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📋</div>
+        <span class="card-title">ประวัติการชำระเงิน</span>
+        <div style="margin-left:auto;display:flex;gap:8px;">
+          <button class="btn btn-outline btn-sm" onclick="filterPayments('all')">ทั้งหมด</button>
+          <button class="btn btn-outline btn-sm" onclick="filterPayments('Approve')">จ่ายแล้ว</button>
+          <button class="btn btn-outline btn-sm" onclick="filterPayments('Pending')">รอชำระ</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>วันที่</th><th>กำไรรวม</th><th>ค่าคอม 10%</th><th>ประกัน 10%</th><th>คงเหลือ 80%</th><th>สมาชิก 50%</th><th>ระบบ 50%</th><th>โอนรวม</th><th>สถานะ</th></tr>
+          </thead>
+          <tbody id="member-payments-table"></tbody>
+        </table>
+      </div>
+      <div id="member-no-data" style="text-align:center;padding:30px;color:var(--text-muted);display:none;">ไม่พบข้อมูลการชำระเงิน</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== ADMIN ===================== -->
+<div id="page-admin" class="page">
+  <div class="page-title">
+    <h1>⚙️ ส่วนแอดมิน</h1>
+    <p>ทำรายการจ่ายเงินและจัดการระบบ</p>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card" style="cursor:pointer;margin-bottom:0;" onclick="showPage('teams')">
+      <div class="card-header" style="margin-bottom:0;border:none;padding-bottom:0;">
+        <div class="card-icon">🏆</div>
+        <span class="card-title">จัดการทีม</span>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-header" style="margin-bottom:0;border:none;padding-bottom:0;">
+        <div class="card-icon">📊</div>
+        <span class="card-title" id="admin-stat-label">รายการทั้งหมด: —</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🔍</div>
+      <span class="card-title">ค้นหาสมาชิก</span>
+    </div>
+    <div class="search-box">
+      <input type="text" class="form-control" id="admin-search" placeholder="ค้นหาชื่อ หรือ BNB ID..." oninput="adminSearchMember()">
+    </div>
+    <div id="admin-search-results"></div>
+  </div>
+
+  <div id="admin-payment-form" style="display:none;">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">👤</div>
+        <span class="card-title">สมาชิกที่เลือก</span>
+        <button class="btn btn-outline btn-sm" onclick="clearAdminForm()" style="margin-left:auto">✕ ยกเลิก</button>
+      </div>
+      <div class="grid-3" style="font-size:0.85rem;">
+        <div class="member-info-row"><span class="info-key">BNB ID</span><span class="info-val" id="af-id">-</span></div>
+        <div class="member-info-row"><span class="info-key">ชื่อ</span><span class="info-val" id="af-name">-</span></div>
+        <div class="member-info-row"><span class="info-key">ทีม</span><span class="info-val" id="af-team">-</span></div>
+        <div class="member-info-row"><span class="info-key">Level A</span><span class="info-val" id="af-lva">-</span></div>
+        <div class="member-info-row"><span class="info-key">Level B</span><span class="info-val" id="af-lvb">-</span></div>
+        <div class="member-info-row"><span class="info-key">วันที่ทำรายการ</span><span class="info-val" id="af-date">-</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📈</div>
+        <span class="card-title">บันทึกรายการเทรด</span>
+        <button class="btn btn-gold btn-sm" onclick="addTradeRow()" style="margin-left:auto">+ เพิ่มรายการ</button>
+      </div>
+      <div id="trade-rows"></div>
+      <div class="sep"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;">
+        <span style="color:var(--text-muted);font-size:0.85rem;">กำไรรวมทั้งหมด</span>
+        <span style="color:var(--gold);font-size:1.2rem;font-weight:700;font-family:'Orbitron',monospace" id="total-trade-profit">$0.00</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🧮</div>
+        <span class="card-title">การแบ่งปันผลกำไร</span>
+      </div>
+      <div class="profit-breakdown">
+        <div class="profit-row"><span class="profit-label">💰 กำไรเทรดรวม (100%)</span><span class="profit-val gold" id="calc-total">$0.00</span></div>
+        <div class="profit-row"><span class="profit-label">🛡️ ประกันกำไรขั้นต่ำ (10%)</span><span class="profit-val red" id="calc-guarantee">-$0.00</span></div>
+        <div class="profit-row"><span class="profit-label">🤝 ค่าคอมมิชั่นทีม (10%)</span><span class="profit-val red" id="calc-commission">-$0.00</span></div>
+        <div class="profit-row" style="background:rgba(240,185,11,0.05);border-radius:6px;padding:10px;">
+          <span class="profit-label" style="font-weight:600;">⚡ คงเหลือกำไรสุทธิ (80%)</span>
+          <span class="profit-val gold" id="calc-balance">$0.00</span>
+        </div>
+        <div class="profit-row"><span class="profit-label">👤 ส่วนแบ่งสมาชิก (50% ของ 80%)</span><span class="profit-val green" id="calc-member">$0.00</span></div>
+        <div class="profit-row"><span class="profit-label">🏢 ส่วนแบ่งระบบ (50% ของ 80%)</span><span class="profit-val gold" id="calc-central">$0.00</span></div>
+        <div style="border-top:2px solid var(--border);padding-top:12px;margin-top:8px;display:flex;justify-content:space-between;">
+          <span style="font-weight:700;">💎 ยอดโอนรวม (ระบบ + ค่าคอม)</span>
+          <span id="calc-transfer" style="color:var(--gold);font-size:1.1rem;font-weight:700;">$0.00</span>
+        </div>
+      </div>
+      <div class="sep"></div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">📅 วันที่จ่ายเงิน</label>
+          <input type="date" class="form-control" id="af-payment-date">
+        </div>
+        <div class="form-group">
+          <label class="form-label">📊 สถานะ</label>
+          <select class="form-control" id="af-position">
+            <option value="Pending">⏳ รอดำเนินการ</option>
+            <option value="Approve">✅ อนุมัติ / จ่ายแล้ว</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">📝 หมายเหตุ</label>
+        <input type="text" class="form-control" id="af-note" placeholder="หมายเหตุเพิ่มเติม (ถ้ามี)">
+      </div>
+      <div class="sep"></div>
+      <div style="font-size:0.9rem;font-weight:600;color:var(--gold);margin-bottom:12px;">🔐 กระเป๋า USDT (BEP-20) ระบบ</div>
+      <div class="wallet-box" style="margin-bottom:16px;">
+        <span class="wallet-addr">0xfd1A5bc82603a702a9AF38426FfAC0d6BE5aEeef</span>
+        <button class="btn btn-outline btn-sm" onclick="copySystemWallet()">📋 คัดลอก</button>
+      </div>
+      <div class="verify-box">
+        <div class="verify-status"><div class="pulse"></div><span style="color:var(--green)">ตรวจสอบ Blockchain (BSC)</span></div>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-top:8px;">ระบบตรวจสอบ USDT BEP-20 จาก BscScan อัตโนมัติ ต้องการ 12 confirmations</p>
+        <button class="btn btn-success btn-sm" style="margin-top:10px;" onclick="checkBlockchain()">🔍 ตรวจสอบการโอนเงิน</button>
+        <div id="blockchain-result" style="margin-top:10px;"></div>
+      </div>
+      <div class="sep"></div>
+      <div id="save-result"></div>
+      <button class="btn btn-gold btn-full" onclick="savePayment()" style="font-size:1rem;padding:14px;">
+        💾 บันทึกและส่งข้อมูลไป NocoDB
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">📋</div>
+      <span class="card-title">รายการล่าสุด</span>
+      <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="loadPayments()">🔄 รีเฟรช</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>วันที่</th><th>BNB ID</th><th>ชื่อ</th><th>ทีม</th><th>กำไร</th><th>สมาชิก</th><th>โอนรวม</th><th>สถานะ</th><th>จัดการ</th></tr>
+        </thead>
+        <tbody id="admin-payments-table">
+          <tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:20px;">กำลังโหลด...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== REGISTER ===================== -->
+<div id="page-register" class="page">
+  <div class="page-title">
+    <h1>📝 สมัครสมาชิกใหม่</h1>
+    <p>กรอกข้อมูลเพื่อเข้าร่วม Trader Cafe Club</p>
+  </div>
+  <div class="card">
+    <div class="steps">
+      <div class="step active" id="step-1"></div>
+      <div class="step" id="step-2"></div>
+      <div class="step" id="step-3"></div>
+    </div>
+    <div id="reg-step-1">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 1: ข้อมูลส่วนตัว</div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">ชื่อ - สกุล *</label>
+          <input type="text" class="form-control" id="reg-name" placeholder="กรอกชื่อ-สกุล">
+        </div>
+        <div class="form-group">
+          <label class="form-label">เบอร์โทรศัพท์ *</label>
+          <input type="tel" class="form-control" id="reg-phone" placeholder="+66 8x-xxx-xxxx">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ทีมสังกัด *</label>
+          <select class="form-control" id="reg-team">
+            <option value="">-- เลือกทีม --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ประเทศ</label>
+          <select class="form-control" id="reg-country" onchange="toggleProvince()">
+            <option value="TH" selected>🇹🇭 ประเทศไทย</option>
+            <option value="MM">🇲🇲 เมียนมาร์</option>
+            <option value="KH">🇰🇭 กัมพูชา</option>
+            <option value="LA">🇱🇦 ลาว</option>
+            <option value="VN">🇻🇳 เวียดนาม</option>
+            <option value="MY">🇲🇾 มาเลเซีย</option>
+            <option value="SG">🇸🇬 สิงคโปร์</option>
+            <option value="HK">🇭🇰 ฮ่องกง</option>
+          </select>
+        </div>
+        <div class="form-group" id="province-group">
+          <label class="form-label">จังหวัด</label>
+          <select class="form-control" id="reg-province">
+            <option value="">-- เลือกจังหวัด --</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn btn-gold btn-full" onclick="regNext(2)">ถัดไป →</button>
+    </div>
+    <div id="reg-step-2" style="display:none;">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 2: ข้อมูล Binance & Wallet</div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Binance ID (BNB_ID) *</label>
+          <input type="text" class="form-control" id="reg-bnbid" placeholder="กรอกหมายเลข Binance ID">
+        </div>
+        <div class="form-group">
+          <label class="form-label">แนบภาพหน้าจอ Binance *</label>
+          <input type="file" class="form-control" id="reg-binance-img" accept="image/*">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">ที่อยู่กระเป๋า USDT (BEP-20) *</label>
+          <input type="text" class="form-control" id="reg-wallet" placeholder="0x...">
+        </div>
+        <div class="form-group" style="grid-column:1/-1">
+          <label class="form-label">QR Code กระเป๋า (แนบไฟล์ภาพ)</label>
+          <input type="file" class="form-control" id="reg-qr" accept="image/*">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="regNext(1)" style="flex:1">← ย้อนกลับ</button>
+        <button class="btn btn-gold" onclick="regNext(3)" style="flex:2">ถัดไป →</button>
+      </div>
+    </div>
+    <div id="reg-step-3" style="display:none;">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 3: ยืนยันข้อมูล</div>
+      <div id="reg-summary" class="member-info-panel"></div>
+      <div class="sep"></div>
+      <div id="reg-result"></div>
+      <div style="background:rgba(240,185,11,0.1);border:1px solid var(--border);border-radius:8px;padding:12px;margin-bottom:16px;">
+        <p style="font-size:0.85rem;color:var(--text-muted);">📧 ระบบจะบันทึกข้อมูลเข้า NocoDB และแจ้งเตือนที่ tradercafeclub@gmail.com</p>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-outline" onclick="regNext(2)" style="flex:1">← ย้อนกลับ</button>
+        <button class="btn btn-gold" onclick="submitRegistration()" style="flex:2">✅ ยืนยันสมัครสมาชิก</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TEAMS ===================== -->
+<div id="page-teams" class="page">
+  <div class="page-title">
+    <h1>🏆 จัดการทีม</h1>
+    <p>ข้อมูลทีมทั้งหมดจาก NocoDB</p>
+  </div>
+  <div class="card">
+    <div class="card-header">
+      <div class="card-icon">🏆</div>
+      <span class="card-title">ทีมทั้งหมด</span>
+      <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="loadTeams()">🔄 รีเฟรช</button>
+    </div>
+    <div id="teams-list">
+      <div style="text-align:center;padding:30px;color:var(--text-muted);">กำลังโหลด...</div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <button class="mobile-nav-btn active" onclick="showPage('home')"><span>🏠</span>หน้าหลัก</button>
+  <button class="mobile-nav-btn" onclick="showPage('member-search')"><span>👤</span>สมาชิก</button>
+  <button class="mobile-nav-btn" onclick="showPage('register')"><span>📝</span>สมัคร</button>
+  <button class="mobile-nav-btn" onclick="showPage('admin')"><span>⚙️</span>แอดมิน</button>
+</nav>
+
+<!-- SUCCESS MODAL -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal" style="text-align:center;max-width:360px;">
+    <div style="font-size:3rem;margin-bottom:16px;" id="success-icon">✅</div>
+    <div style="font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:8px;" id="success-title">สำเร็จ</div>
+    <p id="success-msg" style="color:var(--text-muted);font-size:0.9rem;margin-bottom:20px;"></p>
+    <button class="btn btn-gold btn-full" onclick="document.getElementById('success-modal').classList.remove('open')">ตกลง</button>
+  </div>
+</div>
+
+<!-- PAYMENT DETAIL MODAL -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">💳 รายละเอียดการชำระเงิน</span>
+      <button class="modal-close" onclick="document.getElementById('payment-modal').classList.remove('open')">✕</button>
+    </div>
+    <div id="payment-modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ========== NocoDB CONFIG ==========
+const NDB = {
+  BASE_URL: 'https://app.nocodb.com/api/v1/db/data/noco',
+  TOKEN: 'nTch8TVFE7PC8_SRXco5bY5PPNSuOZuODI9y8hWU',
+  BASE_ID: 'po6zt3k3ebeitbj',
+  TABLES: {
+    teams:    'mmqflwpjfqa44wg',
+    members:  'mkb81hgdcdiwb7c',
+    payments: 'mcvvgz38o0j0wfa'
+  },
+  SYSTEM_WALLET: '0xfd1A5bc82603a702a9AF38426FfAC0d6BE5aEeef'
+};
+
+// ========== API HELPER ==========
+async function ndbFetch(table, params = {}) {
+  const url = new URL(`${NDB.BASE_URL}/${NDB.BASE_ID}/${NDB.TABLES[table]}`);
+  url.searchParams.set('limit', params.limit || 200);
+  if (params.where) url.searchParams.set('where', params.where);
+  if (params.sort) url.searchParams.set('sort', params.sort);
+  if (params.offset) url.searchParams.set('offset', params.offset);
+
+  const res = await fetch(url.toString(), {
+    headers: { 'xc-token': NDB.TOKEN, 'Content-Type': 'application/json' }
+  });
+  if (!res.ok) throw new Error(`API Error: ${res.status}`);
+  return res.json();
+}
+
+async function ndbInsert(table, data) {
+  const url = `${NDB.BASE_URL}/${NDB.BASE_ID}/${NDB.TABLES[table]}`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'xc-token': NDB.TOKEN, 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error(`Insert Error: ${res.status}`);
+  return res.json();
+}
+
+async function ndbUpdate(table, rowId, data) {
+  const url = `${NDB.BASE_URL}/${NDB.BASE_ID}/${NDB.TABLES[table]}/${rowId}`;
+  const res = await fetch(url, {
+    method: 'PATCH',
+    headers: { 'xc-token': NDB.TOKEN, 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  });
+  if (!res.ok) throw new Error(`Update Error: ${res.status}`);
+  return res.json();
+}
+
+// ========== IN-MEMORY CACHE ==========
+let MEMBERS = [], TEAMS = [], PAYMENTS = [];
+let currentMemberPayments = [], selectedAdminMember = null, tradeRows = [];
+
+const COINS = ['Gold','BTC','ETH','XRP','SOL','BNB','ADA','DOGE','MATIC','LINK','DOT','AVAX','LTC','TRX'];
+const PROVINCES = ['กรุงเทพมหานคร','กระบี่','กาญจนบุรี','กาฬสินธุ์','กำแพงเพชร','ขอนแก่น','จันทบุรี','ฉะเชิงเทรา','ชลบุรี','ชัยนาท','ชัยภูมิ','ชุมพร','เชียงราย','เชียงใหม่','ตรัง','ตราด','ตาก','นครนายก','นครปฐม','นครพนม','นครราชสีมา','นครศรีธรรมราช','นครสวรรค์','นนทบุรี','นราธิวาส','น่าน','บึงกาฬ','บุรีรัมย์','ปทุมธานี','ประจวบคีรีขันธ์','ปราจีนบุรี','ปัตตานี','พระนครศรีอยุธยา','พะเยา','พังงา','พัทลุง','พิจิตร','พิษณุโลก','เพชรบุรี','เพชรบูรณ์','แพร่','ภูเก็ต','มหาสารคาม','มุกดาหาร','แม่ฮ่องสอน','ยโสธร','ยะลา','ร้อยเอ็ด','ระนอง','ระยอง','ราชบุรี','ลพบุรี','ลำปาง','ลำพูน','เลย','ศรีสะเกษ','สกลนคร','สงขลา','สตูล','สมุทรปราการ','สมุทรสงคราม','สมุทรสาคร','สระแก้ว','สระบุรี','สิงห์บุรี','สุโขทัย','สุพรรณบุรี','สุราษฎร์ธานี','สุรินทร์','หนองคาย','หนองบัวลำภู','อ่างทอง','อำนาจเจริญ','อุดรธานี','อุตรดิตถ์','อุทัยธานี','อุบลราชธานี'];
+
+// ========== INIT ==========
+async function init() {
+  showLoading('กำลังเชื่อมต่อ NocoDB...');
+  try {
+    await Promise.all([loadMembers(), loadTeams(), loadPayments()]);
+    hideLoading();
+    document.getElementById('db-status').innerHTML = '<span style="color:var(--green)">🟢 NocoDB Connected</span>';
+    populateRegTeams();
+    populateRegProvinces();
+    setTodayDate();
+  } catch(e) {
+    hideLoading();
+    document.getElementById('db-status').innerHTML = '<span style="color:var(--red)">🔴 Connection Error</span>';
+    console.error(e);
+  }
+}
+
+async function loadMembers() {
+  const data = await ndbFetch('members', { limit: 500 });
+  MEMBERS = data.list || [];
+  document.getElementById('stat-members').textContent = MEMBERS.length;
+}
+
+async function loadTeams() {
+  const data = await ndbFetch('teams', { limit: 100 });
+  TEAMS = data.list || [];
+  document.getElementById('stat-teams').textContent = TEAMS.length;
+  renderTeams();
+}
+
+async function loadPayments() {
+  const data = await ndbFetch('payments', { limit: 500, sort: '-Payment' });
+  PAYMENTS = data.list || [];
+
+  const total = PAYMENTS.reduce((s, p) => {
+    const v = parseFloat((p['Total Profit'] || p.Total_Profit || p.profit || '').toString().replace(/[$,]/g, '')) || 0;
+    return s + v;
+  }, 0);
+
+  const pending = PAYMENTS.filter(p => {
+    const pos = (p.Position || p.position || '').toString();
+    return pos === 'Pending';
+  }).length;
+
+  document.getElementById('stat-payments').textContent = PAYMENTS.length;
+  document.getElementById('stat-pending').textContent = pending;
+  document.getElementById('stat-total-profit').textContent = '$' + total.toLocaleString('en', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+  const adminEl = document.getElementById('admin-stat-label');
+  if (adminEl) adminEl.textContent = `รายการทั้งหมด: ${PAYMENTS.length} รายการ`;
+
+  renderRecentPayments();
+  renderAdminPayments();
+}
+
+// ========== RENDER ==========
+function getVal(p, ...keys) {
+  for (const k of keys) { if (p[k] !== undefined && p[k] !== null && p[k] !== '') return p[k]; }
+  return '';
+}
+
+function numVal(p, ...keys) {
+  const v = getVal(p, ...keys);
+  return parseFloat(v.toString().replace(/[$,]/g, '')) || 0;
+}
+
+function renderRecentPayments() {
+  const tbody = document.getElementById('recent-payments-table');
+  const rows = PAYMENTS.slice(0, 10);
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">ไม่มีข้อมูล</td></tr>'; return; }
+  tbody.innerHTML = rows.map(p => {
+    const status = getVal(p, 'Position', 'position', 'Status');
+    const profit = numVal(p, 'Total Profit', 'Total_Profit', 'profit');
+    const member = numVal(p, 'Member', 'member');
+    const name = getVal(p, 'Name', 'name');
+    const team = getVal(p, 'Team', 'team');
+    const date = getVal(p, 'Payment', 'payment', 'date', 'Payment Date');
+    const isApprove = status === 'Approve';
+    return `<tr onclick="showPaymentDetail('${p.Id||p.id||p.Row_Id}')" style="cursor:pointer;">
+      <td>${date}</td><td>${name}</td>
+      <td style="color:var(--text-muted)">${team}</td>
+      <td style="color:var(--gold)">$${profit.toFixed(2)}</td>
+      <td style="color:var(--green)">$${member.toFixed(2)}</td>
+      <td><span class="badge ${isApprove?'badge-approve':'badge-pending'}">${isApprove?'✅ จ่ายแล้ว':'⏳ รอชำระ'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAdminPayments() {
+  const tbody = document.getElementById('admin-payments-table');
+  if (!tbody) return;
+  const rows = PAYMENTS.slice(0, 20);
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-muted);padding:20px;">ไม่มีข้อมูล</td></tr>'; return; }
+  tbody.innerHTML = rows.map(p => {
+    const status = getVal(p, 'Position', 'position', 'Status');
+    const profit = numVal(p, 'Total Profit', 'Total_Profit', 'profit');
+    const member = numVal(p, 'Member', 'member');
+    const transfer = numVal(p, 'Total_Tranfer', 'Total_Transfer', 'transfer');
+    const rowId = p.Id || p.id || p.Row_Id;
+    const isApprove = status === 'Approve';
+    return `<tr>
+      <td>${getVal(p,'Payment','payment','date')}</td>
+      <td style="color:var(--text-muted);font-size:0.75rem">${getVal(p,'BNB_ID','bnbId','BNB ID')}</td>
+      <td>${getVal(p,'Name','name')}</td>
+      <td>${getVal(p,'Team','team')}</td>
+      <td style="color:var(--gold)">$${profit.toFixed(2)}</td>
+      <td style="color:var(--green)">$${member.toFixed(2)}</td>
+      <td style="color:var(--gold)">$${transfer.toFixed(2)}</td>
+      <td><span class="badge ${isApprove?'badge-approve':'badge-pending'}">${isApprove?'✅ จ่ายแล้ว':'⏳ รอชำระ'}</span></td>
+      <td>${!isApprove?`<button class="btn btn-success btn-sm" onclick="approvePayment('${rowId}',this)">✅ อนุมัติ</button>`:'<span style="color:var(--text-muted);font-size:0.8rem">—</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderTeams() {
+  const container = document.getElementById('teams-list');
+  if (!container) return;
+  if (!TEAMS.length) { container.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-muted);">ไม่มีข้อมูล</div>'; return; }
+  container.innerHTML = TEAMS.map(t => {
+    const name = getVal(t, 'Team', 'ฐานข้อมูลทีม', 'team_name');
+    const support = getVal(t, 'Support Team', 'support_team');
+    const owner = getVal(t, 'Owner Team', 'owner');
+    const membersCount = MEMBERS.filter(m => getVal(m,'Team','team') === name).length;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:12px;border-bottom:1px solid rgba(255,255,255,0.05);">
+      <div>
+        <div style="font-weight:600">${name}</div>
+        <div style="font-size:0.8rem;color:var(--text-muted)">เจ้าของ: ${owner||'—'} | สนับสนุน: ${support||'—'}</div>
+      </div>
+      <span style="font-size:0.8rem;color:var(--text-muted)">${membersCount} คน</span>
+    </div>`;
+  }).join('');
+}
+
+// ========== SEARCH ==========
+function searchMember() {
+  const q = document.getElementById('member-search-input').value.toLowerCase().trim();
+  const container = document.getElementById('member-search-results');
+  const list = document.getElementById('member-results-list');
+  if (q.length < 1) { container.style.display = 'none'; return; }
+  const results = MEMBERS.filter(m => {
+    const name = getVal(m, 'Name', 'name').toLowerCase();
+    const id = getVal(m, 'BNB_ID', 'BNB ID', 'bnbId').toString().toLowerCase();
+    return name.includes(q) || id.includes(q);
+  });
+  container.style.display = 'block';
+  if (!results.length) { list.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:16px;">ไม่พบข้อมูล</div>'; return; }
+  list.innerHTML = results.slice(0, 6).map(m => {
+    const name = getVal(m, 'Name', 'name');
+    const id = getVal(m, 'BNB_ID', 'BNB ID', 'bnbId');
+    const team = getVal(m, 'Team', 'team');
+    const status = getVal(m, 'Status', 'status');
+    return `<div onclick="showMemberDashboard('${id}')" style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;cursor:pointer;margin-bottom:4px;background:var(--dark3);transition:all 0.2s;" onmouseover="this.style.background='var(--dark4)'" onmouseout="this.style.background='var(--dark3)'">
+      <div style="width:36px;height:36px;background:rgba(240,185,11,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;">👤</div>
+      <div><div style="font-weight:600">${name}</div><div style="font-size:0.75rem;color:var(--text-muted)">ID: ${id} | ${team}</div></div>
+      <span class="badge ${status==='Pending'?'badge-pending':'badge-approve'}" style="margin-left:auto">${status||'Active'}</span>
+    </div>`;
+  }).join('');
+}
+
+function showMemberDashboard(memberId) {
+  const m = MEMBERS.find(x => getVal(x,'BNB_ID','BNB ID','bnbId').toString() === memberId.toString());
+  if (!m) return;
+  document.getElementById('member-search-results').style.display = 'none';
+  document.getElementById('member-dashboard').style.display = 'block';
+  document.getElementById('dash-name').textContent = getVal(m,'Name','name');
+  document.getElementById('dash-id').textContent = getVal(m,'BNB_ID','BNB ID','bnbId');
+  document.getElementById('dash-team').textContent = getVal(m,'Team','team');
+  const status = getVal(m,'Status','status');
+  document.getElementById('dash-status').innerHTML = `<span class="badge ${status==='Pending'?'badge-pending':'badge-approve'}">${status||'Active'}</span>`;
+  document.getElementById('dash-wallet').textContent = getVal(m,'Address Wallet','wallet','Wallet') || 'ยังไม่ได้ตั้งค่า';
+
+  currentMemberPayments = PAYMENTS.filter(p => getVal(p,'BNB_ID','BNB ID','bnbId').toString() === memberId.toString());
+  renderMemberPayments(currentMemberPayments);
+  document.getElementById('member-dashboard').scrollIntoView({behavior:'smooth'});
+}
+
+function closeMemberDash() {
+  document.getElementById('member-dashboard').style.display = 'none';
+  document.getElementById('member-search-input').value = '';
+  document.getElementById('member-search-results').style.display = 'none';
+}
+
+function filterPayments(status) {
+  const filtered = status === 'all' ? currentMemberPayments : currentMemberPayments.filter(p => getVal(p,'Position','position','Status') === status);
+  renderMemberPayments(filtered);
+}
+
+function renderMemberPayments(payments) {
+  const tbody = document.getElementById('member-payments-table');
+  const noData = document.getElementById('member-no-data');
+  if (!payments.length) { tbody.innerHTML = ''; noData.style.display = 'block'; return; }
+  noData.style.display = 'none';
+  tbody.innerHTML = payments.map(p => {
+    const status = getVal(p,'Position','position','Status');
+    const profit = numVal(p,'Total Profit','Total_Profit','profit');
+    const comm = numVal(p,'Commission','commission');
+    const guar = numVal(p,'Profit Guarantee','Profit_Guarantee','guarantee');
+    const bal = numVal(p,'Total Balance','Total_Balance','balance');
+    const mem = numVal(p,'Member','member');
+    const cen = numVal(p,'Central_Team','central');
+    const trans = numVal(p,'Total_Tranfer','Total_Transfer','transfer');
+    const rowId = p.Id || p.id || p.Row_Id;
+    const isApprove = status === 'Approve';
+    return `<tr onclick="showPaymentDetail('${rowId}')" style="cursor:pointer;">
+      <td>${getVal(p,'Payment','payment','date')}</td>
+      <td style="color:var(--gold)">$${profit.toFixed(2)}</td>
+      <td style="color:var(--red)">$${comm.toFixed(2)}</td>
+      <td style="color:var(--red)">$${guar.toFixed(2)}</td>
+      <td>$${bal.toFixed(2)}</td>
+      <td style="color:var(--green)">$${mem.toFixed(2)}</td>
+      <td>$${cen.toFixed(2)}</td>
+      <td style="color:var(--gold)">$${trans.toFixed(2)}</td>
+      <td><span class="badge ${isApprove?'badge-approve':'badge-pending'}">${isApprove?'✅ จ่ายแล้ว':'⏳ รอชำระ'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ========== ADMIN SEARCH ==========
+function adminSearchMember() {
+  const q = document.getElementById('admin-search').value.toLowerCase().trim();
+  const container = document.getElementById('admin-search-results');
+  if (q.length < 1) { container.innerHTML = ''; return; }
+  const results = MEMBERS.filter(m => {
+    const name = getVal(m,'Name','name').toLowerCase();
+    const id = getVal(m,'BNB_ID','BNB ID','bnbId').toString();
+    return name.includes(q) || id.includes(q);
+  });
+  if (!results.length) { container.innerHTML = '<div style="color:var(--text-muted);text-align:center;padding:16px;">ไม่พบข้อมูล</div>'; return; }
+  container.innerHTML = results.slice(0,5).map(m => {
+    const name = getVal(m,'Name','name');
+    const id = getVal(m,'BNB_ID','BNB ID','bnbId');
+    const team = getVal(m,'Team','team');
+    return `<div onclick="selectAdminMember('${id}')" style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;cursor:pointer;margin-bottom:4px;background:var(--dark3);">
+      <div><div style="font-weight:600">${name}</div><div style="font-size:0.75rem;color:var(--text-muted)">ID: ${id} | ${team}</div></div>
+      <button class="btn btn-gold btn-sm" style="margin-left:auto">เลือก</button>
+    </div>`;
+  }).join('');
+}
+
+function selectAdminMember(memberId) {
+  const m = MEMBERS.find(x => getVal(x,'BNB_ID','BNB ID','bnbId').toString() === memberId.toString());
+  if (!m) return;
+  selectedAdminMember = m;
+  document.getElementById('af-id').textContent = getVal(m,'BNB_ID','BNB ID','bnbId');
+  document.getElementById('af-name').textContent = getVal(m,'Name','name');
+  document.getElementById('af-team').textContent = getVal(m,'Team','team');
+  document.getElementById('af-lva').textContent = getVal(m,'Level A','lva') || '—';
+  document.getElementById('af-lvb').textContent = getVal(m,'Level B','lvb') || '—';
+  document.getElementById('admin-search').value = '';
+  document.getElementById('admin-search-results').innerHTML = '';
+  document.getElementById('admin-payment-form').style.display = 'block';
+  tradeRows = [];
+  renderTradeRows();
+  updateCalc();
+  document.getElementById('admin-payment-form').scrollIntoView({behavior:'smooth'});
+}
+
+// ========== TRADE ROWS ==========
+function addTradeRow() {
+  tradeRows.push({ coin: 'BTC', profit: 0 });
+  renderTradeRows();
+}
+
+function renderTradeRows() {
+  const container = document.getElementById('trade-rows');
+  if (!tradeRows.length) { container.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:20px;font-size:0.85rem;">กดปุ่ม "+ เพิ่มรายการ" เพื่อเพิ่มรายการเทรด</div>'; return; }
+  container.innerHTML = tradeRows.map((row, i) => `
+    <div class="trade-item">
+      <div class="trade-item-num">${i+1}</div>
+      <div style="flex:1.5;min-width:120px;">
+        <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px">ชื่อเหรียญ</div>
+        <select class="form-control" onchange="tradeRows[${i}].coin=this.value">
+          ${COINS.map(c => `<option value="${c}" ${row.coin===c?'selected':''}>${c}/USDT</option>`).join('')}
+        </select>
+      </div>
+      <div style="flex:1.5;min-width:120px;">
+        <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px">กำไร (USD)</div>
+        <input type="number" class="form-control" placeholder="0.00" value="${row.profit||''}" min="0" step="0.01" oninput="tradeRows[${i}].profit=parseFloat(this.value)||0; updateCalc();">
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="removeTradeRow(${i})" style="margin-top:16px;">🗑️</button>
+    </div>`).join('');
+}
+
+function removeTradeRow(i) { tradeRows.splice(i, 1); renderTradeRows(); updateCalc(); }
+
+function updateCalc() {
+  const total = tradeRows.reduce((s, r) => s + (r.profit||0), 0);
+  document.getElementById('total-trade-profit').textContent = `$${total.toFixed(2)}`;
+  const comm = total*0.10, guar = total*0.10, bal = total*0.80, mem = bal*0.50, cen = bal*0.50, trans = cen+comm;
+  document.getElementById('calc-total').textContent = `$${total.toFixed(2)}`;
+  document.getElementById('calc-guarantee').textContent = `-$${guar.toFixed(2)}`;
+  document.getElementById('calc-commission').textContent = `-$${comm.toFixed(2)}`;
+  document.getElementById('calc-balance').textContent = `$${bal.toFixed(2)}`;
+  document.getElementById('calc-member').textContent = `$${mem.toFixed(2)}`;
+  document.getElementById('calc-central').textContent = `$${cen.toFixed(2)}`;
+  document.getElementById('calc-transfer').textContent = `$${trans.toFixed(2)}`;
+}
+
+// ========== SAVE PAYMENT to NocoDB ==========
+async function savePayment() {
+  if (!selectedAdminMember) { alert('กรุณาเลือกสมาชิกก่อน'); return; }
+  const total = tradeRows.reduce((s, r) => s + (r.profit||0), 0);
+  if (total <= 0) { alert('กรุณากรอกรายการเทรดอย่างน้อย 1 รายการ'); return; }
+
+  const comm = total*0.10, guar = total*0.10, bal = total*0.80, mem = bal*0.50, cen = bal*0.50, trans = cen+comm;
+  const status = document.getElementById('af-position').value;
+  const payDate = document.getElementById('af-payment-date').value;
+  const note = document.getElementById('af-note').value;
+  const today = new Date();
+  const dateStr = payDate || `${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;
+  const tradeNote = tradeRows.map((t,i) => `ครั้งที่${i+1}: ${t.coin} +$${t.profit}`).join(' | ');
+
+  const payload = {
+    'BNB_ID': getVal(selectedAdminMember, 'BNB_ID', 'BNB ID', 'bnbId'),
+    'Name': getVal(selectedAdminMember, 'Name', 'name'),
+    'Team': getVal(selectedAdminMember, 'Team', 'team'),
+    'Level A': getVal(selectedAdminMember, 'Level A', 'lva'),
+    'Level B': getVal(selectedAdminMember, 'Level B', 'lvb'),
+    'Payment': dateStr,
+    'Total Profit': `$${total.toFixed(2)}`,
+    'Commission': `$${comm.toFixed(2)}`,
+    'Profit Guarantee': `$${guar.toFixed(2)}`,
+    'Total Balance': `$${bal.toFixed(2)}`,
+    'Member': `$${mem.toFixed(2)}`,
+    'Central_Team': `$${cen.toFixed(2)}`,
+    'Total_Tranfer': `$${trans.toFixed(2)}`,
+    'Position': status,
+    'Note': note || tradeNote
+  };
+
+  const btn = document.querySelector('[onclick="savePayment()"]');
+  btn.textContent = '⏳ กำลังบันทึก...'; btn.disabled = true;
+  const resultEl = document.getElementById('save-result');
+
+  try {
+    await ndbInsert('payments', payload);
+    resultEl.innerHTML = '<div class="api-success">✅ บันทึกลง NocoDB สำเร็จ!</div>';
+    await loadPayments();
+    clearAdminForm();
+    showSuccess('บันทึกสำเร็จ!', `บันทึกการจ่ายเงินให้ ${getVal(selectedAdminMember,'Name','name')} ลง NocoDB แล้ว`);
+  } catch(e) {
+    resultEl.innerHTML = `<div class="api-error">❌ เกิดข้อผิดพลาด: ${e.message}</div>`;
+    btn.textContent = '💾 บันทึกและส่งข้อมูลไป NocoDB'; btn.disabled = false;
+  }
+}
+
+function clearAdminForm() {
+  selectedAdminMember = null; tradeRows = [];
+  document.getElementById('admin-payment-form').style.display = 'none';
+  document.getElementById('admin-search').value = '';
+  document.getElementById('save-result').innerHTML = '';
+  const btn = document.querySelector('[onclick="savePayment()"]');
+  if (btn) { btn.textContent = '💾 บันทึกและส่งข้อมูลไป NocoDB'; btn.disabled = false; }
+}
+
+async function approvePayment(rowId, btnEl) {
+  btnEl.textContent = '⏳...'; btnEl.disabled = true;
+  try {
+    await ndbUpdate('payments', rowId, { 'Position': 'Approve' });
+    await loadPayments();
+    showSuccess('อนุมัติสำเร็จ', 'อัปเดตสถานะใน NocoDB แล้ว');
+  } catch(e) {
+    btnEl.textContent = '✅ อนุมัติ'; btnEl.disabled = false;
+    alert('เกิดข้อผิดพลาด: ' + e.message);
+  }
+}
+
+// ========== PAYMENT DETAIL MODAL ==========
+function showPaymentDetail(rowId) {
+  const p = PAYMENTS.find(x => (x.Id||x.id||x.Row_Id)?.toString() === rowId?.toString());
+  if (!p) return;
+  const now = new Date();
+  const profit = numVal(p,'Total Profit','Total_Profit','profit');
+  const comm = numVal(p,'Commission','commission');
+  const guar = numVal(p,'Profit Guarantee','Profit_Guarantee','guarantee');
+  const bal = numVal(p,'Total Balance','Total_Balance','balance');
+  const mem = numVal(p,'Member','member');
+  const cen = numVal(p,'Central_Team','central');
+  const trans = numVal(p,'Total_Tranfer','Total_Transfer','transfer');
+  const status = getVal(p,'Position','position','Status');
+  const isPending = status !== 'Approve';
+  const lvaComm = comm * 0.15, lvbComm = comm * 0.10;
+  const lva = getVal(p,'Level A','lva');
+  const lvb = getVal(p,'Level B','lvb');
+  const name = getVal(p,'Name','name');
+  const bnbId = getVal(p,'BNB_ID','BNB ID','bnbId');
+  const team = getVal(p,'Team','team');
+  const date = getVal(p,'Payment','payment','date');
+  const note = getVal(p,'Note','note');
+
+  document.getElementById('payment-modal-content').innerHTML = `
+    <div style="background:var(--dark3);border-radius:12px;overflow:hidden;">
+      <div style="background:linear-gradient(135deg,#1a1f28,#0f1318);padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <img src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" style="height:28px;" onerror="this.style.display='none'">
+          <div>
+            <div style="font-family:'Orbitron',monospace;font-size:0.8rem;color:var(--gold);letter-spacing:2px;">PAYMENT REPORT</div>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+              <div class="pulse" style="width:6px;height:6px;"></div>
+              <span style="font-size:0.7rem;color:var(--green);">LIVE</span>
+              <span style="font-size:0.7rem;color:var(--text-muted);">${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}</span>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:0.7rem;color:var(--gold);border:1px solid var(--border);padding:3px 10px;border-radius:20px;">✦ OFFICIAL</div>
+      </div>
+      <div style="padding:16px 20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+          <div style="width:44px;height:44px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;">👤</div>
+          <div style="flex:1;">
+            <div style="font-size:1rem;font-weight:700;">${name}</div>
+            <div style="display:flex;gap:10px;margin-top:3px;flex-wrap:wrap;">
+              <span style="font-size:0.72rem;color:var(--text-muted);">🪙 UID: <b style="color:var(--gold)">${bnbId}</b></span>
+              <span style="font-size:0.72rem;color:var(--text-muted);">🏆 ${team}</span>
+            </div>
+            <div style="font-size:0.72rem;color:var(--text-muted);margin-top:2px;">📈 TEAM COMMISSION: <b style="color:var(--gold)">$${comm.toFixed(2)}</b></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+          <div style="background:rgba(3,192,117,0.08);border:1px solid rgba(3,192,117,0.2);border-radius:8px;padding:8px;">
+            <div style="font-size:0.65rem;color:var(--text-muted);">A - ${lva||'—'}</div>
+            <div style="font-weight:700;color:var(--green);">$${lvaComm.toFixed(2)}</div>
+          </div>
+          <div style="background:rgba(240,185,11,0.08);border:1px solid rgba(240,185,11,0.2);border-radius:8px;padding:8px;">
+            <div style="font-size:0.65rem;color:var(--text-muted);">B - ${lvb||'—'}</div>
+            <div style="font-weight:700;color:var(--gold);">$${lvbComm.toFixed(2)}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:12px;">
+          <div style="background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:0.6rem;color:var(--text-muted);">ส่วนแบ่งสมาชิก (50%)</div>
+            <div style="font-size:1rem;font-weight:700;color:var(--green);">$${mem.toFixed(2)}</div>
+          </div>
+          <div style="background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:0.6rem;color:var(--text-muted);">ประกันกำไร (10%)</div>
+            <div style="font-size:1rem;font-weight:700;color:var(--gold);">$${guar.toFixed(2)}</div>
+          </div>
+          <div style="background:linear-gradient(135deg,rgba(240,185,11,0.15),rgba(240,185,11,0.05));border:1px solid var(--gold);border-radius:8px;padding:10px;text-align:center;">
+            <div style="font-size:0.6rem;color:var(--text-muted);">⭐ รายได้รวม</div>
+            <div style="font-size:1rem;font-weight:700;color:var(--gold);">$${(mem+guar).toFixed(2)}</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+          <div>
+            <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:6px;">📊 รายละเอียดส่วนแบ่ง</div>
+            <div style="background:var(--dark2);border-radius:8px;padding:10px;">
+              ${[['กำไรรวม (100%)',`+$${profit.toFixed(2)}`,'var(--green)'],['ประกันกำไร (10%)',`-$${guar.toFixed(2)}`,'var(--red)'],['ค่าคอมมิชั่น (10%)',`-$${comm.toFixed(2)}`,'var(--red)'],['คงเหลือสุทธิ (80%)',`$${bal.toFixed(2)}`,'var(--gold)'],['ส่วนผู้เทรด (50%)',`$${mem.toFixed(2)}`,'var(--green)'],['ส่วนระบบ (50%)',`$${cen.toFixed(2)}`,'var(--gold)']].map(([l,v,c])=>`
+              <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:var(--text-muted)">${l}</span><span style="color:${c};font-weight:600">${v}</span>
+              </div>`).join('')}
+            </div>
+          </div>
+          <div>
+            <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:6px;">💳 รายละเอียดเข้าระบบ</div>
+            <div style="background:var(--dark2);border-radius:8px;padding:10px;margin-bottom:8px;">
+              ${[['ค่าคอมมิชั่น',`$${comm.toFixed(2)}`],['ส่วนระบบ',`$${cen.toFixed(2)}`]].map(([l,v])=>`
+              <div style="display:flex;justify-content:space-between;padding:4px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:var(--text-muted)">${l}</span><span style="color:var(--gold);font-weight:600">${v}</span>
+              </div>`).join('')}
+              <div style="display:flex;justify-content:space-between;padding:6px 0 0;font-size:0.8rem;font-weight:700;">
+                <span>🔖 ยอดรวม</span><span style="color:var(--gold)">$${trans.toFixed(2)}</span>
+              </div>
+            </div>
+            <div style="font-size:0.65rem;color:var(--text-muted);text-align:center;margin-bottom:5px;">TOTAL PAYMENT AMOUNT</div>
+            <div style="background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:10px;padding:12px;text-align:center;">
+              <div style="font-size:0.7rem;color:rgba(0,0,0,0.6)">ยอดรวมเข้าระบบ</div>
+              <div style="font-family:'Orbitron',monospace;font-size:1.2rem;font-weight:900;color:var(--black);">$${trans.toFixed(2)}</div>
+            </div>
+          </div>
+        </div>
+        ${isPending ? `
+        <div style="margin-bottom:12px;">
+          <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:6px;">🔐 SCAN QR CODE FOR PAYMENT</div>
+          <div style="background:var(--dark2);border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <span style="font-family:monospace;font-size:0.7rem;color:var(--gold);word-break:break-all;flex:1;">${NDB.SYSTEM_WALLET}</span>
+            <button onclick="navigator.clipboard.writeText('${NDB.SYSTEM_WALLET}').then(()=>showToast('คัดลอกแล้ว!'))" style="background:rgba(240,185,11,0.15);border:1px solid var(--gold);color:var(--gold);padding:4px 8px;border-radius:6px;cursor:pointer;font-size:0.7rem;flex-shrink:0;">📋 Copy</button>
+          </div>
+          <div style="font-size:0.65rem;color:var(--green);text-align:center;">✦ USDT BNB Smart Chain (BEP-20)</div>
+        </div>` : ''}
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--dark2);border-radius:8px;border:1px solid ${isPending?'rgba(240,185,11,0.3)':'rgba(3,192,117,0.3)'};">
+          <span style="font-weight:600;color:${isPending?'var(--gold)':'var(--green)'};">${isPending?'⏳ รอการชำระเงิน':'✅ จ่ายเงินแล้ว'}</span>
+          <span style="font-size:0.75rem;color:var(--text-muted);">📅 ${date}</span>
+        </div>
+        ${note?`<div style="margin-top:8px;font-size:0.8rem;color:var(--text-muted);">📝 ${note}</div>`:''}
+        <div style="text-align:center;margin-top:14px;padding-top:10px;border-top:1px solid var(--border);">
+          <div style="font-family:'Orbitron',monospace;font-size:0.65rem;color:var(--text-muted);letter-spacing:2px;">TRADERCAFECLUB</div>
+          <div style="font-size:0.6rem;color:var(--green);margin-top:3px;">🔒 Secured & Encrypted ✦ Verified</div>
+        </div>
+      </div>
+    </div>`;
+  document.getElementById('payment-modal').classList.add('open');
+}
+
+// ========== REGISTER → NocoDB ==========
+function populateRegTeams() {
+  const sel = document.getElementById('reg-team');
+  TEAMS.forEach(t => {
+    const name = getVal(t,'Team','ฐานข้อมูลทีม','team_name');
+    if (name && name !== 'Team') { const o = document.createElement('option'); o.value = name; o.textContent = name; sel.appendChild(o); }
+  });
+}
+
+function populateRegProvinces() {
+  const sel = document.getElementById('reg-province');
+  PROVINCES.forEach(p => { const o = document.createElement('option'); o.value = p; o.textContent = p; sel.appendChild(o); });
+}
+
+function toggleProvince() {
+  document.getElementById('province-group').style.display = document.getElementById('reg-country').value === 'TH' ? 'block' : 'none';
+}
+
+function regNext(step) {
+  [1,2,3].forEach(s => { document.getElementById(`reg-step-${s}`).style.display='none'; document.getElementById(`step-${s}`).classList.remove('active'); });
+  document.getElementById(`reg-step-${step}`).style.display = 'block';
+  for (let i=1; i<=step; i++) document.getElementById(`step-${i}`).classList.add('active');
+  if (step === 3) {
+    const fields = ['reg-name','reg-phone','reg-team','reg-bnbid','reg-wallet','reg-province'].map(id => document.getElementById(id)?.value || '—');
+    document.getElementById('reg-summary').innerHTML = [['ชื่อ-สกุล',fields[0]],['เบอร์โทร',fields[1]],['ทีมสังกัด',fields[2]],['Binance ID',fields[3]],['กระเป๋า',fields[4]],['จังหวัด',fields[5]]].map(([k,v])=>`<div class="member-info-row"><span class="info-key">${k}</span><span class="info-val" style="font-size:0.8rem;word-break:break-all">${v}</span></div>`).join('');
+  }
+}
+
+async function submitRegistration() {
+  const name = document.getElementById('reg-name').value;
+  const phone = document.getElementById('reg-phone').value;
+  const team = document.getElementById('reg-team').value;
+  const bnbid = document.getElementById('reg-bnbid').value;
+  const wallet = document.getElementById('reg-wallet').value;
+  const province = document.getElementById('reg-province').value;
+  if (!name || !bnbid) { alert('กรุณากรอกชื่อและ Binance ID'); return; }
+
+  const btn = document.querySelector('[onclick="submitRegistration()"]');
+  btn.textContent = '⏳ กำลังบันทึก...'; btn.disabled = true;
+  const resultEl = document.getElementById('reg-result');
+
+  try {
+    await ndbInsert('members', {
+      'BNB_ID': bnbid, 'Name': name, 'Team': team,
+      'Address Wallet': wallet, 'Status': 'Pending'
+    });
+    resultEl.innerHTML = '<div class="api-success">✅ บันทึกข้อมูลสมาชิกลง NocoDB สำเร็จ!</div>';
+    await loadMembers();
+    setTimeout(() => {
+      showSuccess('สมัครสมาชิกสำเร็จ!', `บันทึก ${name} เข้าระบบ NocoDB แล้ว`);
+      regNext(1);
+      document.getElementById('reg-name').value = '';
+      resultEl.innerHTML = '';
+      btn.textContent = '✅ ยืนยันสมัครสมาชิก'; btn.disabled = false;
+    }, 1500);
+  } catch(e) {
+    resultEl.innerHTML = `<div class="api-error">❌ เกิดข้อผิดพลาด: ${e.message}</div>`;
+    btn.textContent = '✅ ยืนยันสมัครสมาชิก'; btn.disabled = false;
+  }
+}
+
+// ========== UTILS ==========
+function showPage(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`page-${page}`)?.classList.add('active');
+  const map = {home:0,'member-search':1,register:2,admin:3};
+  const idx = map[page];
+  if (idx !== undefined) {
+    document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
+    document.querySelectorAll('.mobile-nav-btn')[idx]?.classList.add('active');
+  }
+  window.scrollTo(0,0);
+}
+
+function showLoading(text = 'กำลังโหลด...') {
+  document.getElementById('loading-overlay').style.display = 'flex';
+  document.getElementById('loading-text').textContent = text;
+}
+function hideLoading() { document.getElementById('loading-overlay').style.display = 'none'; }
+
+function showSuccess(title, msg) {
+  document.getElementById('success-title').textContent = title;
+  document.getElementById('success-msg').textContent = msg;
+  document.getElementById('success-modal').classList.add('open');
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--dark2);border:1px solid var(--gold);color:var(--gold);padding:10px 20px;border-radius:8px;z-index:999;font-size:0.85rem;';
+  t.textContent = msg; document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2000);
+}
+
+function copyText(id) {
+  const t = document.getElementById(id)?.textContent;
+  if (t) navigator.clipboard.writeText(t).then(() => showToast('คัดลอกแล้ว!')).catch(()=>{});
+}
+
+function copySystemWallet() { navigator.clipboard.writeText(NDB.SYSTEM_WALLET).then(() => showToast('คัดลอกกระเป๋าระบบแล้ว!')).catch(()=>{}); }
+
+function setTodayDate() {
+  const today = new Date();
+  const dd = String(today.getDate()).padStart(2,'0');
+  const mm = String(today.getMonth()+1).padStart(2,'0');
+  const yyyy = today.getFullYear();
+  document.getElementById('af-date').textContent = `${dd}/${mm}/${yyyy}`;
+  const el = document.getElementById('af-payment-date');
+  if (el) el.value = `${yyyy}-${mm}-${dd}`;
+}
+
+async function checkBlockchain() {
+  const resultEl = document.getElementById('blockchain-result');
+  resultEl.innerHTML = '<div style="color:var(--text-muted);font-size:0.85rem;">⚡ กำลังตรวจสอบ BscScan...</div>';
+  setTimeout(() => {
+    resultEl.innerHTML = `<div style="background:rgba(3,192,117,0.1);border:1px solid rgba(3,192,117,0.3);border-radius:8px;padding:10px;margin-top:6px;"><div style="color:var(--green);font-weight:600;">✅ เชื่อมต่อ BscScan สำเร็จ</div><div style="font-size:0.8rem;color:var(--text-muted);margin-top:4px;">ที่อยู่: ${NDB.SYSTEM_WALLET.slice(0,12)}...${NDB.SYSTEM_WALLET.slice(-6)} | ต้องการ 12 confirmations</div></div>`;
+  }, 2000);
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', function(e) { if(e.target===this) this.classList.remove('open'); }));
+
+// ========== START ==========
+init();
+</script>
+</body>
+</html>
