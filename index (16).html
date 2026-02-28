@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCC - Trader Cafe Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:#F0B90B; --gold-l:#FFD700; --gold-d:#C99A00;
+  --black:#0B0E11; --dark:#12161C; --dark2:#1E2329; --dark3:#2B3139; --dark4:#3C4350;
+  --text:#EAECEF; --muted:#848E9C;
+  --green:#03C075; --red:#F6465D; --blue:#1890FF;
+  --border:rgba(240,185,11,0.2); --border2:rgba(255,255,255,0.06);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--black);color:var(--text);font-family:'Sarabun',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  background:radial-gradient(ellipse at 15% 10%,rgba(240,185,11,0.06) 0%,transparent 55%),
+             radial-gradient(ellipse at 85% 90%,rgba(3,192,117,0.04) 0%,transparent 55%);
+  pointer-events:none;z-index:0;}
+
+/* ── NAVBAR ── */
+.navbar{position:sticky;top:0;z-index:100;background:rgba(11,14,17,0.97);
+  border-bottom:1px solid var(--border);backdrop-filter:blur(20px);
+  padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.brand{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.brand img{height:36px;}
+.brand-name{font-family:'Orbitron',monospace;font-size:0.82rem;color:var(--gold);letter-spacing:2px;line-height:1.2;}
+.brand-sub{font-size:0.6rem;color:var(--muted);letter-spacing:1px;}
+.nav-tabs{display:flex;gap:2px;}
+.nav-tab{padding:8px 14px;border:none;background:transparent;color:var(--muted);
+  cursor:pointer;border-radius:6px;font-family:'Sarabun',sans-serif;font-size:0.85rem;transition:all 0.2s;}
+.nav-tab:hover{color:var(--gold);background:rgba(240,185,11,0.08);}
+.nav-tab.active{color:var(--gold);background:rgba(240,185,11,0.12);border-bottom:2px solid var(--gold);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.db-badge{font-size:0.7rem;padding:3px 10px;border-radius:12px;border:1px solid;}
+.db-ok{background:rgba(3,192,117,0.1);border-color:rgba(3,192,117,0.4);color:var(--green);}
+.db-err{background:rgba(246,70,93,0.1);border-color:rgba(246,70,93,0.4);color:var(--red);}
+.db-wait{background:rgba(240,185,11,0.1);border-color:rgba(240,185,11,0.3);color:var(--gold);}
+.admin-pill{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:var(--black);
+  padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:700;cursor:pointer;}
+.login-btn{background:transparent;border:1px solid var(--border);color:var(--gold);
+  padding:6px 14px;border-radius:8px;cursor:pointer;font-size:0.82rem;font-family:'Sarabun',sans-serif;transition:all 0.2s;}
+.login-btn:hover{background:rgba(240,185,11,0.1);}
+
+/* ── PAGES ── */
+.page{display:none;padding:24px;max-width:1200px;margin:0 auto;animation:fadeIn 0.3s ease;position:relative;z-index:1;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.page-title{margin-bottom:20px;}
+.page-title h1{font-size:1.3rem;font-weight:700;color:var(--gold);}
+.page-title p{color:var(--muted);font-size:0.85rem;margin-top:4px;}
+
+/* ── CARDS ── */
+.card{background:var(--dark2);border:1px solid var(--border2);border-radius:14px;padding:20px;margin-bottom:16px;transition:border-color 0.2s;}
+.card:hover{border-color:rgba(240,185,11,0.15);}
+.card-hd{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border2);}
+.card-title{font-size:0.95rem;font-weight:700;color:var(--gold);}
+.card-icon{width:32px;height:32px;background:rgba(240,185,11,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:48px 20px 40px;background:linear-gradient(135deg,rgba(240,185,11,0.06) 0%,rgba(3,192,117,0.02) 100%);
+  border:1px solid rgba(240,185,11,0.12);border-radius:18px;margin-bottom:24px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-40px;left:50%;transform:translateX(-50%);
+  width:300px;height:300px;background:radial-gradient(circle,rgba(240,185,11,0.08),transparent 70%);pointer-events:none;}
+.hero-logo{height:80px;margin-bottom:16px;filter:drop-shadow(0 0 20px rgba(240,185,11,0.3));}
+.hero-title{font-family:'Orbitron',monospace;font-size:2rem;color:var(--gold);letter-spacing:4px;font-weight:900;}
+.hero-sub{color:var(--muted);margin-top:10px;font-size:0.9rem;}
+.hero-stats{display:flex;justify-content:center;gap:32px;margin-top:24px;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-val{font-family:'Orbitron',monospace;font-size:1.4rem;color:var(--gold);font-weight:700;}
+.hero-stat-lbl{font-size:0.72rem;color:var(--muted);margin-top:2px;}
+
+/* ── STATS GRID ── */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;}
+.stat-card{background:var(--dark2);border:1px solid var(--border2);border-radius:12px;padding:18px;text-align:center;position:relative;overflow:hidden;transition:all 0.2s;}
+.stat-card:hover{transform:translateY(-2px);border-color:rgba(240,185,11,0.3);box-shadow:0 8px 24px rgba(0,0,0,0.3);}
+.stat-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold-d));}
+.stat-val{font-size:1.5rem;font-weight:700;color:var(--gold);font-family:'Orbitron',monospace;}
+.stat-lbl{font-size:0.72rem;color:var(--muted);margin-top:5px;}
+.stat-icon{font-size:1.4rem;margin-bottom:6px;}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+th{background:var(--dark3);color:var(--gold);padding:11px 12px;text-align:left;font-size:0.72rem;letter-spacing:0.8px;white-space:nowrap;font-weight:600;}
+td{padding:11px 12px;border-bottom:1px solid var(--border2);white-space:nowrap;}
+tr:hover td{background:rgba(240,185,11,0.025);}
+tr:last-child td{border-bottom:none;}
+
+/* ── BADGES ── */
+.badge{padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;}
+.badge-approve{background:rgba(3,192,117,0.12);color:var(--green);border:1px solid rgba(3,192,117,0.3);}
+.badge-pending{background:rgba(240,185,11,0.12);color:var(--gold);border:1px solid rgba(240,185,11,0.3);}
+.badge-admin{background:rgba(24,144,255,0.15);color:var(--blue);border:1px solid rgba(24,144,255,0.3);}
+.badge-beginner{background:rgba(255,255,255,0.05);color:var(--muted);border:1px solid rgba(255,255,255,0.1);}
+
+/* ── FORMS ── */
+.form-group{margin-bottom:14px;}
+.form-label{font-size:0.78rem;color:var(--muted);margin-bottom:6px;display:block;font-weight:600;}
+.form-control{width:100%;padding:10px 14px;background:var(--dark3);border:1px solid var(--border2);
+  border-radius:8px;color:var(--text);font-family:'Sarabun',sans-serif;font-size:0.88rem;transition:border-color 0.2s;}
+.form-control:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 2px rgba(240,185,11,0.12);}
+select.form-control option{background:var(--dark3);}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:768px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+/* ── BUTTONS ── */
+.btn{padding:10px 20px;border:none;border-radius:8px;cursor:pointer;font-family:'Sarabun',sans-serif;font-size:0.88rem;font-weight:600;transition:all 0.2s;display:inline-flex;align-items:center;gap:6px;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-d));color:var(--black);}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(240,185,11,0.35);}
+.btn-outline{background:transparent;border:1px solid var(--border2);color:var(--text);}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.btn-danger{background:rgba(246,70,93,0.12);border:1px solid rgba(246,70,93,0.3);color:var(--red);}
+.btn-success{background:rgba(3,192,117,0.12);border:1px solid rgba(3,192,117,0.3);color:var(--green);}
+.btn-blue{background:rgba(24,144,255,0.12);border:1px solid rgba(24,144,255,0.3);color:var(--blue);}
+.btn-sm{padding:5px 12px;font-size:0.78rem;}
+.btn-full{width:100%;justify-content:center;}
+button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
+
+/* ── SEARCH ── */
+.search-box{position:relative;margin-bottom:14px;}
+.search-box input{padding-left:40px;}
+.search-icon{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:0.9rem;pointer-events:none;}
+
+/* ── MEMBER INFO ── */
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border2);font-size:0.85rem;}
+.info-row:last-child{border-bottom:none;}
+.info-k{color:var(--muted);}
+.info-v{color:var(--text);font-weight:600;text-align:right;max-width:60%;word-break:break-all;}
+
+/* ── WALLET BOX ── */
+.wallet-box{background:var(--dark3);border:1px solid rgba(240,185,11,0.25);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.wallet-addr{font-family:monospace;font-size:0.78rem;color:var(--gold);word-break:break-all;flex:1;}
+.qr-img{width:140px;height:140px;border-radius:10px;border:2px solid var(--border);object-fit:cover;}
+
+/* ── PROFIT BREAKDOWN ── */
+.profit-wrap{background:linear-gradient(135deg,rgba(240,185,11,0.07),rgba(240,185,11,0.02));
+  border:1px solid var(--border);border-radius:14px;padding:20px;margin-top:14px;}
+.profit-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.profit-row:last-child{border-bottom:none;}
+.profit-lbl{font-size:0.84rem;color:var(--muted);}
+.profit-val{font-weight:700;font-size:0.95rem;}
+.pv-gold{color:var(--gold);}
+.pv-green{color:var(--green);}
+.pv-red{color:var(--red);}
+
+/* ── TRADE ITEM ── */
+.trade-item{background:var(--dark3);border:1px solid var(--border2);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.trade-num{width:28px;height:28px;background:rgba(240,185,11,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:var(--gold);flex-shrink:0;}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.88);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--dark2);border:1px solid var(--border);border-radius:18px;padding:24px;max-width:700px;width:100%;max-height:92vh;overflow-y:auto;animation:slideUp 0.3s ease;}
+.modal-sm{max-width:420px;}
+@keyframes slideUp{from{transform:translateY(28px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.modal-title{font-size:1.05rem;font-weight:700;color:var(--gold);}
+.modal-close{background:none;border:none;color:var(--muted);font-size:1.3rem;cursor:pointer;transition:color 0.2s;}
+.modal-close:hover{color:var(--text);}
+
+/* ── MOBILE NAV ── */
+.mobile-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(11,14,17,0.98);
+  border-top:1px solid var(--border);padding:6px;z-index:100;grid-template-columns:repeat(4,1fr);}
+@media(max-width:768px){.mobile-nav{display:grid;}body{padding-bottom:68px;}.nav-tabs{display:none;}}
+.mnav-btn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:0.63rem;font-family:'Sarabun',sans-serif;border-radius:6px;transition:all 0.2s;}
+.mnav-btn.active{color:var(--gold);}
+.mnav-btn span:first-child{font-size:1.1rem;}
+
+/* ── STEPS ── */
+.steps{display:flex;gap:8px;margin-bottom:20px;}
+.step{flex:1;height:3px;background:var(--dark3);border-radius:2px;transition:background 0.3s;}
+.step.active{background:var(--gold);}
+
+/* ── ALERTS ── */
+.api-ok{background:rgba(3,192,117,0.1);border:1px solid rgba(3,192,117,0.3);border-radius:8px;padding:12px;color:var(--green);font-size:0.84rem;margin-bottom:12px;}
+.api-err{background:rgba(246,70,93,0.1);border:1px solid rgba(246,70,93,0.3);border-radius:8px;padding:12px;color:var(--red);font-size:0.84rem;margin-bottom:12px;}
+
+/* ── LOADING ── */
+.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(11,14,17,0.92);z-index:300;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.spinner{width:48px;height:48px;border:3px solid var(--dark3);border-top:3px solid var(--gold);border-radius:50%;animation:spin 0.75s linear infinite;margin-bottom:16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-txt{color:var(--gold);font-family:'Orbitron',monospace;font-size:0.78rem;letter-spacing:2px;}
+
+/* ── PULSE ── */
+.pulse{width:8px;height:8px;background:currentColor;border-radius:50%;animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.4;transform:scale(1.3);}}
+
+/* ── MISC ── */
+.sep{height:1px;background:var(--border2);margin:16px 0;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--dark);}
+::-webkit-scrollbar-thumb{background:var(--dark4);border-radius:3px;}
+::-webkit-scrollbar-thumb:hover{background:var(--gold-d);}
+
+/* ── PAYMENT MODAL SPECIAL ── */
+.pay-modal-card{background:var(--dark3);border-radius:14px;overflow:hidden;border:1px solid var(--border2);}
+.pay-modal-header{background:linear-gradient(135deg,#1a1f28,#0f1318);padding:16px 20px;border-bottom:1px solid var(--border2);display:flex;justify-content:space-between;align-items:center;}
+.pay-amount-box{background:linear-gradient(135deg,var(--gold),var(--gold-d));border-radius:12px;padding:16px;text-align:center;}
+.pay-amount-lbl{font-size:0.68rem;color:rgba(0,0,0,0.6);font-weight:600;}
+.pay-amount-val{font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;color:var(--black);}
+.trade-hist-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;}
+.trade-hist-item{background:var(--dark2);border:1px solid var(--border2);border-radius:8px;padding:8px;text-align:center;}
+.trade-coin{font-size:0.65rem;color:var(--gold);font-weight:700;margin-bottom:3px;}
+.trade-amount{font-size:0.88rem;font-weight:700;color:var(--green);}
+
+/* ── ADMIN AUTH ── */
+.auth-wall{display:flex;align-items:center;justify-content:center;min-height:60vh;}
+.auth-card{background:var(--dark2);border:1px solid var(--border);border-radius:18px;padding:36px;max-width:380px;width:100%;text-align:center;}
+.auth-icon{font-size:3rem;margin-bottom:16px;}
+.auth-title{font-family:'Orbitron',monospace;font-size:1rem;color:var(--gold);margin-bottom:8px;letter-spacing:2px;}
+.auth-sub{color:var(--muted);font-size:0.83rem;margin-bottom:24px;}
+
+/* ── WALLET MANAGER ── */
+.wallet-item{background:var(--dark3);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-bottom:10px;display:flex;align-items:center;gap:12px;transition:all 0.2s;}
+.wallet-item.active-wallet{border-color:rgba(240,185,11,0.5);background:rgba(240,185,11,0.06);}
+.wallet-dot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex-shrink:0;}
+.wallet-dot.active-dot{background:var(--green);}
+.wallet-info{flex:1;min-width:0;}
+.wallet-label{font-size:0.78rem;font-weight:700;color:var(--text);}
+.wallet-address{font-family:monospace;font-size:0.7rem;color:var(--muted);word-break:break-all;margin-top:2px;}
+
+/* ── TEAM CARD ── */
+.team-card{background:var(--dark3);border:1px solid var(--border2);border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all 0.2s;}
+.team-card:hover{border-color:rgba(240,185,11,0.3);background:rgba(240,185,11,0.03);}
+.team-card-hd{display:flex;justify-content:space-between;align-items:flex-start;}
+.team-name{font-size:1rem;font-weight:700;}
+.team-meta{font-size:0.77rem;color:var(--muted);margin-top:4px;}
+.team-stats{display:flex;gap:16px;margin-top:10px;}
+.team-stat{font-size:0.78rem;color:var(--muted);}
+.team-stat b{color:var(--text);}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="spinner"></div>
+  <div class="loading-txt" id="loading-txt">กำลังโหลดข้อมูล...</div>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="brand" onclick="showPage('home')">
+    <img src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC" onerror="this.style.display='none'">
+    <div>
+      <div class="brand-name">TRADER CAFE CLUB</div>
+      <div class="brand-sub">PAYMENT MANAGEMENT SYSTEM</div>
+    </div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('home')">🏠 หน้าหลัก</button>
+    <button class="nav-tab" onclick="showPage('member-search')">👤 สมาชิก</button>
+    <button class="nav-tab" onclick="showPage('register')">📝 สมัครสมาชิก</button>
+    <button class="nav-tab" id="admin-nav-tab" onclick="showPage('admin')">⚙️ แอดมิน</button>
+  </div>
+  <div class="nav-right">
+    <span class="db-badge db-wait" id="db-status">⏳ กำลังเชื่อมต่อ...</span>
+    <span id="nav-auth-area">
+      <button class="login-btn" onclick="openLoginModal()">🔐 แอดมิน</button>
+    </span>
+  </div>
+</nav>
+
+<!-- ═══════════════ HOME ═══════════════ -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <img class="hero-logo" src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC" onerror="this.style.display='none'">
+    <div class="hero-title">TRADER CAFE CLUB</div>
+    <div class="hero-sub">ระบบจัดการการจ่ายเงินและผลตอบแทนการเทรด — เชื่อมต่อ NocoDB Live</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-members">—</div><div class="hero-stat-lbl">👥 สมาชิก</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-teams">—</div><div class="hero-stat-lbl">🏆 ทีม</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-payments">—</div><div class="hero-stat-lbl">📋 รายการ</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-pending" style="color:var(--gold)">—</div><div class="hero-stat-lbl">⏳ รอชำระ</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-total-profit" style="color:var(--green);font-size:1.1rem;">—</div><div class="hero-stat-lbl">💰 Total Profit</div></div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div class="card" style="cursor:pointer;margin-bottom:0;" onclick="showPage('member-search')">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;background:rgba(240,185,11,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">💳</div>
+        <div><div style="font-weight:700;color:var(--gold)">ดูรายการจ่ายเงิน</div><div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">ค้นหาและดูประวัติการจ่ายเงินของสมาชิก</div></div>
+      </div>
+    </div>
+    <div class="card" style="cursor:pointer;margin-bottom:0;" onclick="showPage('register')">
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="width:44px;height:44px;background:rgba(3,192,117,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">📝</div>
+        <div><div style="font-weight:700;color:var(--green)">สมัครสมาชิกใหม่</div><div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">ลงทะเบียนเข้าร่วม Trader Cafe Club</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-hd">
+      <div class="card-icon">📊</div>
+      <span class="card-title">รายการชำระล่าสุด</span>
+      <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="loadPayments()">🔄 รีเฟรช</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>วันที่</th><th>ชื่อ</th><th>ทีม</th><th>กำไรรวม</th><th>ส่วนสมาชิก</th><th>สถานะ</th></tr></thead>
+        <tbody id="recent-payments-table"><tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px;">กำลังโหลด...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ MEMBER SEARCH ═══════════════ -->
+<div id="page-member-search" class="page">
+  <div class="page-title"><h1>💳 ดูรายการจ่ายเงิน</h1><p>ค้นหาจากชื่อหรือหมายเลขสมาชิก</p></div>
+  <div class="card">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" class="form-control" id="member-search-input" placeholder="ค้นหาชื่อ หรือ BNB ID..." oninput="searchMember()">
+    </div>
+    <div id="member-search-results" style="display:none;">
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;">ผลการค้นหา</div>
+      <div id="member-results-list"></div>
+    </div>
+  </div>
+  <div id="member-dashboard" style="display:none;">
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-icon">👤</div>
+        <span class="card-title">ข้อมูลสมาชิก</span>
+        <button class="btn btn-outline btn-sm" onclick="closeMemberDash()" style="margin-left:auto">✕ ปิด</button>
+      </div>
+      <div class="grid-2">
+        <div>
+          <div class="info-row"><span class="info-k">ชื่อ-สกุล</span><span class="info-v" id="dash-name">—</span></div>
+          <div class="info-row"><span class="info-k">หมายเลขสมาชิก</span><span class="info-v" id="dash-id">—</span></div>
+          <div class="info-row"><span class="info-k">ทีมสังกัด</span><span class="info-v" id="dash-team">—</span></div>
+          <div class="info-row"><span class="info-k">สถานะ</span><span class="info-v" id="dash-status">—</span></div>
+        </div>
+        <div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;">กระเป๋า USDT (BEP-20)</div>
+          <div class="wallet-box" style="margin-bottom:10px;">
+            <span class="wallet-addr" id="dash-wallet">—</span>
+            <button class="btn btn-outline btn-sm" onclick="copyText('dash-wallet')">📋</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-icon">📋</div>
+        <span class="card-title">ประวัติการชำระเงิน</span>
+        <div style="margin-left:auto;display:flex;gap:6px;">
+          <button class="btn btn-outline btn-sm" onclick="filterPayments('all')">ทั้งหมด</button>
+          <button class="btn btn-success btn-sm" onclick="filterPayments('Approve')">✅ จ่ายแล้ว</button>
+          <button class="btn btn-sm badge-pending" onclick="filterPayments('Pending')">⏳ รอชำระ</button>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>วันที่</th><th>กำไรรวม</th><th>ค่าคอม 10%</th><th>ประกัน 10%</th><th>คงเหลือ 80%</th><th>สมาชิก 50%</th><th>ระบบ 50%</th><th>โอนรวม</th><th>สถานะ</th></tr></thead>
+          <tbody id="member-payments-table"></tbody>
+        </table>
+      </div>
+      <div id="member-no-data" style="text-align:center;padding:30px;color:var(--muted);display:none;">ไม่พบข้อมูลการชำระเงิน</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ REGISTER ═══════════════ -->
+<div id="page-register" class="page">
+  <div class="page-title"><h1>📝 สมัครสมาชิกใหม่</h1><p>กรอกข้อมูลเพื่อเข้าร่วม Trader Cafe Club</p></div>
+  <div class="card">
+    <div class="steps">
+      <div class="step active" id="step-1"></div>
+      <div class="step" id="step-2"></div>
+      <div class="step" id="step-3"></div>
+    </div>
+    <div id="reg-step-1">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 1: ข้อมูลส่วนตัว</div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">ชื่อ - สกุล *</label><input type="text" class="form-control" id="reg-name" placeholder="กรอกชื่อ-สกุล"></div>
+        <div class="form-group"><label class="form-label">เบอร์โทรศัพท์ *</label><input type="tel" class="form-control" id="reg-phone" placeholder="+66 8x-xxx-xxxx"></div>
+        <div class="form-group"><label class="form-label">ทีมสังกัด *</label><select class="form-control" id="reg-team"><option value="">-- เลือกทีม --</option></select></div>
+        <div class="form-group"><label class="form-label">ประเทศ</label>
+          <select class="form-control" id="reg-country" onchange="toggleProvince()">
+            <option value="TH" selected>🇹🇭 ประเทศไทย</option><option value="MM">🇲🇲 เมียนมาร์</option>
+            <option value="KH">🇰🇭 กัมพูชา</option><option value="LA">🇱🇦 ลาว</option>
+            <option value="VN">🇻🇳 เวียดนาม</option><option value="MY">🇲🇾 มาเลเซีย</option>
+          </select>
+        </div>
+        <div class="form-group" id="province-group"><label class="form-label">จังหวัด</label><select class="form-control" id="reg-province"><option value="">-- เลือกจังหวัด --</option></select></div>
+      </div>
+      <button class="btn btn-gold btn-full" onclick="regNext(2)">ถัดไป →</button>
+    </div>
+    <div id="reg-step-2" style="display:none;">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 2: ข้อมูล Binance & Wallet</div>
+      <div class="grid-2">
+        <div class="form-group"><label class="form-label">Binance ID (BNB_ID) *</label><input type="text" class="form-control" id="reg-bnbid" placeholder="กรอกหมายเลข Binance ID"></div>
+        <div class="form-group"><label class="form-label">แนบภาพหน้าจอ Binance</label><input type="file" class="form-control" id="reg-binance-img" accept="image/*"></div>
+        <div class="form-group" style="grid-column:1/-1"><label class="form-label">ที่อยู่กระเป๋า USDT (BEP-20) *</label><input type="text" class="form-control" id="reg-wallet" placeholder="0x..."></div>
+      </div>
+      <div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="regNext(1)" style="flex:1">← ย้อนกลับ</button><button class="btn btn-gold" onclick="regNext(3)" style="flex:2">ถัดไป →</button></div>
+    </div>
+    <div id="reg-step-3" style="display:none;">
+      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 3: ยืนยันข้อมูล</div>
+      <div id="reg-summary" style="background:var(--dark3);border-radius:10px;padding:16px;margin-bottom:16px;"></div>
+      <div id="reg-result"></div>
+      <div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="regNext(2)" style="flex:1">← ย้อนกลับ</button><button class="btn btn-gold" onclick="submitRegistration()" style="flex:2">✅ ยืนยันสมัครสมาชิก</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ADMIN ═══════════════ -->
+<div id="page-admin" class="page">
+  <!-- AUTH WALL (แสดงเมื่อยังไม่ login) -->
+  <div id="admin-auth-wall" class="auth-wall">
+    <div class="auth-card">
+      <div class="auth-icon">🔐</div>
+      <div class="auth-title">ADMIN ACCESS</div>
+      <div class="auth-sub">กรุณาเข้าสู่ระบบด้วยอีเมลแอดมิน</div>
+      <div class="form-group"><label class="form-label">อีเมล</label><input type="email" class="form-control" id="login-email" placeholder="admin@tradercafeclub.com" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div class="form-group"><label class="form-label">รหัสผ่าน</label><input type="password" class="form-control" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+      <div id="login-err" style="color:var(--red);font-size:0.82rem;margin-bottom:10px;display:none;"></div>
+      <button class="btn btn-gold btn-full" onclick="doLogin()" style="font-size:0.95rem;padding:12px;">🔓 เข้าสู่ระบบ</button>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD (แสดงเมื่อ login แล้ว) -->
+  <div id="admin-dashboard" style="display:none;">
+    <!-- Admin header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+      <div class="page-title" style="margin-bottom:0;"><h1>⚙️ ส่วนแอดมิน</h1><p id="admin-welcome">ยินดีต้อนรับ</p></div>
+      <button class="btn btn-danger btn-sm" onclick="doLogout()">🚪 ออกจากระบบ</button>
+    </div>
+
+    <!-- Admin Stats -->
+    <div class="stats-row" style="margin-bottom:20px;">
+      <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val" id="a-stat-members">—</div><div class="stat-lbl">สมาชิกทั้งหมด</div></div>
+      <div class="stat-card"><div class="stat-icon">🏆</div><div class="stat-val" id="a-stat-teams">—</div><div class="stat-lbl">ทีมทั้งหมด</div></div>
+      <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-val" id="a-stat-pays">—</div><div class="stat-lbl">รายการชำระ</div></div>
+      <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" id="a-stat-pending" style="color:var(--gold)">—</div><div class="stat-lbl">รอดำเนินการ</div></div>
+      <div class="stat-card" style="border-top-color:var(--green);"><div class="stat-icon">💰</div><div class="stat-val" id="a-stat-profit" style="font-size:1rem;color:var(--green);">—</div><div class="stat-lbl">Total Profit</div></div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div style="display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border2);overflow-x:auto;">
+      <button class="nav-tab active" id="atab-payment" onclick="switchAdminTab('payment')">💰 ทำรายการ</button>
+      <button class="nav-tab" id="atab-wallets" onclick="switchAdminTab('wallets')">💼 จัดการกระเป๋า</button>
+      <button class="nav-tab" id="atab-teams" onclick="switchAdminTab('teams')">🏆 จัดการทีม</button>
+      <button class="nav-tab" id="atab-admins" onclick="switchAdminTab('admins')">👑 จัดการแอดมิน</button>
+    </div>
+
+    <!-- TAB: PAYMENT -->
+    <div id="admin-tab-payment">
+      <div class="card">
+        <div class="card-hd"><div class="card-icon">🔍</div><span class="card-title">ค้นหาสมาชิก</span></div>
+        <div class="search-box"><span class="search-icon">🔍</span>
+          <input type="text" class="form-control" id="admin-search" placeholder="ค้นหาชื่อ หรือ BNB ID..." oninput="adminSearchMember()">
+        </div>
+        <div id="admin-search-results"></div>
+      </div>
+
+      <div id="admin-payment-form" style="display:none;">
+        <div class="card">
+          <div class="card-hd"><div class="card-icon">👤</div><span class="card-title">สมาชิกที่เลือก</span>
+            <button class="btn btn-outline btn-sm" onclick="clearAdminForm()" style="margin-left:auto">✕ ยกเลิก</button>
+          </div>
+          <div class="grid-3" style="font-size:0.85rem;">
+            <div class="info-row"><span class="info-k">BNB ID</span><span class="info-v" id="af-id">—</span></div>
+            <div class="info-row"><span class="info-k">ชื่อ</span><span class="info-v" id="af-name">—</span></div>
+            <div class="info-row"><span class="info-k">ทีม</span><span class="info-v" id="af-team">—</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-icon">📈</div><span class="card-title">บันทึกรายการเทรด</span>
+            <button class="btn btn-gold btn-sm" onclick="addTradeRow()" style="margin-left:auto">+ เพิ่มรายการ</button>
+          </div>
+          <div id="trade-rows"></div>
+          <div class="sep"></div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:var(--muted);font-size:0.85rem;">กำไรรวมทั้งหมด</span>
+            <span style="color:var(--gold);font-size:1.2rem;font-weight:700;font-family:'Orbitron',monospace" id="total-trade-profit">$0.00</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-hd"><div class="card-icon">🧮</div><span class="card-title">การแบ่งปันผลกำไร</span></div>
+          <div class="profit-wrap">
+            <div class="profit-row"><span class="profit-lbl">💰 กำไรเทรดรวม (100%)</span><span class="profit-val pv-gold" id="calc-total">$0.00</span></div>
+            <div class="profit-row"><span class="profit-lbl">🛡️ ประกันกำไร (10%)</span><span class="profit-val pv-red" id="calc-guarantee">-$0.00</span></div>
+            <div class="profit-row"><span class="profit-lbl">🤝 ค่าคอมมิชั่น (10%)</span><span class="profit-val pv-red" id="calc-commission">-$0.00</span></div>
+            <div class="profit-row" style="background:rgba(240,185,11,0.05);border-radius:6px;padding:10px;"><span class="profit-lbl" style="font-weight:600;">⚡ คงเหลือสุทธิ (80%)</span><span class="profit-val pv-gold" id="calc-balance">$0.00</span></div>
+            <div class="profit-row"><span class="profit-lbl">👤 ส่วนสมาชิก (50%×80%)</span><span class="profit-val pv-green" id="calc-member">$0.00</span></div>
+            <div class="profit-row"><span class="profit-lbl">🏢 ส่วนระบบ (50%×80%)</span><span class="profit-val pv-gold" id="calc-central">$0.00</span></div>
+            <div style="border-top:2px solid var(--border);padding-top:12px;margin-top:8px;display:flex;justify-content:space-between;">
+              <span style="font-weight:700;">💎 ยอดโอนรวม (ระบบ+ค่าคอม)</span>
+              <span id="calc-transfer" style="color:var(--gold);font-size:1.1rem;font-weight:700;">$0.00</span>
+            </div>
+          </div>
+          <div class="sep"></div>
+          <!-- Wallet selector for payment -->
+          <div class="form-group">
+            <label class="form-label">🏦 เลือกกระเป๋าระบบสำหรับรับชำระ</label>
+            <select class="form-control" id="af-wallet-select" onchange="updatePayWallet()">
+              <option value="">-- เลือกกระเป๋า --</option>
+            </select>
+          </div>
+          <div id="af-wallet-display" style="display:none;margin-bottom:14px;">
+            <div class="wallet-box">
+              <span class="wallet-addr" id="af-wallet-addr">—</span>
+              <button class="btn btn-outline btn-sm" onclick="copyText('af-wallet-addr')">📋</button>
+            </div>
+            <div style="text-align:center;margin-top:8px;font-size:0.72rem;color:var(--green);">✦ USDT BNB Smart Chain (BEP-20)</div>
+          </div>
+          <div class="grid-2">
+            <div class="form-group"><label class="form-label">📅 วันที่จ่ายเงิน</label><input type="date" class="form-control" id="af-payment-date"></div>
+            <div class="form-group"><label class="form-label">📊 สถานะ</label>
+              <select class="form-control" id="af-position"><option value="Pending">⏳ รอดำเนินการ</option><option value="Approve">✅ อนุมัติ / จ่ายแล้ว</option></select>
+            </div>
+          </div>
+          <div class="form-group"><label class="form-label">📝 หมายเหตุ</label><input type="text" class="form-control" id="af-note" placeholder="หมายเหตุเพิ่มเติม (ถ้ามี)"></div>
+          <div id="save-result"></div>
+          <button class="btn btn-gold btn-full" onclick="savePayment()" style="font-size:1rem;padding:14px;">💾 บันทึกและส่งข้อมูลไป NocoDB</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd"><div class="card-icon">📋</div><span class="card-title">รายการล่าสุด</span>
+          <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="loadPayments()">🔄 รีเฟรช</button>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>วันที่</th><th>BNB ID</th><th>ชื่อ</th><th>ทีม</th><th>กำไร</th><th>สมาชิก</th><th>โอนรวม</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+            <tbody id="admin-payments-table"><tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px;">กำลังโหลด...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: WALLETS -->
+    <div id="admin-tab-wallets" style="display:none;">
+      <div class="card">
+        <div class="card-hd"><div class="card-icon">💼</div><span class="card-title">จัดการกระเป๋าระบบ</span>
+          <button class="btn btn-gold btn-sm" onclick="openAddWalletModal()" style="margin-left:auto">+ เพิ่มกระเป๋า</button>
+        </div>
+        <p style="font-size:0.82rem;color:var(--muted);margin-bottom:14px;">กระเป๋า USDT BEP-20 ที่ใช้รับชำระเงิน แอดมินสามารถเลือกกระเป๋าให้ลูกค้าแต่ละรายชำระได้</p>
+        <div id="wallets-list"></div>
+      </div>
+    </div>
+
+    <!-- TAB: TEAMS -->
+    <div id="admin-tab-teams" style="display:none;">
+      <div class="card">
+        <div class="card-hd"><div class="card-icon">🏆</div><span class="card-title">จัดการทีม</span>
+          <button class="btn btn-gold btn-sm" onclick="openAddTeamModal()" style="margin-left:auto">+ เพิ่มทีม</button>
+        </div>
+        <div class="search-box"><span class="search-icon">🔍</span>
+          <input type="text" class="form-control" id="team-search" placeholder="ค้นหาชื่อทีม..." oninput="renderAdminTeams()">
+        </div>
+        <div id="admin-teams-list"></div>
+      </div>
+    </div>
+
+    <!-- TAB: ADMINS -->
+    <div id="admin-tab-admins" style="display:none;">
+      <div class="card">
+        <div class="card-hd"><div class="card-icon">👑</div><span class="card-title">จัดการแอดมิน</span>
+          <button class="btn btn-gold btn-sm" onclick="openAddAdminModal()" style="margin-left:auto">+ เพิ่มแอดมิน</button>
+        </div>
+        <div id="admins-list"></div>
+      </div>
+    </div>
+
+  </div><!-- /admin-dashboard -->
+</div><!-- /page-admin -->
+
+<!-- ═══════════════ TEAMS (public view) ═══════════════ -->
+<div id="page-teams" class="page">
+  <div class="page-title"><h1>🏆 ข้อมูลทีม</h1><p>ข้อมูลทีมทั้งหมดใน Trader Cafe Club</p></div>
+  <div class="card">
+    <div class="card-hd"><div class="card-icon">🏆</div><span class="card-title">ทีมทั้งหมด</span>
+      <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="loadTeams()">🔄 รีเฟรช</button>
+    </div>
+    <div id="teams-list"><div style="text-align:center;padding:30px;color:var(--muted);">กำลังโหลด...</div></div>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<nav class="mobile-nav">
+  <button class="mnav-btn active" onclick="showPage('home')"><span>🏠</span>หน้าหลัก</button>
+  <button class="mnav-btn" onclick="showPage('member-search')"><span>👤</span>สมาชิก</button>
+  <button class="mnav-btn" onclick="showPage('register')"><span>📝</span>สมัคร</button>
+  <button class="mnav-btn" onclick="showPage('admin')"><span>⚙️</span>แอดมิน</button>
+</nav>
+
+<!-- ═══ MODALS ═══ -->
+<!-- Success -->
+<div class="modal-overlay" id="success-modal">
+  <div class="modal modal-sm" style="text-align:center;">
+    <div style="font-size:3rem;margin-bottom:14px;" id="success-icon">✅</div>
+    <div style="font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:8px;" id="success-title">สำเร็จ</div>
+    <p id="success-msg" style="color:var(--muted);font-size:0.88rem;margin-bottom:20px;"></p>
+    <button class="btn btn-gold btn-full" onclick="document.getElementById('success-modal').classList.remove('open')">ตกลง</button>
+  </div>
+</div>
+
+<!-- Payment Detail -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal">
+    <div class="modal-hd">
+      <span class="modal-title">💳 รายละเอียดการชำระเงิน</span>
+      <button class="modal-close" onclick="document.getElementById('payment-modal').classList.remove('open')">✕</button>
+    </div>
+    <div id="payment-modal-content"></div>
+  </div>
+</div>
+
+<!-- Add Wallet -->
+<div class="modal-overlay" id="add-wallet-modal">
+  <div class="modal modal-sm">
+    <div class="modal-hd"><span class="modal-title" id="add-wallet-title">➕ เพิ่มกระเป๋าใหม่</span><button class="modal-close" onclick="document.getElementById('add-wallet-modal').classList.remove('open')">✕</button></div>
+    <div class="form-group"><label class="form-label">ชื่อกระเป๋า / ป้ายกำกับ</label><input type="text" class="form-control" id="new-wallet-label" placeholder="เช่น กระเป๋าหลัก, กระเป๋าสำรอง"></div>
+    <div class="form-group"><label class="form-label">ที่อยู่กระเป๋า (0x...)</label><input type="text" class="form-control" id="new-wallet-addr" placeholder="0xfd1A5bc82603a702a9AF38426FfAC0d6BE5aEeef"></div>
+    <div class="form-group"><label class="form-label">URL รูป QR Code (ถ้ามี)</label><input type="text" class="form-control" id="new-wallet-qr" placeholder="https://..."></div>
+    <div class="form-group" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="new-wallet-active" style="width:auto;"><label style="color:var(--muted);font-size:0.85rem;">ตั้งเป็นกระเป๋าหลัก (default)</label></div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="document.getElementById('add-wallet-modal').classList.remove('open')" style="flex:1">ยกเลิก</button><button class="btn btn-gold" onclick="saveWallet()" style="flex:2">💾 บันทึก</button></div>
+  </div>
+</div>
+
+<!-- Add Team -->
+<div class="modal-overlay" id="add-team-modal">
+  <div class="modal">
+    <div class="modal-hd"><span class="modal-title" id="add-team-title">➕ เพิ่มทีมใหม่</span><button class="modal-close" onclick="document.getElementById('add-team-modal').classList.remove('open')">✕</button></div>
+    <div class="grid-2">
+      <div class="form-group"><label class="form-label">ชื่อทีม (Team Name) *</label><input type="text" class="form-control" id="new-team-name" placeholder="เช่น Star Cafe"></div>
+      <div class="form-group"><label class="form-label">ค้นหาเจ้าของทีม (Owner)</label>
+        <input type="text" class="form-control" id="new-team-owner-search" placeholder="ค้นชื่อหรือ ID..." oninput="searchTeamOwner()">
+        <div id="team-owner-results" style="margin-top:4px;"></div>
+        <input type="hidden" id="new-team-owner-id"><input type="hidden" id="new-team-owner-name">
+      </div>
+      <div class="form-group"><label class="form-label">Support Team (ทีมแม่)</label>
+        <select class="form-control" id="new-team-support"><option value="">-- ไม่มี (ทีมหลัก) --</option></select>
+      </div>
+      <div class="form-group"><label class="form-label">สถานะ</label>
+        <select class="form-control" id="new-team-status"><option value="Beginner">Beginner</option><option value="Pending">Pending</option><option value="Active">Active</option></select>
+      </div>
+    </div>
+    <div id="team-owner-preview" style="display:none;" class="card" style="padding:12px;margin-bottom:14px;">
+      <div style="font-size:0.78rem;color:var(--gold);margin-bottom:8px;">ข้อมูลเจ้าของทีม (ดึงจากระบบอัตโนมัติ)</div>
+      <div id="team-owner-info"></div>
+    </div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="document.getElementById('add-team-modal').classList.remove('open')" style="flex:1">ยกเลิก</button><button class="btn btn-gold" onclick="saveTeam()" style="flex:2">💾 บันทึกทีม</button></div>
+  </div>
+</div>
+
+<!-- Add Admin -->
+<div class="modal-overlay" id="add-admin-modal">
+  <div class="modal modal-sm">
+    <div class="modal-hd"><span class="modal-title">👑 เพิ่มแอดมินใหม่</span><button class="modal-close" onclick="document.getElementById('add-admin-modal').classList.remove('open')">✕</button></div>
+    <div class="form-group"><label class="form-label">อีเมล</label><input type="email" class="form-control" id="new-admin-email" placeholder="admin@example.com"></div>
+    <div class="form-group"><label class="form-label">ชื่อ-สกุล</label><input type="text" class="form-control" id="new-admin-name" placeholder="ชื่อแอดมิน"></div>
+    <div class="form-group"><label class="form-label">รหัสผ่าน</label><input type="password" class="form-control" id="new-admin-pass" placeholder="••••••••"></div>
+    <div id="add-admin-result"></div>
+    <div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="document.getElementById('add-admin-modal').classList.remove('open')" style="flex:1">ยกเลิก</button><button class="btn btn-gold" onclick="saveAdmin()" style="flex:2">👑 เพิ่มแอดมิน</button></div>
+  </div>
+</div>
+
+<!-- Team Members Modal -->
+<div class="modal-overlay" id="team-members-modal">
+  <div class="modal">
+    <div class="modal-hd"><span class="modal-title" id="team-members-title">👥 สมาชิกในทีม</span><button class="modal-close" onclick="document.getElementById('team-members-modal').classList.remove('open')">✕</button></div>
+    <div id="team-members-content"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════ CONFIG ═══════════════
+const WORKER_URL = 'https://tcc-proxy.tradercafeclub.workers.dev';
+const SYSTEM_WALLET_DEFAULT = { label:'กระเป๋าหลัก', addr:'0xfd1A5bc82603a702a9AF38426FfAC0d6BE5aEeef', qr:'https://i.ibb.co/d0T7YJfy/line-oa-chat-260203-125428.jpg', active:true };
+const LS_ADMINS  = 'tcc_admins';
+const LS_WALLETS = 'tcc_wallets';
+const LS_SESSION = 'tcc_session';
+
+// ═══════════════ STATE ═══════════════
+let MEMBERS=[], TEAMS=[], PAYMENTS=[];
+let currentMemberPayments=[], selectedAdminMember=null, tradeRows=[];
+let WALLETS=[], ADMINS=[], currentAdmin=null;
+let editWalletIdx=-1;
+
+const COINS=['Gold','BTC','ETH','XRP','SOL','BNB','ADA','DOGE','MATIC','LINK','DOT','AVAX','LTC','TRX'];
+const PROVINCES=['กรุงเทพมหานคร','กระบี่','กาญจนบุรี','กาฬสินธุ์','กำแพงเพชร','ขอนแก่น','จันทบุรี','ฉะเชิงเทรา','ชลบุรี','ชัยนาท','ชัยภูมิ','ชุมพร','เชียงราย','เชียงใหม่','ตรัง','ตราด','ตาก','นครนายก','นครปฐม','นครพนม','นครราชสีมา','นครศรีธรรมราช','นครสวรรค์','นนทบุรี','นราธิวาส','น่าน','บึงกาฬ','บุรีรัมย์','ปทุมธานี','ประจวบคีรีขันธ์','ปราจีนบุรี','ปัตตานี','พระนครศรีอยุธยา','พะเยา','พังงา','พัทลุง','พิจิตร','พิษณุโลก','เพชรบุรี','เพชรบูรณ์','แพร่','ภูเก็ต','มหาสารคาม','มุกดาหาร','แม่ฮ่องสอน','ยโสธร','ยะลา','ร้อยเอ็ด','ระนอง','ระยอง','ราชบุรี','ลพบุรี','ลำปาง','ลำพูน','เลย','ศรีสะเกษ','สกลนคร','สงขลา','สตูล','สมุทรปราการ','สมุทรสงคราม','สมุทรสาคร','สระแก้ว','สระบุรี','สิงห์บุรี','สุโขทัย','สุพรรณบุรี','สุราษฎร์ธานี','สุรินทร์','หนองคาย','หนองบัวลำภู','อ่างทอง','อำนาจเจริญ','อุดรธานี','อุตรดิตถ์','อุทัยธานี','อุบลราชธานี'];
+
+// ═══════════════ FIELD HELPERS ═══════════════
+function payVal(p,f){const M={'bnb_id':p['Field 1'],'team':p['Field 2'],'name':p['Field 3'],'lva':p['Field 4'],'lvb':p['Field 5'],'date':p['Field 6'],'profit':p['Field 8'],'commission':p['10.00%'],'guarantee':p['10.00%1'],'balance':p['Field 11'],'member':p['50.00%'],'central':p['50.00%1'],'transfer':p['Field 14'],'position':p['Field 15'],'note':p['Field 16']};const v=M[f];return(v===undefined||v===null)?'':v;}
+function payNum(p,f){return parseFloat(String(payVal(p,f)).replace(/[$,\s]/g,''))||0;}
+function memVal(m,f){const M={'id':m['BNB_ID'],'name':m['Name'],'team':m['Team'],'wallet':m['Address Wallet'],'status':m['Status'],'qr':m['QR Code'],'lva':m['Level A'],'lvb':m['Level B']};const v=M[f];return(v===undefined||v===null)?'':String(v);}
+function teamVal(t,f){const M={'name':t['ฐานข้อมูลทีม'],'support':t['Field 2'],'memberid':t['Field 3'],'owner':t['Field 4'],'qr':t['Field 5'],'wallet':t['Field 6'],'status':t['สถานะของทีม']};const v=M[f];return(v===undefined||v===null)?'':String(v);}
+
+// ═══════════════ API ═══════════════
+async function ndbFetch(table,params={}){
+  const url=new URL(`${WORKER_URL}/api/${table}`);
+  url.searchParams.set('limit',params.limit||200);
+  if(params.sort)url.searchParams.set('sort',params.sort);
+  if(params.offset)url.searchParams.set('offset',params.offset);
+  const res=await fetch(url.toString());
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||`API ${res.status}`);}
+  return res.json();
+}
+async function ndbInsert(table,data){
+  const res=await fetch(`${WORKER_URL}/api/${table}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||`Insert ${res.status}`);}
+  return res.json();
+}
+async function ndbUpdate(table,rowId,data){
+  const res=await fetch(`${WORKER_URL}/api/${table}/${rowId}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error||`Update ${res.status}`);}
+  return res.json();
+}
+
+// ═══════════════ LOCAL STORAGE ═══════════════
+function loadLocalData(){
+  try{
+    const w=JSON.parse(localStorage.getItem(LS_WALLETS)||'null');
+    WALLETS=w||[SYSTEM_WALLET_DEFAULT];
+    const a=JSON.parse(localStorage.getItem(LS_ADMINS)||'null');
+    ADMINS=a||[{email:'admin@tradercafeclub.com',name:'Super Admin',pass:'tcc2024',root:true}];
+    const s=JSON.parse(localStorage.getItem(LS_SESSION)||'null');
+    if(s){currentAdmin=ADMINS.find(x=>x.email===s.email)||null;}
+  }catch(e){WALLETS=[SYSTEM_WALLET_DEFAULT];ADMINS=[{email:'admin@tradercafeclub.com',name:'Super Admin',pass:'tcc2024',root:true}];}
+}
+function saveWalletsLocal(){localStorage.setItem(LS_WALLETS,JSON.stringify(WALLETS));}
+function saveAdminsLocal(){localStorage.setItem(LS_ADMINS,JSON.stringify(ADMINS));}
+
+// ═══════════════ AUTH ═══════════════
+function doLogin(){
+  const email=document.getElementById('login-email').value.trim().toLowerCase();
+  const pass=document.getElementById('login-pass').value;
+  const admin=ADMINS.find(a=>a.email.toLowerCase()===email&&a.pass===pass);
+  if(!admin){document.getElementById('login-err').style.display='block';document.getElementById('login-err').textContent='❌ อีเมลหรือรหัสผ่านไม่ถูกต้อง';return;}
+  currentAdmin=admin;
+  localStorage.setItem(LS_SESSION,JSON.stringify({email:admin.email}));
+  showAdminDashboard();
+}
+function doLogout(){
+  currentAdmin=null;
+  localStorage.removeItem(LS_SESSION);
+  document.getElementById('admin-auth-wall').style.display='flex';
+  document.getElementById('admin-dashboard').style.display='none';
+  document.getElementById('nav-auth-area').innerHTML='<button class="login-btn" onclick="openLoginModal()">🔐 แอดมิน</button>';
+}
+function showAdminDashboard(){
+  document.getElementById('admin-auth-wall').style.display='none';
+  document.getElementById('admin-dashboard').style.display='block';
+  document.getElementById('admin-welcome').textContent=`ยินดีต้อนรับ, ${currentAdmin.name}`;
+  document.getElementById('nav-auth-area').innerHTML=`<span style="font-size:0.8rem;color:var(--gold);">👑 ${currentAdmin.name}</span>`;
+  updateAdminStats();
+  renderWalletsList();
+  renderAdminTeams();
+  renderAdminsList();
+  populateWalletSelect();
+}
+function openLoginModal(){showPage('admin');}
+
+// ═══════════════ INIT ═══════════════
+async function init(){
+  loadLocalData();
+  showLoading('กำลังเชื่อมต่อ NocoDB...');
+  try{
+    await Promise.all([loadMembers(),loadTeams(),loadPayments()]);
+    hideLoading();
+    const el=document.getElementById('db-status');
+    el.textContent='🟢 NocoDB Connected'; el.className='db-badge db-ok';
+    populateRegTeams(); populateRegProvinces(); setTodayDate();
+    if(currentAdmin)showAdminDashboard();
+  }catch(e){
+    hideLoading();
+    const el=document.getElementById('db-status');
+    el.textContent='🔴 Connection Error'; el.className='db-badge db-err';
+    const b=document.createElement('div');
+    b.style.cssText='position:fixed;top:70px;left:0;right:0;z-index:150;background:rgba(246,70,93,0.12);border-bottom:1px solid rgba(246,70,93,0.3);padding:10px 20px;color:var(--red);font-size:0.84rem;text-align:center;';
+    b.innerHTML=`⚠️ ไม่สามารถเชื่อมต่อ Worker: ${e.message} <button onclick="this.parentElement.remove()" style="margin-left:10px;background:none;border:1px solid rgba(246,70,93,0.4);color:var(--red);padding:2px 8px;border-radius:4px;cursor:pointer;">✕</button>`;
+    document.body.appendChild(b);
+  }
+}
+
+// ═══════════════ LOAD DATA ═══════════════
+async function loadMembers(){
+  const d=await ndbFetch('members',{limit:500});
+  MEMBERS=d.list||d.data?.list||[];
+  document.getElementById('stat-members').textContent=MEMBERS.length;
+}
+async function loadTeams(){
+  const d=await ndbFetch('teams',{limit:100});
+  TEAMS=d.list||d.data?.list||[];
+  document.getElementById('stat-teams').textContent=TEAMS.length;
+  renderTeams();
+}
+async function loadPayments(){
+  const d=await ndbFetch('payments',{limit:500,sort:'-Id'});
+  PAYMENTS=d.list||d.data?.list||[];
+  const total=PAYMENTS.reduce((s,p)=>s+payNum(p,'profit'),0);
+  const pending=PAYMENTS.filter(p=>payVal(p,'position')==='Pending').length;
+  document.getElementById('stat-payments').textContent=PAYMENTS.length;
+  document.getElementById('stat-pending').textContent=pending;
+  const profitStr='$'+total.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById('stat-total-profit').textContent=profitStr;
+  renderRecentPayments();
+  renderAdminPayments();
+  updateAdminStats();
+}
+function updateAdminStats(){
+  const total=PAYMENTS.reduce((s,p)=>s+payNum(p,'profit'),0);
+  const pending=PAYMENTS.filter(p=>payVal(p,'position')==='Pending').length;
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('a-stat-members',MEMBERS.length);
+  set('a-stat-teams',TEAMS.length);
+  set('a-stat-pays',PAYMENTS.length);
+  set('a-stat-pending',pending);
+  set('a-stat-profit','$'+total.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2}));
+}
+
+// ═══════════════ RENDER ═══════════════
+function renderRecentPayments(){
+  const tbody=document.getElementById('recent-payments-table');
+  const rows=PAYMENTS.slice(0,10);
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:24px;">ไม่มีข้อมูล</td></tr>';return;}
+  tbody.innerHTML=rows.map(p=>{
+    const st=payVal(p,'position'),profit=payNum(p,'profit'),member=payNum(p,'member');
+    const ok=st==='Approve';
+    return`<tr onclick="showPaymentDetail('${p.Id}')" style="cursor:pointer;">
+      <td>${payVal(p,'date')}</td><td style="font-weight:600;">${payVal(p,'name')}</td>
+      <td style="color:var(--muted)">${payVal(p,'team')}</td>
+      <td style="color:var(--gold);font-weight:700;">$${profit.toFixed(2)}</td>
+      <td style="color:var(--green);font-weight:700;">$${member.toFixed(2)}</td>
+      <td><span class="badge ${ok?'badge-approve':'badge-pending'}">${ok?'✅ จ่ายแล้ว':'⏳ รอชำระ'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function renderAdminPayments(){
+  const tbody=document.getElementById('admin-payments-table');
+  if(!tbody)return;
+  const rows=PAYMENTS.slice(0,30);
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px;">ไม่มีข้อมูล</td></tr>';return;}
+  tbody.innerHTML=rows.map(p=>{
+    const st=payVal(p,'position'),ok=st==='Approve';
+    const profit=payNum(p,'profit'),member=payNum(p,'member'),transfer=payNum(p,'transfer');
+    return`<tr>
+      <td>${payVal(p,'date')}</td>
+      <td style="color:var(--muted);font-size:0.75rem;">${payVal(p,'bnb_id')}</td>
+      <td style="font-weight:600;">${payVal(p,'name')}</td>
+      <td style="color:var(--muted);">${payVal(p,'team')}</td>
+      <td style="color:var(--gold);font-weight:700;">$${profit.toFixed(2)}</td>
+      <td style="color:var(--green);">$${member.toFixed(2)}</td>
+      <td style="color:var(--gold);">$${transfer.toFixed(2)}</td>
+      <td><span class="badge ${ok?'badge-approve':'badge-pending'}">${ok?'✅ จ่ายแล้ว':'⏳ รอชำระ'}</span></td>
+      <td>${!ok?`<button class="btn btn-success btn-sm" onclick="approvePayment('${p.Id}',this)">✅ อนุมัติ</button>`:'<span style="color:var(--muted);font-size:0.8rem;">—</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderTeams(){
+  const container=document.getElementById('teams-list');
+  if(!container)return;
+  if(!TEAMS.length){container.innerHTML='<div style="text-align:center;padding:30px;color:var(--muted);">ไม่มีข้อมูล</div>';return;}
+  container.innerHTML=TEAMS.map(t=>{
+    const name=teamVal(t,'name'),owner=teamVal(t,'owner'),support=teamVal(t,'support'),status=teamVal(t,'status');
+    const cnt=MEMBERS.filter(m=>memVal(m,'team')===name).length;
+    return`<div class="team-card" onclick="showTeamMembers('${name}')">
+      <div class="team-card-hd">
+        <div>
+          <div class="team-name">${name||'—'}</div>
+          <div class="team-meta">เจ้าของ: ${owner||'—'}${support?' | สนับสนุน: '+support:''}</div>
+        </div>
+        <span class="badge ${status==='Pending'?'badge-pending':status==='Active'?'badge-approve':'badge-beginner'}">${status||'—'}</span>
+      </div>
+      <div class="team-stats">
+        <div class="team-stat">👥 สมาชิก: <b>${cnt} คน</b></div>
+        ${cnt>0?'<div class="team-stat" style="color:var(--gold);">คลิกดูรายชื่อ 👉</div>':''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderAdminTeams(){
+  const container=document.getElementById('admin-teams-list');
+  if(!container)return;
+  const q=(document.getElementById('team-search')?.value||'').toLowerCase();
+  const filtered=TEAMS.filter(t=>!q||teamVal(t,'name').toLowerCase().includes(q));
+  if(!filtered.length){container.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);">ไม่พบข้อมูล</div>';return;}
+  container.innerHTML=filtered.map((t,i)=>{
+    const name=teamVal(t,'name'),owner=teamVal(t,'owner'),support=teamVal(t,'support'),status=teamVal(t,'status');
+    const cnt=MEMBERS.filter(m=>memVal(m,'team')===name).length;
+    return`<div class="wallet-item" style="cursor:default;">
+      <div style="width:36px;height:36px;background:rgba(240,185,11,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">🏆</div>
+      <div class="wallet-info">
+        <div class="wallet-label">${name||'—'} <span class="badge ${status==='Pending'?'badge-pending':status==='Active'?'badge-approve':'badge-beginner'}" style="font-size:0.65rem;">${status||'—'}</span></div>
+        <div class="wallet-address">เจ้าของ: ${owner||'—'} | สนับสนุน: ${support||'—'} | สมาชิก: ${cnt} คน</div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn btn-outline btn-sm" onclick="showTeamMembers('${name}')">👥 ดูสมาชิก</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════ TEAM MEMBERS MODAL ═══════════════
+function showTeamMembers(teamName){
+  const members=MEMBERS.filter(m=>memVal(m,'team')===teamName);
+  document.getElementById('team-members-title').textContent=`👥 สมาชิกในทีม: ${teamName} (${members.length} คน)`;
+  const content=document.getElementById('team-members-content');
+  if(!members.length){content.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);">ไม่มีสมาชิกในทีมนี้</div>';}
+  else{
+    content.innerHTML=`<div class="tbl-wrap"><table>
+      <thead><tr><th>BNB ID</th><th>ชื่อ</th><th>กระเป๋า</th><th>สถานะ</th></tr></thead>
+      <tbody>${members.map(m=>`<tr>
+        <td style="color:var(--gold);font-family:monospace;">${memVal(m,'id')}</td>
+        <td style="font-weight:600;">${memVal(m,'name')}</td>
+        <td style="font-family:monospace;font-size:0.72rem;color:var(--muted);">${memVal(m,'wallet').slice(0,16)}...</td>
+        <td><span class="badge ${memVal(m,'status')==='Pending'?'badge-pending':'badge-approve'}">${memVal(m,'status')||'—'}</span></td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  }
+  document.getElementById('team-members-modal').classList.add('open');
+}
+
+// ═══════════════ SEARCH ═══════════════
+function searchMember(){
+  const q=document.getElementById('member-search-input').value.toLowerCase().trim();
+  const container=document.getElementById('member-search-results');
+  const list=document.getElementById('member-results-list');
+  if(q.length<1){container.style.display='none';return;}
+  const results=MEMBERS.filter(m=>memVal(m,'name').toLowerCase().includes(q)||memVal(m,'id').toLowerCase().includes(q));
+  container.style.display='block';
+  if(!results.length){list.innerHTML='<div style="color:var(--muted);text-align:center;padding:16px;">ไม่พบข้อมูล</div>';return;}
+  list.innerHTML=results.slice(0,6).map(m=>{
+    const name=memVal(m,'name'),id=memVal(m,'id'),team=memVal(m,'team'),status=memVal(m,'status');
+    return`<div onclick="showMemberDashboard('${id}')" style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;cursor:pointer;margin-bottom:4px;background:var(--dark3);transition:all 0.2s;" onmouseover="this.style.background='var(--dark4)'" onmouseout="this.style.background='var(--dark3)'">
+      <div style="width:36px;height:36px;background:rgba(240,185,11,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;">👤</div>
+      <div><div style="font-weight:600;">${name}</div><div style="font-size:0.75rem;color:var(--muted);">ID: ${id} | ${team}</div></div>
+      <span class="badge ${status==='Pending'?'badge-pending':'badge-approve'}" style="margin-left:auto;">${status||'Active'}</span>
+    </div>`;
+  }).join('');
+}
+
+function showMemberDashboard(memberId){
+  const m=MEMBERS.find(x=>memVal(x,'id')===String(memberId));
+  if(!m)return;
+  document.getElementById('member-search-results').style.display='none';
+  document.getElementById('member-dashboard').style.display='block';
+  document.getElementById('dash-name').textContent=memVal(m,'name');
+  document.getElementById('dash-id').textContent=memVal(m,'id');
+  document.getElementById('dash-team').textContent=memVal(m,'team');
+  const st=memVal(m,'status');
+  document.getElementById('dash-status').innerHTML=`<span class="badge ${st==='Pending'?'badge-pending':'badge-approve'}">${st||'Active'}</span>`;
+  document.getElementById('dash-wallet').textContent=memVal(m,'wallet')||'ยังไม่ได้ตั้งค่า';
+  currentMemberPayments=PAYMENTS.filter(p=>payVal(p,'bnb_id')===String(memberId));
+  renderMemberPayments(currentMemberPayments);
+  document.getElementById('member-dashboard').scrollIntoView({behavior:'smooth'});
+}
+
+function closeMemberDash(){
+  document.getElementById('member-dashboard').style.display='none';
+  document.getElementById('member-search-input').value='';
+  document.getElementById('member-search-results').style.display='none';
+}
+function filterPayments(status){
+  const f=status==='all'?currentMemberPayments:currentMemberPayments.filter(p=>payVal(p,'position')===status);
+  renderMemberPayments(f);
+}
+function renderMemberPayments(payments){
+  const tbody=document.getElementById('member-payments-table');
+  const noData=document.getElementById('member-no-data');
+  if(!payments.length){tbody.innerHTML='';noData.style.display='block';return;}
+  noData.style.display='none';
+  tbody.innerHTML=payments.map(p=>{
+    const st=payVal(p,'position'),ok=st==='Approve';
+    return`<tr onclick="showPaymentDetail('${p.Id}')" style="cursor:pointer;">
+      <td>${payVal(p,'date')}</td>
+      <td style="color:var(--gold);">$${payNum(p,'profit').toFixed(2)}</td>
+      <td style="color:var(--red);">$${payNum(p,'commission').toFixed(2)}</td>
+      <td style="color:var(--red);">$${payNum(p,'guarantee').toFixed(2)}</td>
+      <td>$${payNum(p,'balance').toFixed(2)}</td>
+      <td style="color:var(--green);">$${payNum(p,'member').toFixed(2)}</td>
+      <td>$${payNum(p,'central').toFixed(2)}</td>
+      <td style="color:var(--gold);">$${payNum(p,'transfer').toFixed(2)}</td>
+      <td><span class="badge ${ok?'badge-approve':'badge-pending'}">${ok?'✅ จ่ายแล้ว':'⏳ รอชำระ'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════ ADMIN SEARCH ═══════════════
+function adminSearchMember(){
+  const q=document.getElementById('admin-search').value.toLowerCase().trim();
+  const container=document.getElementById('admin-search-results');
+  if(q.length<1){container.innerHTML='';return;}
+  const results=MEMBERS.filter(m=>memVal(m,'name').toLowerCase().includes(q)||memVal(m,'id').includes(q));
+  if(!results.length){container.innerHTML='<div style="color:var(--muted);text-align:center;padding:16px;">ไม่พบข้อมูล</div>';return;}
+  container.innerHTML=results.slice(0,5).map(m=>{
+    const name=memVal(m,'name'),id=memVal(m,'id'),team=memVal(m,'team');
+    return`<div onclick="selectAdminMember('${id}')" style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;cursor:pointer;margin-bottom:4px;background:var(--dark3);transition:all 0.2s;" onmouseover="this.style.background='var(--dark4)'" onmouseout="this.style.background='var(--dark3)'">
+      <div><div style="font-weight:600;">${name}</div><div style="font-size:0.75rem;color:var(--muted);">ID: ${id} | ${team}</div></div>
+      <button class="btn btn-gold btn-sm" style="margin-left:auto;">เลือก</button>
+    </div>`;
+  }).join('');
+}
+
+function selectAdminMember(memberId){
+  const m=MEMBERS.find(x=>memVal(x,'id')===String(memberId));
+  if(!m)return;
+  selectedAdminMember=m;
+  document.getElementById('af-id').textContent=memVal(m,'id');
+  document.getElementById('af-name').textContent=memVal(m,'name');
+  document.getElementById('af-team').textContent=memVal(m,'team');
+  document.getElementById('admin-search').value='';
+  document.getElementById('admin-search-results').innerHTML='';
+  document.getElementById('admin-payment-form').style.display='block';
+  tradeRows=[];renderTradeRows();updateCalc();
+  document.getElementById('admin-payment-form').scrollIntoView({behavior:'smooth'});
+}
+
+// ═══════════════ TRADE ROWS ═══════════════
+function addTradeRow(){tradeRows.push({coin:'BTC',profit:0});renderTradeRows();updateCalc();}
+function removeTradeRow(i){tradeRows.splice(i,1);renderTradeRows();updateCalc();}
+function renderTradeRows(){
+  const c=document.getElementById('trade-rows');
+  if(!tradeRows.length){c.innerHTML='<div style="text-align:center;color:var(--muted);padding:16px;font-size:0.85rem;">กดปุ่ม "+ เพิ่มรายการ" เพื่อเพิ่มรายการเทรด</div>';return;}
+  c.innerHTML=tradeRows.map((r,i)=>`<div class="trade-item">
+    <div class="trade-num">${i+1}</div>
+    <div style="flex:1.5;min-width:110px;"><div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">ชื่อเหรียญ</div>
+      <select class="form-control" onchange="tradeRows[${i}].coin=this.value">${COINS.map(c=>`<option value="${c}" ${r.coin===c?'selected':''}>${c}/USDT</option>`).join('')}</select>
+    </div>
+    <div style="flex:1.5;min-width:110px;"><div style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;">กำไร (USD)</div>
+      <input type="number" class="form-control" placeholder="0.00" value="${r.profit||''}" min="0" step="0.01" oninput="tradeRows[${i}].profit=parseFloat(this.value)||0;updateCalc();">
+    </div>
+    <button class="btn btn-danger btn-sm" onclick="removeTradeRow(${i})" style="margin-top:16px;">🗑️</button>
+  </div>`).join('');
+}
+function updateCalc(){
+  const total=tradeRows.reduce((s,r)=>s+(r.profit||0),0);
+  const comm=total*.10,guar=total*.10,bal=total*.80,mem=bal*.50,cen=bal*.50,trans=cen+comm;
+  document.getElementById('total-trade-profit').textContent=`$${total.toFixed(2)}`;
+  document.getElementById('calc-total').textContent=`$${total.toFixed(2)}`;
+  document.getElementById('calc-guarantee').textContent=`-$${guar.toFixed(2)}`;
+  document.getElementById('calc-commission').textContent=`-$${comm.toFixed(2)}`;
+  document.getElementById('calc-balance').textContent=`$${bal.toFixed(2)}`;
+  document.getElementById('calc-member').textContent=`$${mem.toFixed(2)}`;
+  document.getElementById('calc-central').textContent=`$${cen.toFixed(2)}`;
+  document.getElementById('calc-transfer').textContent=`$${trans.toFixed(2)}`;
+}
+
+// ═══════════════ WALLET MANAGEMENT ═══════════════
+function renderWalletsList(){
+  const c=document.getElementById('wallets-list');
+  if(!c)return;
+  if(!WALLETS.length){c.innerHTML='<div style="text-align:center;padding:20px;color:var(--muted);">ยังไม่มีกระเป๋า</div>';return;}
+  c.innerHTML=WALLETS.map((w,i)=>`<div class="wallet-item ${w.active?'active-wallet':''}">
+    <div class="wallet-dot ${w.active?'active-dot':''}"></div>
+    <div class="wallet-info">
+      <div class="wallet-label">${w.label} ${w.active?'<span class="badge badge-approve" style="font-size:0.65rem;">●  หลัก</span>':''}</div>
+      <div class="wallet-address">${w.addr}</div>
+      ${w.qr?`<div style="margin-top:6px;"><img src="${w.qr}" style="height:60px;border-radius:6px;" onerror="this.style.display='none'"></div>`:''}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      ${!w.active?`<button class="btn btn-success btn-sm" onclick="setDefaultWallet(${i})">⭐ ตั้งหลัก</button>`:''}
+      <button class="btn btn-outline btn-sm" onclick="editWallet(${i})">✏️ แก้ไข</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteWallet(${i})">🗑️ ลบ</button>
+    </div>
+  </div>`).join('');
+}
+
+function populateWalletSelect(){
+  const sel=document.getElementById('af-wallet-select');
+  if(!sel)return;
+  sel.innerHTML='<option value="">-- เลือกกระเป๋า --</option>'+
+    WALLETS.map((w,i)=>`<option value="${i}" ${w.active?'selected':''}>${w.label} — ${w.addr.slice(0,14)}...${w.addr.slice(-6)}</option>`).join('');
+  updatePayWallet();
+}
+
+function updatePayWallet(){
+  const sel=document.getElementById('af-wallet-select');
+  const idx=parseInt(sel?.value);
+  const display=document.getElementById('af-wallet-display');
+  const addrEl=document.getElementById('af-wallet-addr');
+  if(!isNaN(idx)&&WALLETS[idx]){
+    addrEl.textContent=WALLETS[idx].addr;
+    display.style.display='block';
+  }else{display.style.display='none';}
+}
+
+function openAddWalletModal(idx=-1){
+  editWalletIdx=idx;
+  const title=document.getElementById('add-wallet-title');
+  if(idx>=0&&WALLETS[idx]){
+    const w=WALLETS[idx];
+    title.textContent='✏️ แก้ไขกระเป๋า';
+    document.getElementById('new-wallet-label').value=w.label;
+    document.getElementById('new-wallet-addr').value=w.addr;
+    document.getElementById('new-wallet-qr').value=w.qr||'';
+    document.getElementById('new-wallet-active').checked=w.active;
+  }else{
+    title.textContent='➕ เพิ่มกระเป๋าใหม่';
+    document.getElementById('new-wallet-label').value='';
+    document.getElementById('new-wallet-addr').value='';
+    document.getElementById('new-wallet-qr').value='';
+    document.getElementById('new-wallet-active').checked=false;
+  }
+  document.getElementById('add-wallet-modal').classList.add('open');
+}
+function editWallet(i){openAddWalletModal(i);}
+function saveWallet(){
+  const label=document.getElementById('new-wallet-label').value.trim();
+  const addr=document.getElementById('new-wallet-addr').value.trim();
+  const qr=document.getElementById('new-wallet-qr').value.trim();
+  const isActive=document.getElementById('new-wallet-active').checked;
+  if(!label||!addr){alert('กรุณากรอกชื่อและที่อยู่กระเป๋า');return;}
+  if(isActive)WALLETS.forEach(w=>w.active=false);
+  const wallet={label,addr,qr,active:isActive||WALLETS.length===0};
+  if(editWalletIdx>=0)WALLETS[editWalletIdx]=wallet;
+  else WALLETS.push(wallet);
+  saveWalletsLocal();
+  renderWalletsList();
+  populateWalletSelect();
+  document.getElementById('add-wallet-modal').classList.remove('open');
+}
+function deleteWallet(i){
+  if(!confirm(`ลบกระเป๋า "${WALLETS[i].label}" ?`))return;
+  WALLETS.splice(i,1);
+  if(WALLETS.length&&!WALLETS.some(w=>w.active))WALLETS[0].active=true;
+  saveWalletsLocal();renderWalletsList();populateWalletSelect();
+}
+function setDefaultWallet(i){
+  WALLETS.forEach(w=>w.active=false);
+  WALLETS[i].active=true;
+  saveWalletsLocal();renderWalletsList();populateWalletSelect();
+}
+
+// ═══════════════ ADMIN MANAGEMENT ═══════════════
+function renderAdminsList(){
+  const c=document.getElementById('admins-list');
+  if(!c)return;
+  c.innerHTML=ADMINS.map((a,i)=>`<div class="wallet-item">
+    <div style="width:36px;height:36px;background:rgba(24,144,255,0.12);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;">👑</div>
+    <div class="wallet-info">
+      <div class="wallet-label">${a.name} ${a.root?'<span class="badge badge-admin" style="font-size:0.65rem;">Super Admin</span>':''}</div>
+      <div class="wallet-address">${a.email}</div>
+    </div>
+    ${!a.root&&currentAdmin?.root?`<button class="btn btn-danger btn-sm" onclick="deleteAdmin(${i})">🗑️ ลบ</button>`:''}
+  </div>`).join('');
+}
+function openAddAdminModal(){document.getElementById('add-admin-modal').classList.add('open');document.getElementById('add-admin-result').innerHTML='';}
+function saveAdmin(){
+  const email=document.getElementById('new-admin-email').value.trim().toLowerCase();
+  const name=document.getElementById('new-admin-name').value.trim();
+  const pass=document.getElementById('new-admin-pass').value;
+  const resEl=document.getElementById('add-admin-result');
+  if(!email||!name||!pass){resEl.innerHTML='<div class="api-err">กรุณากรอกข้อมูลให้ครบ</div>';return;}
+  if(ADMINS.some(a=>a.email.toLowerCase()===email)){resEl.innerHTML='<div class="api-err">อีเมลนี้มีในระบบแล้ว</div>';return;}
+  ADMINS.push({email,name,pass,root:false});
+  saveAdminsLocal();renderAdminsList();
+  document.getElementById('add-admin-modal').classList.remove('open');
+  showSuccess('เพิ่มแอดมินสำเร็จ!',`${name} (${email}) เพิ่มเข้าระบบแล้ว`);
+}
+function deleteAdmin(i){
+  if(!confirm(`ลบแอดมิน "${ADMINS[i].name}" ?`))return;
+  ADMINS.splice(i,1);saveAdminsLocal();renderAdminsList();
+}
+
+// ═══════════════ TEAM MANAGEMENT ═══════════════
+function openAddTeamModal(){
+  document.getElementById('add-team-title').textContent='➕ เพิ่มทีมใหม่';
+  document.getElementById('new-team-name').value='';
+  document.getElementById('new-team-owner-search').value='';
+  document.getElementById('new-team-owner-id').value='';
+  document.getElementById('new-team-owner-name').value='';
+  document.getElementById('team-owner-results').innerHTML='';
+  document.getElementById('team-owner-preview').style.display='none';
+  // populate support team dropdown
+  const sel=document.getElementById('new-team-support');
+  sel.innerHTML='<option value="">-- ไม่มี (ทีมหลัก) --</option>'+
+    TEAMS.map(t=>`<option value="${teamVal(t,'name')}">${teamVal(t,'name')}</option>`).join('');
+  document.getElementById('add-team-modal').classList.add('open');
+}
+function searchTeamOwner(){
+  const q=document.getElementById('new-team-owner-search').value.toLowerCase().trim();
+  const c=document.getElementById('team-owner-results');
+  if(q.length<2){c.innerHTML='';return;}
+  const results=MEMBERS.filter(m=>memVal(m,'name').toLowerCase().includes(q)||memVal(m,'id').includes(q));
+  c.innerHTML=results.slice(0,4).map(m=>`<div onclick="selectTeamOwner('${memVal(m,'id')}')" style="padding:8px;background:var(--dark3);border-radius:6px;cursor:pointer;margin-bottom:3px;font-size:0.83rem;" onmouseover="this.style.background='var(--dark4)'" onmouseout="this.style.background='var(--dark3)'">
+    <b>${memVal(m,'name')}</b> <span style="color:var(--muted);">ID: ${memVal(m,'id')} | ${memVal(m,'team')}</span>
+  </div>`).join('');
+}
+function selectTeamOwner(id){
+  const m=MEMBERS.find(x=>memVal(x,'id')===id);
+  if(!m)return;
+  document.getElementById('new-team-owner-id').value=id;
+  document.getElementById('new-team-owner-name').value=memVal(m,'name');
+  document.getElementById('new-team-owner-search').value=`${memVal(m,'name')} (${id})`;
+  document.getElementById('team-owner-results').innerHTML='';
+  const prev=document.getElementById('team-owner-preview');
+  prev.style.display='block';
+  document.getElementById('team-owner-info').innerHTML=`
+    <div class="info-row"><span class="info-k">ชื่อ-สกุล</span><span class="info-v">${memVal(m,'name')}</span></div>
+    <div class="info-row"><span class="info-k">หมายเลขสมาชิก</span><span class="info-v">${memVal(m,'id')}</span></div>
+    <div class="info-row"><span class="info-k">ทีมสังกัดปัจจุบัน</span><span class="info-v">${memVal(m,'team')}</span></div>
+    <div class="info-row"><span class="info-k">กระเป๋า USDT</span><span class="info-v" style="font-size:0.72rem;font-family:monospace;">${memVal(m,'wallet').slice(0,20)}...</span></div>`;
+}
+async function saveTeam(){
+  const name=document.getElementById('new-team-name').value.trim();
+  const ownerId=document.getElementById('new-team-owner-id').value;
+  const ownerName=document.getElementById('new-team-owner-name').value;
+  const support=document.getElementById('new-team-support').value;
+  const status=document.getElementById('new-team-status').value;
+  if(!name){alert('กรุณากรอกชื่อทีม');return;}
+  try{
+    await ndbInsert('teams',{'ฐานข้อมูลทีม':name,'Field 2':support,'Field 3':ownerId,'Field 4':ownerName,'สถานะของทีม':status});
+    await loadTeams();
+    document.getElementById('add-team-modal').classList.remove('open');
+    showSuccess('เพิ่มทีมสำเร็จ!',`ทีม "${name}" เพิ่มเข้าระบบแล้ว`);
+  }catch(e){alert('เกิดข้อผิดพลาด: '+e.message);}
+}
+
+// ═══════════════ SAVE PAYMENT ═══════════════
+async function savePayment(){
+  if(!selectedAdminMember){alert('กรุณาเลือกสมาชิกก่อน');return;}
+  const total=tradeRows.reduce((s,r)=>s+(r.profit||0),0);
+  if(total<=0){alert('กรุณากรอกรายการเทรดอย่างน้อย 1 รายการ');return;}
+  const comm=total*.10,guar=total*.10,bal=total*.80,mem=bal*.50,cen=bal*.50,trans=cen+comm;
+  const status=document.getElementById('af-position').value;
+  const payDate=document.getElementById('af-payment-date').value;
+  const note=document.getElementById('af-note').value;
+  const today=new Date();
+  let dateStr;
+  if(payDate){const[y,mo,d]=payDate.split('-');dateStr=`${parseInt(d)}/${parseInt(mo)}/${y}`;}
+  else{dateStr=`${today.getDate()}/${today.getMonth()+1}/${today.getFullYear()}`;}
+  const tradeNote=tradeRows.map((t,i)=>`ครั้งที่${i+1}: ${t.coin} +$${t.profit}`).join(' | ');
+  const payload={'Field 1':memVal(selectedAdminMember,'id'),'Field 2':memVal(selectedAdminMember,'team'),'Field 3':memVal(selectedAdminMember,'name'),'Field 4':memVal(selectedAdminMember,'lva'),'Field 5':memVal(selectedAdminMember,'lvb'),'Field 6':dateStr,'Field 8':`$${total.toFixed(2)}`,'10.00%':`$${comm.toFixed(2)}`,'10.00%1':`$${guar.toFixed(2)}`,'Field 11':`$${bal.toFixed(2)}`,'50.00%':`$${mem.toFixed(2)}`,'50.00%1':`$${cen.toFixed(2)}`,'Field 14':`$${trans.toFixed(2)}`,'Field 15':status,'Field 16':note||tradeNote};
+  const btn=document.querySelector('[onclick="savePayment()"]');
+  btn.textContent='⏳ กำลังบันทึก...';btn.disabled=true;
+  const resEl=document.getElementById('save-result');
+  try{
+    await ndbInsert('payments',payload);
+    resEl.innerHTML='<div class="api-ok">✅ บันทึกลง NocoDB สำเร็จ!</div>';
+    await loadPayments();clearAdminForm();
+    showSuccess('บันทึกสำเร็จ!',`บันทึกการจ่ายเงินให้ ${memVal(selectedAdminMember,'name')} ลง NocoDB แล้ว`);
+  }catch(e){
+    resEl.innerHTML=`<div class="api-err">❌ เกิดข้อผิดพลาด: ${e.message}</div>`;
+    btn.textContent='💾 บันทึกและส่งข้อมูลไป NocoDB';btn.disabled=false;
+  }
+}
+
+function clearAdminForm(){
+  selectedAdminMember=null;tradeRows=[];
+  document.getElementById('admin-payment-form').style.display='none';
+  document.getElementById('admin-search').value='';
+  document.getElementById('save-result').innerHTML='';
+  const btn=document.querySelector('[onclick="savePayment()"]');
+  if(btn){btn.textContent='💾 บันทึกและส่งข้อมูลไป NocoDB';btn.disabled=false;}
+}
+
+async function approvePayment(rowId,btnEl){
+  btnEl.textContent='⏳...';btnEl.disabled=true;
+  try{
+    await ndbUpdate('payments',rowId,{'Field 15':'Approve'});
+    await loadPayments();
+    showSuccess('อนุมัติสำเร็จ','อัปเดตสถานะใน NocoDB แล้ว');
+  }catch(e){btnEl.textContent='✅ อนุมัติ';btnEl.disabled=false;alert('เกิดข้อผิดพลาด: '+e.message);}
+}
+
+// ═══════════════ PAYMENT DETAIL MODAL ═══════════════
+function showPaymentDetail(rowId){
+  const p=PAYMENTS.find(x=>String(x.Id)===String(rowId));
+  if(!p)return;
+  const now=new Date();
+  const profit=payNum(p,'profit'),comm=payNum(p,'commission'),guar=payNum(p,'guarantee');
+  const bal=payNum(p,'balance'),mem=payNum(p,'member'),cen=payNum(p,'central'),trans=payNum(p,'transfer');
+  const status=payVal(p,'position'),isPending=status!=='Approve';
+  const lvaComm=comm*.15,lvbComm=comm*.10;
+  const name=payVal(p,'name'),bnbId=payVal(p,'bnb_id'),team=payVal(p,'team');
+  const date=payVal(p,'date'),note=payVal(p,'note');
+  const lva=payVal(p,'lva'),lvb=payVal(p,'lvb');
+  // Get current default wallet
+  const activeWallet=WALLETS.find(w=>w.active)||WALLETS[0]||SYSTEM_WALLET_DEFAULT;
+
+  // Parse trade history from note
+  const tradeHistory=note?note.split(' | ').filter(x=>x.includes(':')):[];
+
+  document.getElementById('payment-modal-content').innerHTML=`
+  <div class="pay-modal-card">
+    <!-- Header -->
+    <div class="pay-modal-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <img src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" style="height:26px;" onerror="this.style.display='none'">
+        <div>
+          <div style="font-family:'Orbitron',monospace;font-size:0.78rem;color:var(--gold);letter-spacing:2px;">PAYMENT REPORT</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+            <div class="pulse" style="color:var(--green);width:6px;height:6px;"></div>
+            <span style="font-size:0.68rem;color:var(--green);">LIVE REPORT</span>
+            <span style="font-size:0.68rem;color:var(--muted);">${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}</span>
+          </div>
+        </div>
+      </div>
+      <span style="font-size:0.68rem;color:var(--gold);border:1px solid var(--border);padding:3px 10px;border-radius:20px;">✦ OFFICIAL REPORT No.${p.Id}</span>
+    </div>
+    <div style="padding:16px 20px;">
+      <!-- Member Info -->
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;background:rgba(240,185,11,0.04);border:1px solid var(--border2);border-radius:12px;padding:12px;">
+        <div style="width:50px;height:50px;background:linear-gradient(135deg,var(--gold),var(--gold-d));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;">👤</div>
+        <div style="flex:1;">
+          <div style="font-size:1.05rem;font-weight:700;">${name}</div>
+          <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
+            <span style="font-size:0.72rem;color:var(--muted);">🪙 UID: <b style="color:var(--gold)">${bnbId}</b></span>
+            <span style="font-size:0.72rem;color:var(--muted);">🏆 ${team}</span>
+          </div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;">📈 TEAM COMMISSION: <b style="color:var(--gold)">$${comm.toFixed(2)}</b></div>
+        </div>
+        <span class="badge ${isPending?'badge-pending':'badge-approve'}" style="align-self:flex-start;">${isPending?'⏳ รอชำระ':'✅ จ่ายแล้ว'}</span>
+      </div>
+
+      <!-- Level Commission -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+        <div style="background:rgba(3,192,117,0.08);border:1px solid rgba(3,192,117,0.2);border-radius:10px;padding:12px;">
+          <div style="font-size:0.65rem;color:var(--muted);">LEVEL A — ${lva||'—'}</div>
+          <div style="font-weight:700;color:var(--green);font-size:1.1rem;margin-top:4px;">$${lvaComm.toFixed(2)}</div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">(15% ของค่าคอม)</div>
+        </div>
+        <div style="background:rgba(240,185,11,0.08);border:1px solid rgba(240,185,11,0.2);border-radius:10px;padding:12px;">
+          <div style="font-size:0.65rem;color:var(--muted);">LEVEL B — ${lvb||'—'}</div>
+          <div style="font-weight:700;color:var(--gold);font-size:1.1rem;margin-top:4px;">$${lvbComm.toFixed(2)}</div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">(10% ของค่าคอม)</div>
+        </div>
+      </div>
+
+      <!-- Summary 3 boxes -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+        <div style="background:var(--dark2);border:1px solid var(--border2);border-radius:10px;padding:10px;text-align:center;">
+          <div style="font-size:0.6rem;color:var(--muted);">ส่วนแบ่งสมาชิก (50%)</div>
+          <div style="font-size:1.05rem;font-weight:700;color:var(--green);margin-top:4px;">$${mem.toFixed(2)}</div>
+        </div>
+        <div style="background:var(--dark2);border:1px solid var(--border2);border-radius:10px;padding:10px;text-align:center;">
+          <div style="font-size:0.6rem;color:var(--muted);">ประกันกำไร (10%)</div>
+          <div style="font-size:1.05rem;font-weight:700;color:var(--gold);margin-top:4px;">$${guar.toFixed(2)}</div>
+        </div>
+        <div style="background:linear-gradient(135deg,rgba(240,185,11,0.15),rgba(240,185,11,0.05));border:1px solid rgba(240,185,11,0.3);border-radius:10px;padding:10px;text-align:center;">
+          <div style="font-size:0.6rem;color:var(--muted);">⭐ รายได้รวม</div>
+          <div style="font-size:1.05rem;font-weight:700;color:var(--gold);margin-top:4px;">$${(mem+guar).toFixed(2)}</div>
+        </div>
+      </div>
+
+      <!-- Detail + System -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div>
+          <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:8px;">📊 รายละเอียดส่วนแบ่ง</div>
+          <div style="background:var(--dark2);border-radius:10px;padding:12px;">
+            ${[['กำไรรวม (100%)',`+$${profit.toFixed(2)}`,'var(--green)'],['ประกันกำไร (10%)',`-$${guar.toFixed(2)}`,'var(--red)'],['ค่าคอมมิชั่น (10%)',`-$${comm.toFixed(2)}`,'var(--red)'],['คงเหลือสุทธิ (80%)',`$${bal.toFixed(2)}`,'var(--gold)'],['ส่วนผู้เทรด (50%)',`$${mem.toFixed(2)}`,'var(--green)'],['ส่วนระบบ (50%)',`$${cen.toFixed(2)}`,'var(--gold)']].map(([l,v,c])=>`<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="color:var(--muted)">${l}</span><span style="color:${c};font-weight:600;">${v}</span></div>`).join('')}
+          </div>
+        </div>
+        <div>
+          <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:8px;">💳 รายละเอียดเข้าระบบ</div>
+          <div style="background:var(--dark2);border-radius:10px;padding:12px;margin-bottom:8px;">
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="color:var(--muted)">ค่าคอมมิชั่น</span><span style="color:var(--gold);">$${comm.toFixed(2)}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="color:var(--muted)">ส่วนระบบ</span><span style="color:var(--gold);">$${cen.toFixed(2)}</span></div>
+            <div style="display:flex;justify-content:space-between;padding:8px 0 0;font-size:0.82rem;font-weight:700;"><span>🔖 ยอดรวม</span><span style="color:var(--gold);">$${trans.toFixed(2)}</span></div>
+          </div>
+          <div class="pay-amount-box">
+            <div class="pay-amount-lbl">TOTAL PAYMENT AMOUNT</div>
+            <div class="pay-amount-val">$${trans.toFixed(2)}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trade History -->
+      ${tradeHistory.length?`<div style="margin-bottom:14px;">
+        <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:8px;">📈 ประวัติการเทรด</div>
+        <div class="trade-hist-grid">
+          ${tradeHistory.map(t=>{const parts=t.split(':');const coin=(parts[0]||'').replace(/ครั้งที่\d+/,'').trim();const amt=(parts[1]||'').trim();return`<div class="trade-hist-item"><div class="trade-coin">${coin||'—'}</div><div class="trade-amount">${amt}</div></div>`;}).join('')}
+        </div>
+      </div>`:''}
+
+      <!-- QR + Wallet for pending -->
+      ${isPending?`<div style="margin-bottom:14px;">
+        <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:8px;">🔐 SCAN QR CODE FOR PAYMENT</div>
+        ${activeWallet.qr?`<div style="display:flex;justify-content:center;margin-bottom:12px;"><img src="${activeWallet.qr}" alt="QR Code" style="width:160px;height:160px;border-radius:12px;border:2px solid var(--border);" onerror="this.style.display='none'"></div>`:''}
+        <div class="wallet-box" style="margin-bottom:6px;">
+          <span class="wallet-addr" id="pay-wallet-show">${activeWallet.addr}</span>
+          <button onclick="navigator.clipboard.writeText('${activeWallet.addr}').then(()=>showToast('คัดลอกแล้ว!'))" style="background:rgba(240,185,11,0.12);border:1px solid var(--gold);color:var(--gold);padding:4px 10px;border-radius:6px;cursor:pointer;font-size:0.7rem;white-space:nowrap;">📋 Copy</button>
+        </div>
+        <div style="font-size:0.68rem;color:var(--green);text-align:center;">✦ USDT BNB Smart Chain (BEP-20) — ${activeWallet.label}</div>
+        <div style="font-size:0.65rem;color:var(--muted);text-align:center;margin-top:4px;cursor:pointer;" onclick="copyText('pay-wallet-show')">CLICK ADDRESS TO COPY</div>
+      </div>`:''}
+
+      <!-- Status -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--dark2);border-radius:8px;border:1px solid ${isPending?'rgba(240,185,11,0.25)':'rgba(3,192,117,0.25)'};">
+        <span style="font-weight:600;color:${isPending?'var(--gold)':'var(--green)'};">${isPending?'⏳ รอการชำระเงิน':'✅ จ่ายเงินแล้ว'}</span>
+        <span style="font-size:0.75rem;color:var(--muted);">📅 ${date}</span>
+      </div>
+      ${note?`<div style="margin-top:8px;font-size:0.8rem;color:var(--muted);">📝 ${note}</div>`:''}
+      <div style="text-align:center;margin-top:14px;padding-top:10px;border-top:1px solid var(--border2);">
+        <div style="font-family:'Orbitron',monospace;font-size:0.65rem;color:var(--muted);letter-spacing:2px;">TRADERCAFECLUB</div>
+        <div style="font-size:0.62rem;color:var(--green);margin-top:3px;">🔒 Secured & Encrypted ✦ Verified</div>
+      </div>
+    </div>
+  </div>`;
+  document.getElementById('payment-modal').classList.add('open');
+}
+
+// ═══════════════ REGISTER ═══════════════
+function populateRegTeams(){
+  const sel=document.getElementById('reg-team');
+  TEAMS.forEach(t=>{
+    const name=teamVal(t,'name');
+    if(name&&name.toLowerCase()!=='non'&&name.toLowerCase()!=='team'){
+      const o=document.createElement('option');o.value=name;o.textContent=name;sel.appendChild(o);
+    }
+  });
+}
+function populateRegProvinces(){
+  const sel=document.getElementById('reg-province');
+  PROVINCES.forEach(p=>{const o=document.createElement('option');o.value=p;o.textContent=p;sel.appendChild(o);});
+}
+function toggleProvince(){document.getElementById('province-group').style.display=document.getElementById('reg-country').value==='TH'?'block':'none';}
+function regNext(step){
+  [1,2,3].forEach(s=>{document.getElementById(`reg-step-${s}`).style.display='none';document.getElementById(`step-${s}`).classList.remove('active');});
+  document.getElementById(`reg-step-${step}`).style.display='block';
+  for(let i=1;i<=step;i++)document.getElementById(`step-${i}`).classList.add('active');
+  if(step===3){
+    const f=['reg-name','reg-phone','reg-team','reg-bnbid','reg-wallet','reg-province'].map(id=>document.getElementById(id)?.value||'—');
+    document.getElementById('reg-summary').innerHTML=[['ชื่อ-สกุล',f[0]],['เบอร์โทร',f[1]],['ทีมสังกัด',f[2]],['Binance ID',f[3]],['กระเป๋า',f[4]],['จังหวัด',f[5]]].map(([k,v])=>`<div class="info-row"><span class="info-k">${k}</span><span class="info-v" style="font-size:0.8rem;word-break:break-all;">${v}</span></div>`).join('');
+  }
+}
+async function submitRegistration(){
+  const name=document.getElementById('reg-name').value;
+  const phone=document.getElementById('reg-phone').value;
+  const team=document.getElementById('reg-team').value;
+  const bnbid=document.getElementById('reg-bnbid').value;
+  const wallet=document.getElementById('reg-wallet').value;
+  if(!name||!bnbid){alert('กรุณากรอกชื่อและ Binance ID');return;}
+  const btn=document.querySelector('[onclick="submitRegistration()"]');
+  btn.textContent='⏳ กำลังบันทึก...';btn.disabled=true;
+  const resEl=document.getElementById('reg-result');
+  try{
+    await ndbInsert('members',{'BNB_ID':bnbid,'Name':name,'Team':team,'Address Wallet':wallet,'Status':'Pending'});
+    resEl.innerHTML='<div class="api-ok">✅ บันทึกข้อมูลสมาชิกลง NocoDB สำเร็จ!</div>';
+    await loadMembers();
+    setTimeout(()=>{showSuccess('สมัครสมาชิกสำเร็จ!',`บันทึก ${name} เข้าระบบ NocoDB แล้ว`);regNext(1);document.getElementById('reg-name').value='';resEl.innerHTML='';btn.textContent='✅ ยืนยันสมัครสมาชิก';btn.disabled=false;},1500);
+  }catch(e){
+    resEl.innerHTML=`<div class="api-err">❌ เกิดข้อผิดพลาด: ${e.message}</div>`;
+    btn.textContent='✅ ยืนยันสมัครสมาชิก';btn.disabled=false;
+  }
+}
+
+// ═══════════════ UTILS ═══════════════
+function switchAdminTab(tab){
+  ['payment','wallets','teams','admins'].forEach(t=>{
+    const el=document.getElementById(`admin-tab-${t}`);
+    const btn=document.getElementById(`atab-${t}`);
+    if(el)el.style.display=t===tab?'block':'none';
+    if(btn)btn.classList.toggle('active',t===tab);
+  });
+}
+
+function showPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.mnav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(`page-${page}`)?.classList.add('active');
+  const map={home:0,'member-search':1,register:2,admin:3};
+  const idx=map[page];
+  if(idx!==undefined){
+    document.querySelectorAll('.nav-tab')[idx]?.classList.add('active');
+    document.querySelectorAll('.mnav-btn')[idx]?.classList.add('active');
+  }
+  window.scrollTo(0,0);
+  // Auto show admin content based on auth
+  if(page==='admin'){
+    if(currentAdmin){document.getElementById('admin-auth-wall').style.display='none';document.getElementById('admin-dashboard').style.display='block';}
+    else{document.getElementById('admin-auth-wall').style.display='flex';document.getElementById('admin-dashboard').style.display='none';}
+  }
+}
+
+function showLoading(t='กำลังโหลด...'){document.getElementById('loading-overlay').style.display='flex';document.getElementById('loading-txt').textContent=t;}
+function hideLoading(){document.getElementById('loading-overlay').style.display='none';}
+function showSuccess(title,msg){document.getElementById('success-title').textContent=title;document.getElementById('success-msg').textContent=msg;document.getElementById('success-modal').classList.add('open');}
+function showToast(msg){const t=document.createElement('div');t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--dark2);border:1px solid var(--gold);color:var(--gold);padding:10px 20px;border-radius:8px;z-index:999;font-size:0.85rem;box-shadow:0 4px 20px rgba(0,0,0,0.4);';t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),2000);}
+function copyText(id){const t=document.getElementById(id)?.textContent;if(t)navigator.clipboard.writeText(t).then(()=>showToast('คัดลอกแล้ว!')).catch(()=>{});}
+function setTodayDate(){const today=new Date();const dd=String(today.getDate()).padStart(2,'0');const mm=String(today.getMonth()+1).padStart(2,'0');const yyyy=today.getFullYear();const el=document.getElementById('af-payment-date');if(el)el.value=`${yyyy}-${mm}-${dd}`;}
+
+window.addEventListener('load',init);
+</script>
+</body>
+</html>
