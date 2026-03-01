@@ -1369,17 +1369,21 @@ function showPaymentDetail(rowId){
       <!-- Summary 3 boxes -->
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
         <div style="background:var(--dark2);border:1px solid var(--border2);border-radius:10px;padding:10px;text-align:center;">
-          <div style="font-size:0.6rem;color:var(--muted);">ส่วนแบ่งสมาชิก (50%)</div>
+          <div style="font-size:0.6rem;color:var(--muted);">เงินส่วนแบ่งสมาชิก (50%)</div>
           <div style="font-size:1.05rem;font-weight:700;color:var(--green);margin-top:4px;">$${mem.toFixed(2)}</div>
         </div>
         <div style="background:var(--dark2);border:1px solid var(--border2);border-radius:10px;padding:10px;text-align:center;">
-          <div style="font-size:0.6rem;color:var(--muted);">ประกันกำไร (10%)</div>
+          <div style="font-size:0.6rem;color:var(--muted);">เงินประกันกำไร (10%)</div>
           <div style="font-size:1.05rem;font-weight:700;color:var(--gold);margin-top:4px;">$${guar.toFixed(2)}</div>
         </div>
         <div style="background:linear-gradient(135deg,rgba(240,185,11,0.15),rgba(240,185,11,0.05));border:1px solid rgba(240,185,11,0.3);border-radius:10px;padding:10px;text-align:center;">
-          <div style="font-size:0.6rem;color:var(--muted);">⭐ รายได้รวม</div>
+          <div style="font-size:0.6rem;color:var(--muted);">เงินรายได้สมาชิกรวม</div>
           <div style="font-size:1.05rem;font-weight:700;color:var(--gold);margin-top:4px;">$${(mem+guar).toFixed(2)}</div>
         </div>
+         <div class="pay-amount-box"style="color:var(--green);">
+            <div class="pay-amount-lbl">TOTAL PAYMENT AMOUNT</div>
+            <div class="pay-amount-val">$${trans.toFixed(2)}</div>
+          </div>
       </div>
 
       <!-- Detail + System -->
