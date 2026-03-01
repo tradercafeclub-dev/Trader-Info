@@ -360,8 +360,8 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
           <div class="info-row"><span class="info-k">ชื่อ-สกุล</span><span class="info-v" id="dash-name">—</span></div>
           <div class="info-row"><span class="info-k">หมายเลขสมาชิก</span><span class="info-v" id="dash-id">—</span></div>
           <div class="info-row"><span class="info-k">ทีมสังกัด</span><span class="info-v" id="dash-team">—</span></div>
-          <div class="info-row"><span class="info-k">Level 🅰️ :${lva||'—'}</span></div>
-          <div class="info-row"><span class="info-k">Level 🅱️ :${lvb||'—'}</span></div>
+          <div class="info-row"><span class="info-k">Level 🅰️</span><span class="info-v" id="dash-lva" style="color:var(--green);">—</span></div>
+          <div class="info-row"><span class="info-k">Level 🅱️</span><span class="info-v" id="dash-lvb" style="color:var(--gold);">—</span></div>
           <div class="info-row"><span class="info-k">สถานะ</span><span class="info-v" id="dash-status">—</span></div>
         </div>
         <div>
@@ -979,6 +979,13 @@ function showMemberDashboard(memberId){
   document.getElementById('dash-name').textContent=memVal(m,'name');
   document.getElementById('dash-id').textContent=memVal(m,'id');
   document.getElementById('dash-team').textContent=memVal(m,'team');
+  // ดึง Level A/B จาก payment ล่าสุดของสมาชิก (ข้อมูลแม่นกว่า members table)
+  const memberPays=PAYMENTS.filter(p=>payVal(p,'bnb_id')===String(memberId));
+  const latestPay=memberPays[0]||null;
+  const lvaVal=(latestPay?payVal(latestPay,'lva'):'')||memVal(m,'lva')||'—';
+  const lvbVal=(latestPay?payVal(latestPay,'lvb'):'')||memVal(m,'lvb')||'—';
+  document.getElementById('dash-lva').textContent=lvaVal;
+  document.getElementById('dash-lvb').textContent=lvbVal;
   const st=memVal(m,'status');
   document.getElementById('dash-status').innerHTML=`<span class="badge ${st==='Pending'?'badge-pending':'badge-approve'}">${st||'Active'}</span>`;
   document.getElementById('dash-wallet').textContent=memVal(m,'wallet')||'ยังไม่ได้ตั้งค่า';
