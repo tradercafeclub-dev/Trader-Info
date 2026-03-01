@@ -268,16 +268,40 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
 
 <!-- ═══════════════ HOME ═══════════════ -->
 <div id="page-home" class="page active">
-  <div class="hero">
+  <!-- HERO BANNER -->
+  <div class="hero" style="padding:36px 24px 32px;">
     <img class="hero-logo" src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC" onerror="this.style.display='none'">
     <div class="hero-title">TRADER CAFE CLUB</div>
     <div class="hero-sub">ระบบการจ่ายเงินและกำไรจากการเทรด</div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-members">—</div><div class="hero-stat-lbl">สมาชิก</div></div>
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-teams">—</div><div class="hero-stat-lbl">ทีม</div></div>
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-payments">—</div><div class="hero-stat-lbl">รายการ</div></div>
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-pending" style="color:var(--gold)">—</div><div class="hero-stat-lbl">รอชำระ</div></div>
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-total-profit" style="color:var(--green);font-size:1.1rem;">—</div><div class="hero-stat-lbl">กำไรจากการเทรดรวม</div></div>
+  </div>
+
+  <!-- STAT CARDS ROW — เหมือนในภาพ -->
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:20px;">
+    <!-- สมาชิก -->
+    <div class="stat-card">
+      <div style="font-size:1.6rem;color:var(--gold);font-family:'Orbitron',monospace;font-weight:700;" id="stat-members">—</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:6px;">👥 สมาชิกทั้งหมด</div>
+    </div>
+    <!-- ทีม -->
+    <div class="stat-card">
+      <div style="font-size:1.6rem;color:var(--gold);font-family:'Orbitron',monospace;font-weight:700;" id="stat-teams">—</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:6px;">🏆 ทีมทั้งหมด</div>
+    </div>
+    <!-- รายการ -->
+    <div class="stat-card">
+      <div style="font-size:1.6rem;color:var(--gold);font-family:'Orbitron',monospace;font-weight:700;" id="stat-payments">—</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:6px;">📋 รายการชำระ</div>
+    </div>
+    <!-- รอชำระ -->
+    <div class="stat-card">
+      <div style="font-size:1.6rem;color:var(--gold);font-family:'Orbitron',monospace;font-weight:700;" id="stat-pending">—</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:6px;">⏳ รอดำเนินการ</div>
+    </div>
+    <!-- Total Profit - ใหญ่สุด -->
+    <div class="stat-card" style="border-top-color:var(--green);grid-column:span 1;">
+      <div style="font-size:0.62rem;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">💰 ยอดเงินเทรดรวมทั้งหมด</div>
+      <div style="font-family:'Orbitron',monospace;font-size:1.3rem;font-weight:700;color:var(--green);" id="stat-total-profit">—</div>
+      <div style="font-size:0.65rem;color:var(--muted);margin-top:4px;">Total Profit (USD)</div>
     </div>
   </div>
 
