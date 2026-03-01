@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TCC - Trader Cafe Club</title>
+<title>Trader Cafe Club</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -249,7 +249,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
     <img src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC" onerror="this.style.display='none'">
     <div>
       <div class="brand-name">TRADER CAFE CLUB</div>
-      <div class="brand-sub">PAYMENT MANAGEMENT SYSTEM</div>
+      <div class="brand-sub">PAYMENT SYSTEM</div>
     </div>
   </div>
   <div class="nav-tabs">
@@ -271,13 +271,13 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
   <div class="hero">
     <img class="hero-logo" src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC" onerror="this.style.display='none'">
     <div class="hero-title">TRADER CAFE CLUB</div>
-    <div class="hero-sub">ระบบจัดการการจ่ายเงินและผลตอบแทนการเทรด — เชื่อมต่อ NocoDB Live</div>
+    <div class="hero-sub">ระบบการจ่ายเงินและกำไรจากการเทรด</div>
     <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-members">—</div><div class="hero-stat-lbl">👥 สมาชิก</div></div>
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-teams">—</div><div class="hero-stat-lbl">🏆 ทีม</div></div>
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-payments">—</div><div class="hero-stat-lbl">📋 รายการ</div></div>
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-pending" style="color:var(--gold)">—</div><div class="hero-stat-lbl">⏳ รอชำระ</div></div>
-      <div class="hero-stat"><div class="hero-stat-val" id="stat-total-profit" style="color:var(--green);font-size:1.1rem;">—</div><div class="hero-stat-lbl">💰 Total Profit</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-members">—</div><div class="hero-stat-lbl">สมาชิก</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-teams">—</div><div class="hero-stat-lbl">ทีม</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-payments">—</div><div class="hero-stat-lbl">รายการ</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-pending" style="color:var(--gold)">—</div><div class="hero-stat-lbl">รอชำระ</div></div>
+      <div class="hero-stat"><div class="hero-stat-val" id="stat-total-profit" style="color:var(--green);font-size:1.1rem;">—</div><div class="hero-stat-lbl">กำไรจากการเทรดรวม</div></div>
     </div>
   </div>
 
@@ -285,7 +285,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
     <div class="card" style="cursor:pointer;margin-bottom:0;" onclick="showPage('member-search')">
       <div style="display:flex;align-items:center;gap:14px;">
         <div style="width:44px;height:44px;background:rgba(240,185,11,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;">💳</div>
-        <div><div style="font-weight:700;color:var(--gold)">ดูรายการจ่ายเงิน</div><div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">ค้นหาและดูประวัติการจ่ายเงินของสมาชิก</div></div>
+        <div><div style="font-weight:700;color:var(--gold)">ตรวจสอบการชำระเงิน</div><div style="font-size:0.8rem;color:var(--muted);margin-top:3px;">ค้นหาการจ่ายเงินของท่าน</div></div>
       </div>
     </div>
     <div class="card" style="cursor:pointer;margin-bottom:0;" onclick="showPage('register')">
@@ -313,11 +313,11 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
 
 <!-- ═══════════════ MEMBER SEARCH ═══════════════ -->
 <div id="page-member-search" class="page">
-  <div class="page-title"><h1>💳 ดูรายการจ่ายเงิน</h1><p>ค้นหาจากชื่อหรือหมายเลขสมาชิก</p></div>
+  <div class="page-title"><h1>💳 ดูรายการชำระเงิน</h1><p>ค้นหาจากชื่อหรือหมายเลขสมาชิก</p></div>
   <div class="card">
     <div class="search-box">
       <span class="search-icon">🔍</span>
-      <input type="text" class="form-control" id="member-search-input" placeholder="ค้นหาชื่อ หรือ BNB ID..." oninput="searchMember()">
+      <input type="text" class="form-control" id="member-search-input" placeholder="ค้นหาชื่อ หรือ เลขสมาชิก..." oninput="searchMember()">
     </div>
     <div id="member-search-results" style="display:none;">
       <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;">ผลการค้นหา</div>
@@ -339,7 +339,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
           <div class="info-row"><span class="info-k">สถานะ</span><span class="info-v" id="dash-status">—</span></div>
         </div>
         <div>
-          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;">กระเป๋า USDT (BEP-20)</div>
+          <div style="font-size:0.78rem;color:var(--muted);margin-bottom:8px;">ที่อยู่กระเป๋า USDT (BEP-20)</div>
           <div class="wallet-box" style="margin-bottom:10px;">
             <span class="wallet-addr" id="dash-wallet">—</span>
             <button class="btn btn-outline btn-sm" onclick="copyText('dash-wallet')">📋</button>
@@ -359,7 +359,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
       </div>
       <div class="tbl-wrap">
         <table>
-          <thead><tr><th>วันที่</th><th>กำไรรวม</th><th>ค่าคอม 10%</th><th>ประกัน 10%</th><th>คงเหลือ 80%</th><th>สมาชิก 50%</th><th>ระบบ 50%</th><th>โอนรวม</th><th>สถานะ</th></tr></thead>
+          <thead><tr><th>วันที่</th><th>กำไรรวม</th><th>ค่าคอม 10%</th><th>ประกัน 10%</th><th>ยอดคงเหลือ</th><th>ยอดสมาชิก</th><th>ส่วนระบบ</th><th>ยอดโอน</th><th>สถานะ</th></tr></thead>
           <tbody id="member-payments-table"></tbody>
         </table>
       </div>
@@ -378,7 +378,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
       <div class="step" id="step-3"></div>
     </div>
     <div id="reg-step-1">
-      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 1: ข้อมูลส่วนตัว</div>
+      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 1: ข้อมูลทั่วไป</div>
       <div class="grid-2">
         <div class="form-group"><label class="form-label">ชื่อ - สกุล *</label><input type="text" class="form-control" id="reg-name" placeholder="กรอกชื่อ-สกุล"></div>
         <div class="form-group"><label class="form-label">เบอร์โทรศัพท์ *</label><input type="tel" class="form-control" id="reg-phone" placeholder="+66 8x-xxx-xxxx"></div>
@@ -392,22 +392,22 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
         </div>
         <div class="form-group" id="province-group"><label class="form-label">จังหวัด</label><select class="form-control" id="reg-province"><option value="">-- เลือกจังหวัด --</option></select></div>
       </div>
-      <button class="btn btn-gold btn-full" onclick="regNext(2)">ถัดไป →</button>
+      <button class="btn btn-gold btn-full" onclick="regNext(2)">ถัดไป</button>
     </div>
     <div id="reg-step-2" style="display:none;">
-      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 2: ข้อมูล Binance & Wallet</div>
+      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 2: Binance Info</div>
       <div class="grid-2">
         <div class="form-group"><label class="form-label">Binance ID (BNB_ID) *</label><input type="text" class="form-control" id="reg-bnbid" placeholder="กรอกหมายเลข Binance ID"></div>
-        <div class="form-group"><label class="form-label">แนบภาพหน้าจอ Binance</label><input type="file" class="form-control" id="reg-binance-img" accept="image/*"></div>
+        <div class="form-group"><label class="form-label">ภาพโปรไฟล์ Binance</label><input type="file" class="form-control" id="reg-binance-img" accept="image/*"></div>
         <div class="form-group" style="grid-column:1/-1"><label class="form-label">ที่อยู่กระเป๋า USDT (BEP-20) *</label><input type="text" class="form-control" id="reg-wallet" placeholder="0x..."></div>
       </div>
-      <div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="regNext(1)" style="flex:1">← ย้อนกลับ</button><button class="btn btn-gold" onclick="regNext(3)" style="flex:2">ถัดไป →</button></div>
+      <div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="regNext(1)" style="flex:1">ย้อนกลับ</button><button class="btn btn-gold" onclick="regNext(3)" style="flex:2">ถัดไป</button></div>
     </div>
     <div id="reg-step-3" style="display:none;">
-      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 3: ยืนยันข้อมูล</div>
+      <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 3: ยืนยันข้อมูลของท่าน</div>
       <div id="reg-summary" style="background:var(--dark3);border-radius:10px;padding:16px;margin-bottom:16px;"></div>
       <div id="reg-result"></div>
-      <div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="regNext(2)" style="flex:1">← ย้อนกลับ</button><button class="btn btn-gold" onclick="submitRegistration()" style="flex:2">✅ ยืนยันสมัครสมาชิก</button></div>
+      <div style="display:flex;gap:8px;"><button class="btn btn-outline" onclick="regNext(2)" style="flex:1">ย้อนกลับ</button><button class="btn btn-gold" onclick="submitRegistration()" style="flex:2">✅ ยืนยันสมัครสมาชิก</button></div>
     </div>
   </div>
 </div>
@@ -446,10 +446,10 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
 
     <!-- Tab Navigation -->
     <div style="display:flex;gap:4px;margin-bottom:20px;border-bottom:1px solid var(--border2);overflow-x:auto;">
-      <button class="nav-tab active" id="atab-payment" onclick="switchAdminTab('payment')">💰 ทำรายการ</button>
-      <button class="nav-tab" id="atab-wallets" onclick="switchAdminTab('wallets')">💼 จัดการกระเป๋า</button>
-      <button class="nav-tab" id="atab-teams" onclick="switchAdminTab('teams')">🏆 จัดการทีม</button>
-      <button class="nav-tab" id="atab-admins" onclick="switchAdminTab('admins')">👑 จัดการแอดมิน</button>
+      <button class="nav-tab active" id="atab-payment" onclick="switchAdminTab('payment')">ทำรายการ</button>
+      <button class="nav-tab" id="atab-wallets" onclick="switchAdminTab('wallets')">จัดการกระเป๋า</button>
+      <button class="nav-tab" id="atab-teams" onclick="switchAdminTab('teams')">จัดการทีม</button>
+      <button class="nav-tab" id="atab-admins" onclick="switchAdminTab('admins')">จัดการแอดมิน</button>
     </div>
 
     <!-- TAB: PAYMENT -->
@@ -469,8 +469,9 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
           </div>
           <div class="grid-3" style="font-size:0.85rem;">
             <div class="info-row"><span class="info-k">BNB ID</span><span class="info-v" id="af-id">—</span></div>
-            <div class="info-row"><span class="info-k">ชื่อ</span><span class="info-v" id="af-name">—</span></div>
-            <div class="info-row"><span class="info-k">ทีม</span><span class="info-v" id="af-team">—</span></div>
+            <div class="info-row"><span class="info-k">ชื่อ</span><span class="info-v" id="af-team">—</span></div>
+            <div class="info-row"><span class="info-k">ทีม</span><span class="info-v" id="af-name">—</span></div>
+           
           </div>
         </div>
         <div class="card">
@@ -503,7 +504,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
           <div class="form-group">
             <label class="form-label">🏦 เลือกกระเป๋าระบบสำหรับรับชำระ</label>
             <select class="form-control" id="af-wallet-select" onchange="updatePayWallet()">
-              <option value="">-- เลือกกระเป๋า --</option>
+              <option value=""> เลือกกระเป๋า </option>
             </select>
           </div>
           <div id="af-wallet-display" style="display:none;margin-bottom:14px;">
@@ -531,7 +532,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
         </div>
         <div class="tbl-wrap">
           <table>
-            <thead><tr><th>วันที่</th><th>BNB ID</th><th>ชื่อ</th><th>ทีม</th><th>กำไร</th><th>สมาชิก</th><th>โอนรวม</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+            <thead><tr><th>วันที่</th><th>เลขสมาชิก</th><th>ชื่อทีม</th><th>ชื่อสมาชิก</th><th>กำไร</th><th>สมาชิก</th><th>ยอดโอน</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
             <tbody id="admin-payments-table"><tr><td colspan="9" style="text-align:center;color:var(--muted);padding:20px;">กำลังโหลด...</td></tr></tbody>
           </table>
         </div>
@@ -692,7 +693,7 @@ const COINS=['Gold','BTC','ETH','XRP','SOL','BNB','ADA','DOGE','MATIC','LINK','D
 const PROVINCES=['กรุงเทพมหานคร','กระบี่','กาญจนบุรี','กาฬสินธุ์','กำแพงเพชร','ขอนแก่น','จันทบุรี','ฉะเชิงเทรา','ชลบุรี','ชัยนาท','ชัยภูมิ','ชุมพร','เชียงราย','เชียงใหม่','ตรัง','ตราด','ตาก','นครนายก','นครปฐม','นครพนม','นครราชสีมา','นครศรีธรรมราช','นครสวรรค์','นนทบุรี','นราธิวาส','น่าน','บึงกาฬ','บุรีรัมย์','ปทุมธานี','ประจวบคีรีขันธ์','ปราจีนบุรี','ปัตตานี','พระนครศรีอยุธยา','พะเยา','พังงา','พัทลุง','พิจิตร','พิษณุโลก','เพชรบุรี','เพชรบูรณ์','แพร่','ภูเก็ต','มหาสารคาม','มุกดาหาร','แม่ฮ่องสอน','ยโสธร','ยะลา','ร้อยเอ็ด','ระนอง','ระยอง','ราชบุรี','ลพบุรี','ลำปาง','ลำพูน','เลย','ศรีสะเกษ','สกลนคร','สงขลา','สตูล','สมุทรปราการ','สมุทรสงคราม','สมุทรสาคร','สระแก้ว','สระบุรี','สิงห์บุรี','สุโขทัย','สุพรรณบุรี','สุราษฎร์ธานี','สุรินทร์','หนองคาย','หนองบัวลำภู','อ่างทอง','อำนาจเจริญ','อุดรธานี','อุตรดิตถ์','อุทัยธานี','อุบลราชธานี'];
 
 // ═══════════════ FIELD HELPERS ═══════════════
-function payVal(p,f){const M={'bnb_id':p['Field 1'],'team':p['Field 2'],'name':p['Field 3'],'lva':p['Field 4'],'lvb':p['Field 5'],'date':p['Field 6'],'profit':p['Field 8'],'commission':p['10.00%'],'guarantee':p['10.00%1'],'balance':p['Field 11'],'member':p['50.00%'],'central':p['50.00%1'],'transfer':p['Field 14'],'position':p['Field 15'],'note':p['Field 16']};const v=M[f];return(v===undefined||v===null)?'':v;}
+function payVal(p,f){const M={'bnb_id':p['Field 1'],'name':p['Field 2'],'team':p['Field 3'],'lva':p['Field 4'],'lvb':p['Field 5'],'date':p['Field 6'],'profit':p['Field 8'],'commission':p['10.00%'],'guarantee':p['10.00%1'],'balance':p['Field 11'],'member':p['50.00%'],'central':p['50.00%1'],'transfer':p['Field 14'],'position':p['Field 15'],'note':p['Field 16']};const v=M[f];return(v===undefined||v===null)?'':v;}
 function payNum(p,f){return parseFloat(String(payVal(p,f)).replace(/[$,\s]/g,''))||0;}
 function memVal(m,f){const M={'id':m['BNB_ID'],'name':m['Name'],'team':m['Team'],'wallet':m['Address Wallet'],'status':m['Status'],'qr':m['QR Code'],'lva':m['Level A'],'lvb':m['Level B']};const v=M[f];return(v===undefined||v===null)?'':String(v);}
 function teamVal(t,f){const M={'name':t['ฐานข้อมูลทีม'],'support':t['Field 2'],'memberid':t['Field 3'],'owner':t['Field 4'],'qr':t['Field 5'],'wallet':t['Field 6'],'status':t['สถานะของทีม']};const v=M[f];return(v===undefined||v===null)?'':String(v);}
@@ -770,7 +771,7 @@ async function init(){
     await Promise.all([loadMembers(),loadTeams(),loadPayments()]);
     hideLoading();
     const el=document.getElementById('db-status');
-    el.textContent='🟢 NocoDB Connected'; el.className='db-badge db-ok';
+    el.textContent='🟢 Data Connected'; el.className='db-badge db-ok';
     populateRegTeams(); populateRegProvinces(); setTodayDate();
     if(currentAdmin)showAdminDashboard();
   }catch(e){
