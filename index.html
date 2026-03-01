@@ -360,6 +360,8 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
           <div class="info-row"><span class="info-k">ชื่อ-สกุล</span><span class="info-v" id="dash-name">—</span></div>
           <div class="info-row"><span class="info-k">หมายเลขสมาชิก</span><span class="info-v" id="dash-id">—</span></div>
           <div class="info-row"><span class="info-k">ทีมสังกัด</span><span class="info-v" id="dash-team">—</span></div>
+          <div class="info-row"><span class="info-k">Level 🅰️ :${lva||'—'}</span></div>
+          <div class="info-row"><span class="info-k">Level 🅱️ :${lvb||'—'}</span></div>
           <div class="info-row"><span class="info-k">สถานะ</span><span class="info-v" id="dash-status">—</span></div>
         </div>
         <div>
@@ -421,7 +423,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
     <div id="reg-step-2" style="display:none;">
       <div style="color:var(--gold);font-weight:700;margin-bottom:16px;">ขั้นตอนที่ 2: Binance Info</div>
       <div class="grid-2">
-        <div class="form-group"><label class="form-label">Binance ID (BNB_ID) *</label><input type="text" class="form-control" id="reg-bnbid" placeholder="กรอกหมายเลข Binance ID"></div>
+        <div class="form-group"><label class="form-label">Binance ID *</label><input type="text" class="form-control" id="reg-bnbid" placeholder="กรอกหมายเลข Binance ID"></div>
         <div class="form-group"><label class="form-label">ภาพโปรไฟล์ Binance</label><input type="file" class="form-control" id="reg-binance-img" accept="image/*"></div>
         <div class="form-group" style="grid-column:1/-1"><label class="form-label">ที่อยู่กระเป๋า USDT (BEP-20) *</label><input type="text" class="form-control" id="reg-wallet" placeholder="0x..."></div>
       </div>
