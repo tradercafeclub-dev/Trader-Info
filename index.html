@@ -1380,10 +1380,11 @@ function showPaymentDetail(rowId){
           <div style="font-size:0.6rem;color:var(--muted);">เงินรายได้สมาชิกรวม</div>
           <div style="font-size:1.05rem;font-weight:700;color:var(--gold);margin-top:4px;">$${(mem+guar).toFixed(2)}</div>
         </div>
-         <div class="pay-amount-box"style="color:var(--green);">
-            <div class="pay-amount-lbl">TOTAL PAYMENT AMOUNT</div>
-            <div class="pay-amount-val">$${trans.toFixed(2)}</div>
-          </div>
+        <div class="stat-card">
+      <div style="font-size:1.6rem;color:var(--gold);font-family:'Orbitron',monospace;font-weight:700;" id="stat-pending">—</div>
+      <div style="font-size:0.72rem;color:var(--muted);margin-top:6px;">เงินรายได้สมาชิกรวม</div>
+      <div style="font-size:1.05rem;font-weight:700;color:var(--gold);margin-top:4px;">$${(mem+guar).toFixed(2)}</div>
+        </div>
       </div>
 
       <!-- Detail + System -->
