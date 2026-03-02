@@ -570,7 +570,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
     <img src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC" onerror="this.style.display='none'">
     <div>
       <div class="brand-name">TRADER CAFE CLUB</div>
-      <div class="brand-sub">PAYMENT MANAGEMENT SYSTEM</div>
+      <div class="brand-sub">Payments System</div>
     </div>
   </div>
   <div class="nav-tabs">
@@ -594,7 +594,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
   <div class="hero" style="padding:36px 24px 32px;">
     <img class="hero-logo" src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC" onerror="this.style.display='none'">
     <div class="hero-title">TRADER CAFE CLUB</div>
-    <div class="hero-sub">ระบบจัดการการจ่ายเงินและผลตอบแทนการเทรด — เชื่อมต่อ NocoDB Live</div>
+    <div class="hero-sub">ระบบการจ่ายเงินและผลกำไรจากการเทรด</div>
   </div>
 
   <!-- STAT CARDS ROW — responsive grid -->
@@ -602,33 +602,33 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
     <!-- สมาชิก -->
     <div class="stat-card" style="padding:16px 14px;">
       <div style="font-size:2rem;color:var(--gold);font-family:'Orbitron',monospace;font-weight:900;line-height:1;" id="stat-members">—</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">👥 สมาชิกทั้งหมด</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">ยอดสมาชิกรวม</div>
     </div>
     <!-- ทีม -->
     <div class="stat-card" style="padding:16px 14px;">
       <div style="font-size:2rem;color:var(--gold);font-family:'Orbitron',monospace;font-weight:900;line-height:1;" id="stat-teams">—</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">🏆 ทีมทั้งหมด</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">ยอดทีมรวม</div>
     </div>
     <!-- รายการ -->
     <div class="stat-card" style="padding:16px 14px;">
       <div style="font-size:2rem;color:var(--gold);font-family:'Orbitron',monospace;font-weight:900;line-height:1;" id="stat-payments">—</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">📋 รายการชำระ</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">รวมรายการจ่าย</div>
     </div>
     <!-- รอชำระ -->
     <div class="stat-card" style="padding:16px 14px;">
       <div style="font-size:2rem;color:var(--gold);font-family:'Orbitron',monospace;font-weight:900;line-height:1;" id="stat-pending">—</div>
-      <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">⏳ รอดำเนินการ</div>
+      <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">รอดำเนินการ</div>
     </div>
     <!-- Total Profit — full width spanning both columns -->
     <div class="stat-card" style="grid-column:1/-1;border-top-color:var(--green);
       background:linear-gradient(135deg,rgba(3,192,117,0.1),rgba(3,192,117,0.03));
       border-color:rgba(3,192,117,0.35);padding:22px 20px;text-align:center;">
       <div style="font-size:0.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;">
-        💰 ยอดเงินเทรดรวมทั้งหมด
+        กำไรจากการเทรดรวม
       </div>
       <div style="font-family:'Orbitron',monospace;font-size:2rem;font-weight:900;color:var(--green);
         text-shadow:0 0 20px rgba(3,192,117,0.4);letter-spacing:1px;" id="stat-total-profit">—</div>
-      <div style="font-size:0.72rem;color:rgba(3,192,117,0.6);margin-top:6px;letter-spacing:1px;">Total Profit (USD)</div>
+      <div style="font-size:0.72rem;color:rgba(3,192,117,0.6);margin-top:6px;letter-spacing:1px;">Total Profit (USDT)</div>
     </div>
   </div>
 
@@ -668,7 +668,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
             placeholder="ค้นหาชื่อสมาชิก, เลขสมาชิก, ชื่อทีม..."
             oninput="pexSearch()">
         </div>
-        <select class="pex-month-select" id="pex-month-filter" onchange="pexSearch()">
+        <ect class="pex-month-select" id="pex-month-filter" onchange="pexSearch()">
           <option value="">📅 ทุกเดือน</option>
         </select>
       </div>
@@ -688,13 +688,13 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
 
     <!-- Stats bar - 2x2 grid on mobile -->
     <div class="pex-stats-bar" id="pex-stats-bar">
-      <div class="pex-stat-chip">📋 <b id="pex-s-count" style="color:var(--text);">0</b> รายการ</div>
+      <div class="pex-stat-chip">📋 <b id="pex-s-count" style="color:var(--text);">0</b> รายการจ่ายเงิน</div>
       <div class="pex-stat-divider"></div>
-      <div class="pex-stat-chip">💰 <b id="pex-s-profit" style="color:var(--gold);">$0</b> กำไร</div>
+      <div class="pex-stat-chip">💰 <b id="pex-s-profit" style="color:var(--gold);">$0</b>กำไรการเทรดรวม</div>
       <div class="pex-stat-divider"></div>
-      <div class="pex-stat-chip">👤 <b id="pex-s-members" style="color:var(--green);">$0</b> สมาชิก</div>
+      <div class="pex-stat-chip">👤 <b id="pex-s-members" style="color:var(--green);">$0</b>รายได้สมาชิก</div>
       <div class="pex-stat-divider"></div>
-      <div class="pex-stat-chip">👥 <b id="pex-s-unique" style="color:var(--blue);">0</b> คน</div>
+      <div class="pex-stat-chip">👥 <b id="pex-s-unique" style="color:var(--blue);">0</b>จำนวนสมาชิก</div>
     </div>
 
     <!-- Results list -->
@@ -729,9 +729,9 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
         <div>
           <div class="info-row"><span class="info-k">ชื่อ-สกุล</span><span class="info-v" id="dash-name">—</span></div>
           <div class="info-row"><span class="info-k">หมายเลขสมาชิก</span><span class="info-v" id="dash-id">—</span></div>
-          <div class="info-row"><span class="info-k">ทีมสังกัด</span><span class="info-v" id="dash-team">—</span></div>
-          <div class="info-row"><span class="info-k">Level A (อัพไลน์)</span><span class="info-v" id="dash-lva" style="color:var(--green);">—</span></div>
-          <div class="info-row"><span class="info-k">Level B (อัพไลน์)</span><span class="info-v" id="dash-lvb" style="color:var(--gold);">—</span></div>
+          <div class="info-row"><span class="info-k">ทีมสังกัด</span><span class="info-v" id="dash-team" style="color:var(--green);">—</span></div>
+          <div class="info-row"><span class="info-k">Level A </span><span class="info-v" id="dash-lva" style="color:var(--green);">—</span></div>
+          <div class="info-row"><span class="info-k">Level B </span><span class="info-v" id="dash-lvb" style="color:var(--green);">—</span></div>
           <div class="info-row"><span class="info-k">สถานะ</span><span class="info-v" id="dash-status">—</span></div>
         </div>
         <div>
@@ -755,7 +755,7 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
       </div>
       <div class="tbl-wrap">
         <table>
-          <thead><tr><th>วันที่</th><th>กำไรรวม</th><th>ค่าคอม 10%</th><th>ประกัน 10%</th><th>คงเหลือ 80%</th><th>สมาชิก 50%</th><th>ระบบ 50%</th><th>โอนรวม</th><th>สถานะ</th></tr></thead>
+          <thead><tr><th>วันที่</th><th>กำไรรวม</th><th>ค่าคอม 10%</th><th>ประกัน 10%</th><th>ยอดคงเหลือ</th><th>สมาชิก 50%</th><th>ระบบ 50%</th><th>โอนรวม</th><th>สถานะ</th></tr></thead>
           <tbody id="member-payments-table"></tbody>
         </table>
       </div>
@@ -1189,8 +1189,8 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
         <div class="comm-section-hd-left">
           <div class="comm-section-icon" style="background:rgba(240,185,11,0.12);">🏠</div>
           <div>
-            <div class="comm-section-title" style="color:var(--gold);">Your Team — ค่าคอมทีมของคุณ</div>
-            <div style="font-size:0.74rem;color:var(--muted);margin-top:2px;">10% จากกำไรรวมของสมาชิกในทีม</div>
+            <div class="comm-section-title" style="color:var(--gold);">ค่าคอมทีมของคุณ Your Team </div>
+            <div style="font-size:0.74rem;color:var(--muted);margin-top:2px;">10% จากกำไรการเทรดของสมาชิก</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:12px;">
@@ -1211,8 +1211,8 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
         <div class="comm-section-hd-left">
           <div class="comm-section-icon" style="background:rgba(3,192,117,0.12);">🅰️</div>
           <div>
-            <div class="comm-section-title" style="color:var(--green);">Level A — ค่าคอมทีม Level A</div>
-            <div style="font-size:0.74rem;color:var(--muted);margin-top:2px;">15% จากค่าคอม 10% ของทีมที่ระบุ Level A</div>
+            <div class="comm-section-title" style="color:var(--green);">ค่าคอมมิชชั่นทีม Level A</div>
+            <div style="font-size:0.74rem;color:var(--muted);margin-top:2px;">15% จากค่าคอมมิชชั่นทีม</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:12px;">
@@ -1233,8 +1233,8 @@ button:disabled{opacity:0.5;cursor:not-allowed;transform:none!important;}
         <div class="comm-section-hd-left">
           <div class="comm-section-icon" style="background:rgba(24,144,255,0.12);">🅱️</div>
           <div>
-            <div class="comm-section-title" style="color:var(--blue);">Level B — ค่าคอมทีม Level B</div>
-            <div style="font-size:0.74rem;color:var(--muted);margin-top:2px;">10% จากค่าคอม 10% ของทีมที่ระบุ Level B</div>
+            <div class="comm-section-title" style="color:var(--blue);">ค่าคอมมิชชั่นทีม Level B</div>
+            <div style="font-size:0.74rem;color:var(--muted);margin-top:2px;">10% จากค่าคอมมิชชั่นทีม</div>
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:12px;">
@@ -2269,10 +2269,10 @@ function showPaymentDetail(rowId){
         <div style="flex:1;">
           <div style="font-size:1.05rem;font-weight:700;">${name}</div>
           <div style="display:flex;gap:12px;margin-top:4px;flex-wrap:wrap;">
-            <span style="font-size:0.72rem;color:var(--muted);">🪙 🪙 UID: <b style="color:var(--gold)">${bnbId}</b></span>
-            <span style="font-size:0.72rem;color:var(--muted);">🏆 ${team}</span>
+            <span style="font-size:0.72rem;color:var(--muted);">UID: <b style="color:var(--gold)">${bnbId}</b></span>
+            <span style="font-size:0.72rem;color:var(--muted);">Team:<b style="color:var(--gold)"> ${team}</b></span>
           </div>
-          <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;">📈 📈 TEAM COMMISSION: <b style="color:var(--gold)">${fmtUSD(comm)}</b></div>
+          <div style="font-size:0.72rem;color:var(--muted);margin-top:3px;">Commission: <b style="color:var(--gold)">${fmtUSD(comm)}</b></div>
         </div>
         <span class="badge ${isPending?'badge-pending':'badge-approve'}" style="align-self:flex-start;">${isPending?'⏳ รอชำระ':'✅ จ่ายแล้ว'}</span>
       </div>
@@ -2280,14 +2280,14 @@ function showPaymentDetail(rowId){
       <!-- Level Commission -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
         <div style="background:rgba(3,192,117,0.08);border:1px solid rgba(3,192,117,0.2);border-radius:10px;padding:12px;">
-          <div style="font-size:0.65rem;color:var(--muted);">LEVEL A — ${lva||'—'}</div>
+          <div style="font-size:0.65rem;color:var(--muted);">LEVEL 🅰️: ${lva||'—'}</div>
           <div style="font-weight:700;color:var(--green);font-size:1.1rem;margin-top:4px;">${fmtUSD(lvaComm)}</div>
-          <div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">(15% ของค่าคอม)</div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">(ค่าคอม 15%)</div>
         </div>
         <div style="background:rgba(240,185,11,0.08);border:1px solid rgba(240,185,11,0.2);border-radius:10px;padding:12px;">
-          <div style="font-size:0.65rem;color:var(--muted);">LEVEL B — ${lvb||'—'}</div>
+          <div style="font-size:0.65rem;color:var(--muted);">LEVEL 🅱️: ${lvb||'—'}</div>
           <div style="font-weight:700;color:var(--gold);font-size:1.1rem;margin-top:4px;">${fmtUSD(lvbComm)}</div>
-          <div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">(10% ของค่าคอม)</div>
+          <div style="font-size:0.65rem;color:var(--muted);margin-top:2px;">(ค่าคอม 10% )</div>
         </div>
       </div>
 
@@ -2302,7 +2302,7 @@ function showPaymentDetail(rowId){
           <div style="font-size:1.05rem;font-weight:700;color:var(--gold);margin-top:4px;">${fmtUSD(guar)}</div>
         </div>
         <div style="background:linear-gradient(135deg,rgba(240,185,11,0.15),rgba(240,185,11,0.05));border:1px solid rgba(240,185,11,0.3);border-radius:10px;padding:10px;text-align:center;">
-          <div style="font-size:0.6rem;color:var(--muted);">⭐ รายได้รวม</div>
+          <div style="font-size:0.6rem;color:var(--muted);">รายได้สมาชิกรวม</div>
           <div style="font-size:1.05rem;font-weight:700;color:var(--gold);margin-top:4px;">${fmtUSD((mem+guar))}</div>
         </div>
       </div>
@@ -2312,18 +2312,18 @@ function showPaymentDetail(rowId){
         <div>
           <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:8px;">📊 รายละเอียดส่วนแบ่ง</div>
           <div style="background:var(--dark2);border-radius:10px;padding:12px;">
-            ${[['กำไรรวม (100%)',`+${fmtUSD(profit)}`,'var(--green)'],['ประกันกำไร (10%)',`-${fmtUSD(guar)}`,'var(--red)'],['ค่าคอมมิชั่น (10%)',`-${fmtUSD(comm)}`,'var(--red)'],['คงเหลือสุทธิ (80%)',`${fmtUSD(bal)}`,'var(--gold)'],['ส่วนผู้เทรด (50%)',`${fmtUSD(mem)}`,'var(--green)'],['ส่วนระบบ (50%)',`${fmtUSD(cen)}`,'var(--gold)']].map(([l,v,c])=>`<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="color:var(--muted)">${l}</span><span style="color:${c};font-weight:600;">${v}</span></div>`).join('')}
+            ${[['กำไรรวม ',`+${fmtUSD(profit)}`,'var(--green)'],['ประกันกำไร (10%)',`-${fmtUSD(guar)}`,'var(--red)'],['ค่าคอมมิชั่น (10%)',`-${fmtUSD(comm)}`,'var(--red)'],['ยอดคงเหลือ',`${fmtUSD(bal)}`,'var(--gold)'],['ส่วนผู้เทรด (50%)',`${fmtUSD(mem)}`,'var(--green)'],['ส่วนระบบ (50%)',`${fmtUSD(cen)}`,'var(--gold)']].map(([l,v,c])=>`<div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="color:var(--muted)">${l}</span><span style="color:${c};font-weight:600;">${v}</span></div>`).join('')}
           </div>
         </div>
         <div>
-          <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:8px;">💳 รายละเอียดเข้าระบบ</div>
+          <div style="font-size:0.72rem;color:var(--gold);font-weight:600;margin-bottom:8px;">💳 รายละเอียดส่งเข้าระบบ</div>
           <div style="background:var(--dark2);border-radius:10px;padding:12px;margin-bottom:8px;">
             <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="color:var(--muted)">ค่าคอมมิชั่น</span><span style="color:var(--gold);">${fmtUSD(comm)}</span></div>
             <div style="display:flex;justify-content:space-between;padding:5px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.04);"><span style="color:var(--muted)">ส่วนระบบ</span><span style="color:var(--gold);">${fmtUSD(cen)}</span></div>
             <div style="display:flex;justify-content:space-between;padding:8px 0 0;font-size:0.82rem;font-weight:700;"><span>🔖 ยอดรวม</span><span style="color:var(--gold);">${fmtUSD(trans)}</span></div>
           </div>
           <div class="pay-amount-box">
-            <div class="pay-amount-lbl">TOTAL PAYMENT AMOUNT</div>
+            <div class="pay-amount-lbl">TOTAL TRANSFER </div>
             <div class="pay-amount-val">${fmtUSD(trans)}</div>
           </div>
         </div>
@@ -2605,8 +2605,8 @@ function renderAdminCommList(monthKey){
 
     const types=[
       ytComm>0&&{type:'your-team',label:'Your Team',pill:'pill-yt',rowCls:'yt-row',color:'var(--gold)',comm:ytComm,pays:ytP,desc:'10% ของกำไรทีม'},
-      laComm>0&&{type:'level-a',label:'Level A',pill:'pill-la',rowCls:'la-row',color:'var(--green)',comm:laComm,pays:laP,desc:'15% × 10% ของกำไร'},
-      lbComm>0&&{type:'level-b',label:'Level B',pill:'pill-lb',rowCls:'lb-row',color:'var(--blue)',comm:lbComm,pays:lbP,desc:'10% × 10% ของกำไร'},
+      laComm>0&&{type:'level-a',label:'Level A',pill:'pill-la',rowCls:'la-row',color:'var(--green)',comm:laComm,pays:laP,desc:'15% ของค่าคอมมิชชั่น'},
+      lbComm>0&&{type:'level-b',label:'Level B',pill:'pill-lb',rowCls:'lb-row',color:'var(--blue)',comm:lbComm,pays:lbP,desc:'10% ของค่าคอมมิชชั่น'},
     ].filter(Boolean);
 
     totalItems+=types.length;
