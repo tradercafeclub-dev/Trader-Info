@@ -1755,24 +1755,41 @@ function pexRender(){
     }).join('');
   }
 
-  // Pagination controls
+ // Pagination — 3 แรก + ... + 2 สุดท้าย (or around current)
   const pgEl = document.getElementById('pex-pagination');
   if(!pgEl) return;
   if(totalPages<=1){pgEl.innerHTML='';return;}
 
-  let pgHtml = `<span class="pex-page-info">หน้า ${pexPage+1}/${totalPages}</span>`;
-  pgHtml += `<button class="pex-page-btn" onclick="pexGoPage(${pexPage-1})" ${pexPage===0?'disabled':''}>‹</button>`;
-
-  // show max 7 page buttons
-  let start=Math.max(0,pexPage-3), end=Math.min(totalPages-1,start+6);
-  if(end-start<6) start=Math.max(0,end-6);
-  if(start>0) pgHtml+=`<button class="pex-page-btn" onclick="pexGoPage(0)">1</button><span class="pex-page-info">…</span>`;
-  for(let i=start;i<=end;i++){
-    pgHtml+=`<button class="pex-page-btn ${i===pexPage?'pex-page-active':''}" onclick="pexGoPage(${i})">${i+1}</button>`;
+  function pgBtn(idx, label, active=false, disabled=false){
+    if(disabled) return `<button class="pex-page-btn" disabled>${label}</button>`;
+    return `<button class="pex-page-btn ${active?'pex-page-active':''}" onclick="pexGoPage(${idx})">${label}</button>`;
   }
-  if(end<totalPages-1) pgHtml+=`<span class="pex-page-info">…</span><button class="pex-page-btn" onclick="pexGoPage(${totalPages-1})">${totalPages}</button>`;
-  pgHtml += `<button class="pex-page-btn" onclick="pexGoPage(${pexPage+1})" ${pexPage>=totalPages-1?'disabled':''}>›</button>`;
-  pgHtml += `<span class="pex-page-info" style="margin-left:4px;">(${filtered.length} รายการ)</span>`;
+
+  // Build page set: first 3 + last 2 + current±1 (deduplicated, sorted)
+  const pageSet = new Set();
+  // First 3
+  for(let i=0;i<Math.min(3,totalPages);i++) pageSet.add(i);
+  // Last 2
+  for(let i=Math.max(0,totalPages-2);i<totalPages;i++) pageSet.add(i);
+  // Current ± 1
+  for(let i=Math.max(0,pexPage-1);i<=Math.min(totalPages-1,pexPage+1);i++) pageSet.add(i);
+
+  const pages = [...pageSet].sort((a,b)=>a-b);
+
+  let pgHtml = `<span class="pex-page-info">หน้า ${pexPage+1}/${totalPages}</span>`;
+  pgHtml += pgBtn(pexPage-1,'‹',false,pexPage===0);
+
+  let prev = -1;
+  for(const pg of pages){
+    if(prev>=0 && pg-prev>1){
+      pgHtml += `<span class="pex-page-info">…</span>`;
+    }
+    pgHtml += pgBtn(pg, pg+1, pg===pexPage);
+    prev = pg;
+  }
+
+  pgHtml += pgBtn(pexPage+1,'›',false,pexPage>=totalPages-1);
+  pgHtml += `<span class="pex-page-info">(${filtered.length} รายการ)</span>`;
   pgEl.innerHTML = pgHtml;
 }
 
