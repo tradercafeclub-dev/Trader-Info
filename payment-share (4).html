@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Report — TRADERCAFECLUB</title>
+
+<!-- ═══════════════════════════════════════════════════
+     OG / LINE / Facebook / Twitter Card Preview Tags
+     รูปภาพ: tcc-payment-banner.png (อยู่ใน repo เดียวกัน)
+     ═══════════════════════════════════════════════════ -->
+<meta property="og:type"        content="website">
+<meta property="og:site_name"   content="TRADERCAFECLUB">
+<meta id="og-title"       property="og:title"
+      content="💳 Payment Report — TRADERCAFECLUB">
+<meta id="og-description" property="og:description"
+      content="รายละเอียดการชำระเงิน • Secured & Encrypted • Verified">
+<meta id="og-image"       property="og:image"
+      content="https://tradercafeclub-dev.github.io/Customer-information/tcc-payment-banner.png">
+<meta property="og:image:width"  content="1200">
+<meta property="og:image:height" content="630">
+<meta id="og-url" property="og:url" content="">
+
+<!-- Twitter Card -->
+<meta name="twitter:card"  content="summary_large_image">
+<meta id="tw-title" name="twitter:title"
+      content="💳 Payment Report — TRADERCAFECLUB">
+<meta id="tw-desc"  name="twitter:description"
+      content="รายละเอียดการชำระเงิน • Secured & Encrypted • Verified">
+<meta id="tw-image" name="twitter:image"
+      content="https://tradercafeclub-dev.github.io/Customer-information/tcc-payment-banner.png">
+
+<!-- General / LINE -->
+<meta id="meta-desc" name="description"
+      content="รายละเอียดการชำระเงิน TRADERCAFECLUB">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold:   #f0b90b;
+    --gold-d: #d4a017;
+    --green:  #03c075;
+    --red:    #f6465d;
+    --dark1:  #0b0e13;
+    --dark2:  #111620;
+    --dark3:  #161c27;
+    --dark4:  #1c2333;
+    --border: rgba(255,255,255,0.08);
+    --border2:rgba(255,255,255,0.06);
+    --text:   #e2e8f0;
+    --muted:  #64748b;
+    --black:  #0a0c10;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--dark1);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    /* subtle grid bg */
+    background-image:
+      linear-gradient(rgba(240,185,11,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240,185,11,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+
+  /* ── Top Banner ── */
+  .top-banner {
+    width: 100%;
+    background: linear-gradient(135deg, #0f1318 0%, #131820 100%);
+    border-bottom: 1px solid rgba(240,185,11,0.15);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-banner-brand {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .top-banner-brand img { height: 28px; }
+  .top-banner-brand-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.72rem;
+    color: var(--gold);
+    letter-spacing: 2px;
+  }
+  .top-banner-badge {
+    font-size: 0.65rem;
+    color: var(--muted);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3px 12px;
+    letter-spacing: 1px;
+  }
+
+  /* ── Loading / Error ── */
+  #loading-screen, #error-screen {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 60vh; gap: 16px; text-align: center; padding: 20px;
+  }
+  .spinner {
+    width: 48px; height: 48px;
+    border: 3px solid rgba(240,185,11,0.15);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text {
+    color: var(--muted); font-size: 0.85rem; letter-spacing: 1px;
+  }
+  .error-icon { font-size: 3rem; }
+  .error-title { color: var(--red); font-size: 1.1rem; font-weight: 700; }
+  .error-msg { color: var(--muted); font-size: 0.82rem; max-width: 320px; line-height: 1.6; }
+
+  /* ── Card Container ── */
+  #payment-container {
+    width: 100%;
+    max-width: 560px;
+    padding: 20px 16px 40px;
+    animation: fadeUp 0.5s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity:0; transform: translateY(20px); }
+    to   { opacity:1; transform: translateY(0);    }
+  }
+
+  /* ── Card ── */
+  .card {
+    background: linear-gradient(160deg, #131820, #0f1318);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6), 0 0 1px rgba(240,185,11,0.1) inset;
+  }
+
+  /* Header */
+  .card-header {
+    background: linear-gradient(135deg, #1a1f28, #0f1318);
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border2);
+    display: flex; justify-content: space-between; align-items: center; gap: 10px;
+  }
+  .card-header-left { display: flex; align-items: center; gap: 10px; }
+  .card-header-left img { height: 26px; }
+  .report-label {
+    font-family: 'Orbitron', monospace; font-size: 0.75rem;
+    color: var(--gold); letter-spacing: 2px;
+  }
+  .live-row {
+    display: flex; align-items: center; gap: 6px; margin-top: 3px;
+  }
+  .pulse-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+    animation: blink 1.4s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100%{ opacity:1; } 50%{ opacity:0.3; }
+  }
+  .live-text { font-size: 0.65rem; color: var(--green); }
+  .live-date { font-size: 0.65rem; color: var(--muted); }
+  .report-no {
+    font-size: 0.65rem; color: var(--gold);
+    border: 1px solid rgba(240,185,11,0.3);
+    padding: 4px 12px; border-radius: 20px;
+    flex-shrink: 0;
+  }
+
+  /* Body */
+  .card-body { padding: 16px 18px; }
+
+  /* Member block */
+  .member-block {
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(240,185,11,0.04);
+    border: 1px solid var(--border2); border-radius: 12px;
+    padding: 12px; margin-bottom: 14px;
+  }
+  .member-avatar {
+    width: 50px; height: 50px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--gold), var(--gold-d));
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+  }
+  .member-name { font-size: 1.05rem; font-weight: 700; }
+  .member-meta { display: flex; gap: 12px; margin-top: 4px; flex-wrap: wrap; }
+  .member-meta span { font-size: 0.72rem; color: var(--muted); }
+  .member-meta b { color: var(--gold); }
+  .member-comm { font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
+  .member-comm b { color: var(--gold); }
+  .badge {
+    font-size: 0.68rem; font-weight: 700; padding: 4px 10px;
+    border-radius: 20px; align-self: flex-start; flex-shrink: 0;
+    border: 1px solid;
+  }
+  .badge-approve { color: var(--green); border-color: rgba(3,192,117,0.35); background: rgba(3,192,117,0.1); }
+  .badge-pending { color: var(--gold);  border-color: rgba(240,185,11,0.35); background: rgba(240,185,11,0.1); }
+
+  /* Level boxes */
+  .level-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .level-box {
+    border-radius: 10px; padding: 12px;
+  }
+  .level-box.lva { background: rgba(3,192,117,0.08); border: 1px solid rgba(3,192,117,0.2); }
+  .level-box.lvb { background: rgba(240,185,11,0.08); border: 1px solid rgba(240,185,11,0.2); }
+  .level-lbl { font-size: 0.62rem; color: var(--muted); }
+  .level-val {
+    font-weight: 700; font-size: 1.1rem; margin-top: 4px;
+  }
+  .lva .level-val { color: var(--green); }
+  .lvb .level-val { color: var(--gold); }
+  .level-sub { font-size: 0.62rem; color: var(--muted); margin-top: 2px; }
+
+  /* Summary 3 boxes */
+  .summary-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  .summary-box {
+    background: var(--dark2); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 10px; text-align: center;
+  }
+  .summary-box.highlight {
+    background: linear-gradient(135deg,rgba(240,185,11,0.15),rgba(240,185,11,0.05));
+    border-color: rgba(240,185,11,0.3);
+  }
+  .summary-lbl { font-size: 0.58rem; color: var(--muted); line-height: 1.4; }
+  .summary-val { font-size: 1rem; font-weight: 700; margin-top: 4px; }
+  .col-green { color: var(--green); }
+  .col-gold  { color: var(--gold);  }
+
+  /* Detail 2-col grid */
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .detail-section-title {
+    font-size: 0.72rem; color: var(--gold); font-weight: 600; margin-bottom: 8px;
+  }
+  .detail-inner {
+    background: var(--dark2); border-radius: 10px; padding: 12px;
+  }
+  .detail-row {
+    display: flex; justify-content: space-between;
+    padding: 5px 0; font-size: 0.78rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .detail-row:last-child { border-bottom: none; }
+  .detail-row span:first-child { color: var(--muted); }
+  .detail-total {
+    display: flex; justify-content: space-between;
+    padding: 8px 0 0; font-size: 0.82rem; font-weight: 700;
+  }
+  .detail-total span:last-child { color: var(--gold); }
+
+  /* Amount box */
+  .amount-box {
+    background: linear-gradient(135deg, var(--gold), var(--gold-d));
+    border-radius: 12px; padding: 14px; text-align: center; margin-top: 8px;
+  }
+  .amount-lbl { font-size: 0.65rem; color: rgba(0,0,0,0.6); font-weight: 600; letter-spacing: 1px; }
+  .amount-val {
+    font-family: 'Orbitron', monospace; font-size: 1.5rem;
+    font-weight: 900; color: var(--black); margin-top: 4px;
+  }
+
+  /* Trade history */
+  .trade-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px;
+  }
+  .trade-card {
+    background: var(--dark2); border: 1px solid var(--border2);
+    border-radius: 10px; padding: 10px 8px; text-align: center;
+    position: relative; overflow: hidden;
+  }
+  .trade-card::before {
+    content:''; position:absolute; top:0;left:0;right:0; height:2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-d));
+  }
+  .trade-no  { font-size: 0.58rem; color: var(--muted); margin-bottom: 2px; }
+  .trade-coin{ font-size: 0.7rem;  color: var(--gold);  font-weight: 700; margin-bottom: 4px; }
+  .trade-amt { font-size: 0.9rem;  font-weight: 700;    color: var(--green); }
+
+  /* Wallet / QR */
+  .qr-section { margin-bottom: 14px; }
+  .qr-section-title { font-size: 0.72rem; color: var(--gold); font-weight: 600; margin-bottom: 8px; }
+  .qr-img-wrap { display: flex; justify-content: center; margin-bottom: 12px; }
+  .qr-img { width: 150px; height: 150px; border-radius: 12px; border: 2px solid var(--border); object-fit: contain; background: #fff; }
+  .wallet-box {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(240,185,11,0.04); border: 1px solid rgba(240,185,11,0.15);
+    border-radius: 8px; padding: 8px 12px; margin-bottom: 6px;
+  }
+  .wallet-addr {
+    font-family: monospace; font-size: 0.75rem; color: var(--gold);
+    word-break: break-all; flex: 1;
+  }
+  .copy-btn {
+    background: rgba(240,185,11,0.12); border: 1px solid var(--gold);
+    color: var(--gold); padding: 4px 10px; border-radius: 6px;
+    cursor: pointer; font-size: 0.7rem; white-space: nowrap;
+    font-family: 'Rajdhani', sans-serif; font-weight: 600;
+    transition: background 0.15s;
+  }
+  .copy-btn:hover { background: rgba(240,185,11,0.25); }
+  .wallet-chain { font-size: 0.65rem; color: var(--green); text-align: center; }
+  .wallet-hint  { font-size: 0.62rem; color: var(--muted); text-align: center; margin-top: 3px; }
+
+  /* Status bar */
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 12px; background: var(--dark2);
+    border-radius: 8px; margin-bottom: 14px;
+  }
+  .status-text { font-weight: 600; }
+  .status-date { font-size: 0.75rem; color: var(--muted); }
+
+  /* Footer */
+  .card-footer {
+    text-align: center; padding: 12px 0 0;
+    border-top: 1px solid var(--border2);
+    margin-top: 4px;
+  }
+  .footer-brand {
+    font-family: 'Orbitron', monospace; font-size: 0.62rem;
+    color: var(--muted); letter-spacing: 2px;
+  }
+  .footer-secure { font-size: 0.6rem; color: var(--green); margin-top: 3px; }
+
+  /* Section title */
+  .section-title {
+    font-size: 0.72rem; color: var(--gold); font-weight: 600;
+    margin-bottom: 10px; margin-top: 14px;
+  }
+
+  /* Toast */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: rgba(3,192,117,0.92); color: #fff;
+    padding: 8px 20px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;
+    opacity: 0; transition: all 0.3s ease; pointer-events: none; z-index: 9999;
+    white-space: nowrap;
+  }
+  #toast.show { opacity:1; transform: translateX(-50%) translateY(0); }
+
+  /* Responsive */
+  @media(max-width:500px){
+    .detail-grid { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .level-val { font-size: 0.95rem; }
+  }
+  @media(max-width:360px){
+    .summary-grid { grid-template-columns: 1fr 1fr; }
+    .summary-grid .highlight { grid-column: span 2; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Top banner -->
+<div class="top-banner">
+  <div class="top-banner-brand">
+    <img src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" onerror="this.style.display='none'" alt="TCC">
+    <div class="top-banner-brand-text">TRADERCAFECLUB</div>
+  </div>
+  <div class="top-banner-badge">🔒 SECURED PAYMENT REPORT</div>
+</div>
+
+<!-- Loading -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <div class="loading-text">⏳ กำลังโหลดข้อมูล...</div>
+</div>
+
+<!-- Error -->
+<div id="error-screen" style="display:none">
+  <div style="background:linear-gradient(160deg,#131820,#0b0e13);border:1px solid rgba(239,68,68,0.3);border-radius:18px;padding:32px 24px;max-width:380px;width:100%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,0.7);">
+    <div style="font-size:3rem;margin-bottom:16px;">🔒</div>
+    <div style="font-family:'Orbitron',monospace;font-size:0.88rem;color:#f87171;letter-spacing:1.5px;margin-bottom:10px;">LINK INVALID</div>
+    <div class="error-msg" id="error-msg" style="color:#94a3b8;font-size:0.82rem;line-height:1.7;margin-bottom:20px;">ลิงก์นี้อาจหมดอายุหรือไม่ถูกต้อง กรุณาติดต่อแอดมิน</div>
+    <div style="background:rgba(240,185,11,0.06);border:1px solid rgba(240,185,11,0.2);border-radius:10px;padding:12px 16px;">
+      <div style="font-size:0.68rem;color:#f0b90b;font-weight:600;letter-spacing:1px;margin-bottom:4px;">ℹ️ SECURE SHARE LINK</div>
+      <div style="font-size:0.72rem;color:#64748b;line-height:1.6;">ลิงก์แชร์มีอายุ 48 ชั่วโมง และสร้างได้เฉพาะแอดมินเท่านั้น<br>เพื่อความปลอดภัยของข้อมูล</div>
+    </div>
+  </div>
+</div>
+
+<!-- Payment content -->
+<div id="payment-container" style="display:none"></div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ── Config ──
+// [FIX] ลบ NOCO token ออกจาก client ทั้งหมด
+// ข้อมูลทุกอย่างดึงผ่าน Worker proxy แทน — token อยู่ฝั่ง server เท่านั้น
+const WORKER_URL = 'https://tcc-proxy.tradercafeclub.workers.dev';
+const SYSTEM_WALLET = {
+  label: 'กระเป๋าหลัก',
+  addr:  '0xfd1A5bc82603a702a9AF38426FfAC0d6BE5aEeef',
+  qr:    'https://i.ibb.co/d0T7YJfy/line-oa-chat-260203-125428.jpg',
+  active: true
+};
+
+// ── Field map ──
+function payVal(p, f) {
+  const M = {
+    bnb_id:     p['Field 1'],
+    name:       p['Field 2'],
+    team:       p['Field 3'],
+    lva:        p['Field 4'],
+    lvb:        p['Field 5'],
+    date:       p['Field 6'],
+    profit:     p['Field 8'],
+    commission: p['10.00%'],
+    guarantee:  p['10.00%1'],
+    balance:    p['Field 11'],
+    member:     p['50.00%'],
+    central:    p['50.00%1'],
+    transfer:   p['Field 14'],
+    position:   p['Field 15'],
+    note:       p['Field 16']
+  };
+  const v = M[f];
+  return (v === undefined || v === null) ? '' : v;
+}
+function payNum(p, f) {
+  return parseFloat(String(payVal(p, f)).replace(/[$,\s]/g, '')) || 0;
+}
+function fmtUSD(n) {
+  return '$' + (parseFloat(n) || 0).toLocaleString('en', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// ── Toast ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── Copy to clipboard ──
+function copyAddr(addr) {
+  navigator.clipboard.writeText(addr)
+    .then(() => showToast('✅ คัดลอกที่อยู่กระเป๋าแล้ว!'))
+    .catch(() => {
+      // fallback
+      const el = document.createElement('textarea');
+      el.value = addr;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+      showToast('✅ คัดลอกแล้ว!');
+    });
+}
+
+// ── Fetch single payment by Id (ผ่าน Worker — ไม่ใช้ NOCO token โดยตรง) ──
+async function fetchPayment(rowId) {
+  // [FIX] เรียกผ่าน Worker /api/payments แทน NocoDB โดยตรง
+  const url = `${WORKER_URL}/api/payments?where=(Id,eq,${encodeURIComponent(rowId)})&limit=1`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  const list = data.list || data.data?.list || [];
+  if (list.length === 0) throw new Error('NOT_FOUND');
+  return list[0];
+}
+
+// ── Render ──
+function renderPayment(p) {
+  const now = new Date();
+  const profit = payNum(p,'profit'), comm = payNum(p,'commission'), guar = payNum(p,'guarantee');
+  const bal = payNum(p,'balance'), mem = payNum(p,'member'), cen = payNum(p,'central'), trans = payNum(p,'transfer');
+  const status = payVal(p,'position'), isPending = status !== 'Approve';
+  const lvaComm = comm * 0.15, lvbComm = comm * 0.10;
+  const name = payVal(p,'name'), bnbId = payVal(p,'bnb_id'), team = payVal(p,'team');
+  const date = payVal(p,'date'), note = payVal(p,'note');
+  const lva = payVal(p,'lva'), lvb = payVal(p,'lvb');
+  const tradeHistory = note ? note.split(' | ').filter(x => x.includes(':')) : [];
+
+  // ── อัพเดท OG meta tags ด้วยข้อมูลจริงของ payment ──
+  // (LINE/Facebook อ่าน og:title + og:description แม้จะ dynamic)
+  const fmtAmt = v => '$' + (parseFloat(v)||0).toFixed(2);
+  const totalAmt  = fmtAmt(trans || bal);
+  const statusTxt = isPending ? '⏳ รอชำระ' : '✅ จ่ายแล้ว';
+  const ogTitle   = `💳 Payment #${p.Id} — ${name} | ${totalAmt} | TRADERCAFECLUB`;
+  const ogDesc    = `${statusTxt} • ยอดรับ ${totalAmt} • ทีม ${team||'—'} • ${date||'—'} • Secured & Verified`;
+  const pageUrl   = window.location.href;
+  const s = (id,attr,v) => { const el=document.getElementById(id); if(el) el.setAttribute(attr,v); };
+  s('og-title',       'content', ogTitle);
+  s('og-description', 'content', ogDesc);
+  s('og-url',         'content', pageUrl);
+  s('tw-title',       'content', ogTitle);
+  s('tw-desc',        'content', ogDesc);
+  s('meta-desc',      'content', ogDesc);
+  document.title = `Payment #${p.Id} — ${name} | ${totalAmt} | TCC`;
+  // ── end OG update ──
+
+  // Wallet
+  let aw = SYSTEM_WALLET;
+  try {
+    const stored = JSON.parse(localStorage.getItem('tcc_wallets') || '[]');
+    const active = stored.find(w => w.active);
+    if (active) aw = active;
+  } catch(e) {}
+
+  const dateStr = `${now.getDate()}/${now.getMonth()+1}/${now.getFullYear()}`;
+
+  const tradeHTML = tradeHistory.length ? `
+    <div class="section-title">📈 ประวัติการเทรด</div>
+    <div class="trade-grid" style="margin-bottom:14px;">
+      ${tradeHistory.map((t, idx) => {
+        const pts = t.split(':');
+        const coin = (pts[0]||'').replace(/ครั้งที่\d+/g,'').trim();
+        const amt  = (pts[1]||'').trim();
+        return `<div class="trade-card">
+          <div class="trade-no">ครั้งที่ ${idx+1}</div>
+          <div class="trade-coin">${coin||'—'}</div>
+          <div class="trade-amt">${amt}</div>
+        </div>`;
+      }).join('')}
+    </div>` : '';
+
+  const walletHTML = isPending ? `
+    <div class="qr-section">
+      <div class="qr-section-title">🔐 SCAN QR CODE FOR PAYMENT</div>
+      ${aw.qr ? `<div class="qr-img-wrap"><img class="qr-img" src="${aw.qr}" alt="QR Code" onerror="this.style.display='none'"></div>` : ''}
+      <div class="wallet-box">
+        <div class="wallet-addr" id="wal-addr">${aw.addr}</div>
+        <button class="copy-btn" onclick="copyAddr('${aw.addr.replace(/'/g,"\\'")}')">📋 Copy</button>
+      </div>
+      <div class="wallet-chain">✦ USDT BNB Smart Chain (BEP-20) — ${aw.label}</div>
+      <div class="wallet-hint">กดที่อยู่กระเป๋าเพื่อคัดลอก</div>
+    </div>` : '';
+
+  document.getElementById('payment-container').innerHTML = `
+  <div class="card">
+    <!-- Header -->
+    <div class="card-header">
+      <div class="card-header-left">
+        <img src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" onerror="this.style.display='none'" alt="TCC">
+        <div>
+          <div class="report-label">PAYMENT REPORT</div>
+          <div class="live-row">
+            <div class="pulse-dot"></div>
+            <span class="live-text">LIVE REPORT</span>
+            <span class="live-date">${dateStr}</span>
+          </div>
+        </div>
+      </div>
+      <div class="report-no">✦ OFFICIAL REPORT No.${p.Id}</div>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+      <!-- Member -->
+      <div class="member-block">
+        <div class="member-avatar">👤</div>
+        <div style="flex:1;">
+          <div class="member-name">${name}</div>
+          <div class="member-meta">
+            <span>🪙 UID: <b>${bnbId}</b></span>
+            <span>🏆 ${team}</span>
+          </div>
+          <div class="member-comm">📈 TEAM COMMISSION: <b>${fmtUSD(comm)}</b></div>
+        </div>
+        <span class="badge ${isPending ? 'badge-pending' : 'badge-approve'}">
+          ${isPending ? '⏳ รอชำระ' : '✅ จ่ายแล้ว'}
+        </span>
+      </div>
+
+      <!-- Level Commission -->
+      <div class="level-grid">
+        <div class="level-box lva">
+          <div class="level-lbl">LEVEL 🅰️: ${lva||'—'}</div>
+          <div class="level-val">${fmtUSD(lvaComm)}</div>
+          <div class="level-sub">(15% ของค่าคอม)</div>
+        </div>
+        <div class="level-box lvb">
+          <div class="level-lbl">LEVEL 🅱️: ${lvb||'—'}</div>
+          <div class="level-val">${fmtUSD(lvbComm)}</div>
+          <div class="level-sub">(10% ของค่าคอม)</div>
+        </div>
+      </div>
+
+      <!-- Summary 3 boxes -->
+      <div class="summary-grid">
+        <div class="summary-box">
+          <div class="summary-lbl">ส่วนแบ่งสมาชิก (50%)</div>
+          <div class="summary-val col-green">${fmtUSD(mem)}</div>
+        </div>
+        <div class="summary-box">
+          <div class="summary-lbl">ส่วนประกันกำไร (10%)</div>
+          <div class="summary-val col-gold">${fmtUSD(guar)}</div>
+        </div>
+        <div class="summary-box highlight">
+          <div class="summary-lbl">⭐ ส่วนรายได้รวม</div>
+          <div class="summary-val col-gold">${fmtUSD(mem + guar)}</div>
+        </div>
+      </div>
+
+      <!-- Detail + System -->
+      <div class="detail-grid">
+        <div>
+          <div class="detail-section-title">📊 รายละเอียดส่วนแบ่ง</div>
+          <div class="detail-inner">
+            ${[
+              ['กำไรรวม (100%)',     '+'+fmtUSD(profit), 'var(--green)'],
+              ['ประกันกำไร (10%)',   '-'+fmtUSD(guar),   'var(--red)'],
+              ['ค่าคอมมิชั่น (10%)','-'+fmtUSD(comm),   'var(--red)'],
+              ['คงเหลือสุทธิ (80%)', fmtUSD(bal),       'var(--gold)'],
+              ['ส่วนผู้เทรด (50%)',  fmtUSD(mem),       'var(--green)'],
+              ['ส่วนระบบ (50%)',     fmtUSD(cen),       'var(--gold)'],
+            ].map(([l,v,c]) => `
+              <div class="detail-row">
+                <span>${l}</span>
+                <span style="color:${c};font-weight:600;">${v}</span>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="detail-section-title">💳 รายละเอียดการส่งเข้าระบบ</div>
+          <div class="detail-inner" style="margin-bottom:8px;">
+            <div class="detail-row">
+              <span>ค่าคอมมิชั่น</span>
+              <span class="col-gold">${fmtUSD(comm)}</span>
+            </div>
+            <div class="detail-row">
+              <span>ส่วนระบบ</span>
+              <span class="col-gold">${fmtUSD(cen)}</span>
+            </div>
+            <div class="detail-total">
+              <span>🔖 ยอดส่งรวม</span>
+              <span>${fmtUSD(trans)}</span>
+            </div>
+          </div>
+          <div class="amount-box">
+            <div class="amount-lbl">TOTAL TRANSFER AMOUNT</div>
+            <div class="amount-val">${fmtUSD(trans)}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trade History -->
+      ${tradeHTML}
+
+      <!-- Wallet / QR (pending only) -->
+      ${walletHTML}
+
+      <!-- Status bar -->
+      <div class="status-bar" style="border:1px solid ${isPending?'rgba(240,185,11,0.25)':'rgba(3,192,117,0.25)'};">
+        <span class="status-text" style="color:${isPending?'var(--gold)':'var(--green)'};">
+          ${isPending ? '⏳ รอการชำระเงิน' : '✅ จ่ายเงินแล้ว'}
+        </span>
+        <span class="status-date">📅 ${date}</span>
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer">
+        <div class="footer-brand">TRADERCAFECLUB</div>
+        <div class="footer-secure">🔒 Secured &amp; Encrypted ✦ Verified</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ── Block back button (share view = read-only) ──
+history.replaceState({ shareView: true }, '');
+history.pushState({ shareView: true }, '');
+window.addEventListener('popstate', function() {
+  history.pushState({ shareView: true }, '');
+});
+
+// ── Main: ตรวจ HMAC token ก่อน แล้วดึงข้อมูล ──
+async function main() {
+  const params = new URLSearchParams(window.location.search);
+
+  // [FIX] รับ ?pv=HMAC_TOKEN แทน ?id=rowId
+  // รองรับ ?id=rowId เดิมไว้ชั่วคราว (backward compat) แต่ไม่ใช่ทาง HMAC
+  const pvToken = params.get('pv');
+  const legacyId = params.get('id');
+
+  const showError = (msg) => {
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('error-screen').style.display   = 'flex';
+    document.getElementById('error-msg').textContent        = msg;
+  };
+
+  // ต้องมี ?pv token เท่านั้น — ?id ถูก deprecated แล้ว
+  if (!pvToken && !legacyId) {
+    showError('ไม่พบ token ในลิงก์ กรุณาขอลิงก์ใหม่จากแอดมิน');
+    return;
+  }
+
+  // แสดง warning ถ้ายังใช้ legacy ?id (admin ควร regenerate ลิงก์)
+  if (!pvToken && legacyId) {
+    showError('ลิงก์รูปแบบนี้ถูกปิดใช้งานแล้วเพื่อความปลอดภัย\nกรุณาติดต่อแอดมินเพื่อขอลิงก์ใหม่');
+    return;
+  }
+
+  try {
+    // [FIX] ตรวจ HMAC signature + expiry ผ่าน Worker ก่อนดึงข้อมูล
+    const verifyRes = await fetch(
+      `${WORKER_URL}/api/auth/share-verify?t=${encodeURIComponent(pvToken)}`
+    );
+
+    if (!verifyRes.ok) {
+      const vd = await verifyRes.json().catch(() => ({}));
+      const reason = vd.error || 'ลิงก์ไม่ถูกต้อง';
+      if (reason.includes('expired') || reason.includes('Expired')) {
+        showError('ลิงก์นี้หมดอายุแล้ว (48 ชั่วโมง) กรุณาติดต่อแอดมินเพื่อขอลิงก์ใหม่');
+      } else {
+        showError(`ลิงก์ไม่ถูกต้องหรือถูกแก้ไข (${reason}) กรุณาติดต่อแอดมิน`);
+      }
+      return;
+    }
+
+    const vd = await verifyRes.json();
+    if (!vd.valid || !vd.rowId) {
+      showError('ลิงก์ไม่ถูกต้อง กรุณาติดต่อแอดมินเพื่อขอลิงก์ใหม่');
+      return;
+    }
+
+    const rowId = vd.rowId;
+    document.title = `Payment Report #${rowId} — TRADERCAFECLUB`;
+
+    // ดึงข้อมูลผ่าน Worker (token อยู่ฝั่ง server เท่านั้น)
+    const payment = await fetchPayment(rowId);
+    document.getElementById('loading-screen').style.display    = 'none';
+    document.getElementById('payment-container').style.display = 'block';
+    renderPayment(payment);
+
+  } catch (err) {
+    if (err.message === 'NOT_FOUND') {
+      showError('ไม่พบรายการการชำระเงิน กรุณาตรวจสอบลิงก์หรือติดต่อแอดมิน');
+    } else {
+      showError(`เกิดข้อผิดพลาด: ${err.message} — กรุณาลองใหม่อีกครั้ง`);
+    }
+  }
+}
+
+main();
+</script>
+</body>
+</html>
