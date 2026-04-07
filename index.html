@@ -6436,7 +6436,7 @@ async function fetchLivePrices() {
 // ── เรียก fetchLivePrices ทันที + ทุก 30 วินาที ──
 setTimeout(function startLivePrices(){
   fetchLivePrices();
-  setInterval(fetchLivePrices, 30000);
+  setInterval(fetchLivePrices, 10000);
 }, 1000); // รอ 1 วินาทีให้ DOM พร้อมก่อน
 
 // ═══════════════════════════════════════════════════
@@ -10183,7 +10183,7 @@ setTimeout(()=>{ ensureMembersColumns().catch(e=>console.warn('ensureMembersColu
 setTimeout(()=>{ initNocoItems().catch(e=>console.warn('initNocoItems:',e)); }, 6000);
 setTimeout(()=>{ initCafeCards().catch(e=>console.warn('initCafeCards:',e)); }, 7000);
 setTimeout(()=>{ initPageContent().catch(e=>console.warn('initPageContent:',e)); }, 1500);
-setTimeout(initClaimTables, 30000);
+setTimeout(initClaimTables, 10000);
 
 // ═══════════════════════════════════════════════════
 //  Claim LP — ตาราง + Admin Approve
