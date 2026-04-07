@@ -6347,7 +6347,7 @@ function _mkTaHTML(id){
 
     <div style="padding:10px 12px 14px;font-size:.6rem;color:#2a3520;
       font-family:'Rajdhani',sans-serif;text-align:center;letter-spacing:.5px;">
-      Powered by TradingView
+      Powered by Tradercafeclub and Binance
     </div>`;
 }
 
@@ -13839,7 +13839,7 @@ function tcJobForm(){
     <div class="tc-grp"><label class="tc-lbl">ตำแหน่งที่ต้องการ <span style="color:var(--gold)">*</span></label>
       <select class="tc-inp" id="tc-job-pos" onchange="tcJobPosChange()">
         <option value="">-- เลือกตำแหน่ง --</option>
-        ${['ผู้บริหารฐานข้อมูล','ผู้บริหารทีม','หัวหน้างาน','อื่นๆ'].map(v=>`<option value="${v}">${v}</option>`).join('')}
+        ${['ผู้บริหารองค์กร','ผู้บริหารทีม','หัวหน้างาน','อื่นๆ'].map(v=>`<option value="${v}">${v}</option>`).join('')}
       </select>
     </div>
     <div class="tc-inp-row">
@@ -14581,7 +14581,7 @@ function openAppDetail(id){
       <div>
         <label style="font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:3px;">ตำแหน่งที่ต้องการ</label>
         <select id="adm-pos-${id}" style="${selStyle}" onchange="admToggleTrader(${id})">
-          ${['เทรดเดอร์','ผู้บริหารฐานข้อมูล','ผู้บริหารทีม','หัวหน้างาน','อื่นๆ'].map(v=>`<option value="${v}" ${(r.DesiredPosition||'')===v?'selected':''}>${v}</option>`).join('')}
+          ${['เทรดเดอร์','ผู้บริหารองค์กร','ผู้บริหารทีม','หัวหน้างาน','อื่นๆ'].map(v=>`<option value="${v}" ${(r.DesiredPosition||'')===v?'selected':''}>${v}</option>`).join('')}
         </select>
       </div>
       <div id="adm-monthly-wrap-${id}" ${isT?'style="display:none;"':''}>
