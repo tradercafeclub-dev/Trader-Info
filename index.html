@@ -3451,7 +3451,7 @@ function buildSystemPaymentInner(){
   <div class="hero" style="padding:32px 24px 28px;">
     <img class="hero-logo" src="https://i.ibb.co/NbQpSTX/TCC-Logo.png" alt="TCC" onerror="this.style.display='none'" style="height:70px;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(240,185,11,0.3));">
     <div style="font-family:'Orbitron',monospace;font-size:1.8rem;color:var(--gold);letter-spacing:4px;font-weight:900;">TRADER CAFE CLUB</div>
-    <div style="color:var(--muted);margin-top:10px;font-size:.85rem;">ระบบจัดการการจ่ายเงินและผลตอบแทนการเทรด — NocoDB Live</div>
+    <div style="color:var(--muted);margin-top:10px;font-size:.85rem;">ระบบการจ่ายเงินและกำไรที่ได้จากการเทรด TCC & Binance Live</div>
   </div>
 
   <!-- Overall stats (ตัวเลขรวมทั้งระบบ) -->
@@ -3574,12 +3574,10 @@ function buildYourTeamCommission(){
   const wrap=document.getElementById('yourteam_comm_wrap');
   if(!wrap) return;
   wrap.innerHTML=`
-  <div style="border-top:2px solid var(--border);padding-top:16px;margin-bottom:10px;">
-    <div class="noco-title" style="font-size:1.05rem;margin-bottom:14px;">💰 ค่าคอมมิชั่นทีม (Commission Dashboard)</div>
-  </div>
+  
   
 <div>
-  <div class="page-title"><h1>💰 ค่าคอมมิชั่นทีม</h1><p>สรุปค่าคอมมิชั่นรายทีมแยกตามเดือน</p></div>
+  <div class="page-title"><h1>💰 ค่าคอมมิชั่นทีม (Commission Dashboard)</h1><p>สรุปค่าคอมมิชั่นรายทีมแยกตามเดือน</p></div>
 
   <!-- ─── DASHBOARD ALL-MONTH OVERVIEW ─── -->
   <div class="card" id="comm-dashboard-card">
