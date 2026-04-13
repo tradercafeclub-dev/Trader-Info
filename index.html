@@ -5057,6 +5057,262 @@ async function loadPublicCafeShops(){
 
 // ═══════════════════════════════════════════════════════════════════
 
+
+// ═══════════════════════════════════════════════════
+//  Market v2 — Bloomberg Terminal Style (functions)
+//  *** ค่าคงที่ MK_ASSETS/MK_PRICES/MK_TA/MK_TIMEFRAMES
+//      ถูกย้ายไปไว้ก่อน MENU.forEach แล้ว (ป้องกัน TDZ) ***
+// ═══════════════════════════════════════════════════
+
+function _mkTickerHTML(){
+  const items = [...MK_ASSETS,...MK_ASSETS]; // dup สำหรับ infinite scroll
+  return items.map(a=>{
+    const p = MK_PRICES[a.id];
+    return `<div class="mk-tick-item" onclick="switchAsset('${a.id}')">
+      <span class="mk-tick-sym">${a.label}</span>
+      <span class="mk-tick-price">${p.price}</span>
+      <span class="mk-tick-chg ${p.up?'up':'dn'}">${p.chg}</span>
+    </div>`;
+  }).join('');
+}
+
+function _mkPriceHTML(id){
+  const p = MK_PRICES[id];
+  const a = MK_ASSETS.find(x=>x.id===id);
+  const tradeSymbol = id === 'GOLD' ? 'XAUUSDT' : (id + 'USDT');
+  const tradeUrl = 'https://www.binance.com/en/futures/' + tradeSymbol;
+  const high = p.high || '—';
+  const low  = p.low  || '—';
+  const vol  = p.vol  || '—';
+  return `
+    <div class="mk-quick-strip">
+      <div class="mk-price-display">
+        <div class="mk-pair-label">${a?a.sym:id} · Live Market</div>
+        <div class="mk-price-meta">
+          <div class="mk-price-val">${p.price}</div>
+          <div class="mk-price-chg ${p.up?'up':'dn'}">${p.up?'▲':'▼'} ${p.chg}</div>
+        </div>
+        <div class="mk-price-stats-row">
+          <div class="mk-ps-item">
+            <div class="mk-ps-label">24h High</div>
+            <div class="mk-ps-value" id="mk-ph-high">${high}</div>
+          </div>
+          <div class="mk-ps-divider"></div>
+          <div class="mk-ps-item">
+            <div class="mk-ps-label">24h Low</div>
+            <div class="mk-ps-value" id="mk-ph-low">${low}</div>
+          </div>
+          <div class="mk-ps-divider"></div>
+          <div class="mk-ps-item">
+            <div class="mk-ps-label">Volume</div>
+            <div class="mk-ps-value" id="mk-ph-vol">${vol}</div>
+          </div>
+        </div>
+      </div>
+      <div class="mk-quick-actions">
+        <button class="mk-trade-btn" onclick="window.open('${tradeUrl}','_blank')">📈 Trade</button>
+      </div>
+    </div>`;
+}
+
+
+function _mkTaHTML(id){
+  const d = MK_TA[id] || MK_TA.BTC;
+  const a = MK_ASSETS.find(x=>x.id===id);
+  const assetLabel = a ? a.label : id;
+  const isLive = !!d.isLive;
+  const tradeSymbol = id === 'GOLD' ? 'XAUUSDT' : (id + 'USDT');
+  const tradeUrl = 'https://www.binance.com/en/futures/' + tradeSymbol;
+
+
+  const sigShortLabel = {
+    'strong-buy':'Strong Buy','buy':'Buy','neutral':'Neutral',
+    'sell':'Sell','strong-sell':'Strong Sell'
+  };
+  const sigArrow = {'strong-buy':'↑','buy':'↑','neutral':'—','sell':'↓','strong-sell':'↓'};
+  const overallSig = d.signal || 'neutral';
+  const signalText = sigShortLabel[overallSig] || 'Neutral';
+
+  const g = d.gauge;
+  const gColor = g>=70?'#22c55e':g>=55?'#4ade80':g<=30?'#ef4444':g<=45?'#f87171':'#f59e0b';
+
+  // Moving Average descriptions
+  function maDesc(key, sig){
+    const map = {
+      sma20:{ buy:'Price above SMA 20', sell:'Price below SMA 20', neu:'Near SMA 20' },
+      sma50:{ buy:'Price above SMA 50', sell:'Price below SMA 50', neu:'Near SMA 50' },
+      ema12:{ buy:'EMA 12 > EMA 26',    sell:'EMA 12 < EMA 26',    neu:'EMA crossing' },
+      ema26:{ buy:'Uptrend signal',      sell:'Downtrend signal',   neu:'Neutral trend' },
+    };
+    return (map[key]&&map[key][sig]) || '';
+  }
+  // RSI description
+  function rsiDesc(v){
+    const n = parseFloat(v);
+    if(n>=70) return 'Overbought territory (>70)';
+    if(n<=30) return 'Oversold territory (<30)';
+    return 'Neutral zone (30–70)';
+  }
+  // Signal description
+  function signalDesc(sig){
+    const map = {
+      'strong-buy':'Momentum is very strong','buy':'Momentum is strong',
+      'neutral':'Market is ranging','sell':'Bearish pressure',
+      'strong-sell':'Strong bearish momentum',
+    };
+    return map[sig]||'Analyzing...';
+  }
+  // MACD description
+  function macdDesc(v){
+    const n = parseFloat(String(v).replace('+',''));
+    if(n>0) return 'Above signal line';
+    if(n<0) return 'Below signal line';
+    return 'At signal line';
+  }
+  // Stochastic description
+  function stochDesc(v){
+    const n = parseFloat(v);
+    if(n>=80) return 'Overbought zone (>80)';
+    if(n<=20) return 'Oversold zone (<20)';
+    return 'Neutral zone';
+  }
+  // Bollinger description
+  function bbDesc(sig){
+    if(sig==='buy')  return 'Near lower band';
+    if(sig==='sell') return 'Near upper band';
+    return 'Mid-band zone';
+  }
+
+  // Row builder — applies colored left border via class
+  function row(name, desc, val, cls){
+    return`<div class="mk-ta-row row-${cls}">
+      <div style="min-width:0;flex:1;">
+        <div class="mk-ta-name">${name}</div>
+        ${desc?`<div class="mk-ta-desc">${desc}</div>`:''}
+      </div>
+      <div class="mk-ta-val ${cls}">${val}</div>
+    </div>`;
+  }
+
+  const rsiCls = overallSig.includes('buy')?'buy':overallSig.includes('sell')?'sell':'neu';
+
+  // Section icon with colored background
+  function secIcon(emoji, bg){
+    return `<span class="mk-sec-icon" style="background:${bg};">${emoji}</span>`;
+  }
+
+  return`
+    <!-- ── Header ── -->
+    <div class="mk-ta-hd">
+      <div class="mk-ta-hd-row">
+        <div class="mk-ta-hd-title">📊TCC Technical Analysis</div>
+        <div class="mk-ta-hd-close" onclick="mkToggleTA()" title="ซ่อน TA Panel">✕</div>
+      </div>
+      <div class="mk-ta-hd-sub">
+        <span class="mk-ta-live-dot"></span>
+        ${assetLabel} · ${isLive?'Live From Binanec Data':'Static Data'}
+      </div>
+    </div>
+
+    <!-- ── Scrollable body (header ล็อกไว้ด้านบนแล้ว) ── -->
+    <div class="mk-ta-body">
+
+    <!-- ── Signal Bar ── -->
+    <div class="mk-signal-bar ${overallSig}">
+      <span style="font-size:1.1rem;">${sigArrow[overallSig]||'—'}</span>
+      <span>${signalText}</span>
+    </div>
+    <div class="mk-gauge-wrap">
+      <div class="mk-gauge-label"><span>Sell</span><span>Buy</span></div>
+      <div class="mk-gauge-track">
+        <div class="mk-gauge-fill" style="width:${g}%;background:${gColor};"></div>
+      </div>
+    </div>
+
+    <!-- ── Moving Averages (expanded) ── -->
+    <div class="mk-ta-section" data-ind="ma">
+      <div class="mk-ta-sec-hd" onclick="mkToggleSection(this)">
+        <div class="mk-sec-hd-left">
+          ${secIcon('📈','rgba(34,197,94,.15)')}
+          ${secIcon('🏦','rgba(240,185,11,.12)')}
+          <span>Moving Averages</span>
+        </div>
+        <span class="mk-sec-arrow">▲</span>
+      </div>
+      <div class="mk-ta-sec-body">
+        ${row('SMA 20', maDesc('sma20',d.sma20.sig), d.sma20.v, d.sma20.sig)}
+        ${row('SMA 50', maDesc('sma50',d.sma50.sig), d.sma50.v, d.sma50.sig)}
+        ${row('EMA 12', maDesc('ema12',d.ema12.sig), d.ema12.v, d.ema12.sig)}
+        ${row('EMA 26', maDesc('ema26',d.ema26.sig), d.ema26.v, d.ema26.sig)}
+      </div>
+    </div>
+
+    <!-- ── RSI (expanded) ── -->
+    <div class="mk-ta-section" data-ind="rsi">
+      <div class="mk-ta-sec-hd" onclick="mkToggleSection(this)">
+        <div class="mk-sec-hd-left">
+          ${secIcon('⚡','rgba(246,146,30,.15)')}
+          ${secIcon('📉','rgba(239,68,68,.12)')}
+          <span>RSI (14)</span>
+        </div>
+        <span class="mk-sec-arrow">▲</span>
+      </div>
+      <div class="mk-ta-sec-body">
+        ${row('RSI (14)', rsiDesc(d.rsi.v), d.rsi.v, d.rsi.sig)}
+        ${row('Signal', signalDesc(overallSig),
+          `<span style="font-weight:900;font-size:.88rem;">${signalText}</span>`, rsiCls)}
+      </div>
+    </div>
+
+    <!-- ── MACD (expanded) ── -->
+    <div class="mk-ta-section" data-ind="macd">
+      <div class="mk-ta-sec-hd" onclick="mkToggleSection(this)">
+        <div class="mk-sec-hd-left">
+          ${secIcon('🔄','rgba(41,98,255,.15)')}
+          <span>MACD</span>
+        </div>
+        <span class="mk-sec-arrow">▲</span>
+      </div>
+      <div class="mk-ta-sec-body">
+        ${row('MACD Line', macdDesc(d.macd.v), d.macd.v, d.macd.sig)}
+        <div class="mk-ta-row row-${d.stoch.sig}" data-stoch>
+          <div style="min-width:0;flex:1;">
+            <div class="mk-ta-name">Stochastic</div>
+            <div class="mk-ta-desc">${stochDesc(d.stoch.v)}</div>
+          </div>
+          <div class="mk-ta-val ${d.stoch.sig}">${d.stoch.v}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Bollinger Bands (collapsed) ── -->
+    <div class="mk-ta-section" data-ind="bb">
+      <div class="mk-ta-sec-hd" onclick="mkToggleSection(this)">
+        <div class="mk-sec-hd-left">
+          ${secIcon('📌','rgba(168,85,247,.15)')}
+          <span>Bollinger Bands</span>
+        </div>
+        <span class="mk-sec-arrow">▼</span>
+      </div>
+      <div class="mk-ta-sec-body" style="display:none;">
+        ${row('Bollinger', bbDesc(d.bb.sig), d.bb.v, d.bb.sig)}
+      </div>
+    </div>
+
+    <div style="padding:8px 12px 12px;font-size:.6rem;color:#2a3520;
+      font-family:'Rajdhani',sans-serif;text-align:center;letter-spacing:.5px;">
+      Powered by Tradercafeclub and Binance
+    </div>
+
+    </div><!-- end mk-ta-body -->
+  `;
+}
+
+
+function _mkChartUrl(id, tf){
+  const a = MK_ASSETS.find(x=>x.id===id);
+  if(!a) return '';
+  const tfMap = {'1m':'1','5m':'5','15m':'15','1h':'60','4h':'240','1d':'D'};
   const iv = tfMap[tf] || '60';
   return `https://www.tradingview.com/widgetembed/?frameElementId=tv_${id}&symbol=${encodeURIComponent(a.sym)}&interval=${iv}&hidesidetoolbar=0&hidetoptoolbar=0&symboledit=0&saveimage=0&toolbarbg=0d1117&studies=%5B%5D&theme=dark&style=1&timezone=Asia%2FBangkok&withdateranges=1&showpopupbutton=0&locale=th`;
 }
@@ -9390,195 +9646,5 @@ function closeMemberDrawer(){
 }
 
 // ── บันทึก ──
-  if(!force&&_APPS.length){renderAdminApps();return;}
-  tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-dim);">⏳ กำลังโหลด...</td></tr>';
-  try{const rows=await nocoGet(NOCO.tbl.applications,'&sort=-SubmittedAt&limit=500');_APPS=rows||[];renderAdminApps();updateAppStats();}
-  catch(e){tb.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:24px;color:#f87171;">❌ โหลดไม่สำเร็จ: ${e.message}</td></tr>`;}
-}
-function renderAdminApps(){
-  const tb=document.getElementById('aapp-tbody');if(!tb)return;
-  const q=(document.getElementById('aapp-q')?.value||'').toLowerCase();
-  const f=document.getElementById('aapp-filter')?.value||'';
-  const list=_APPS.filter(r=>{
-    const mq=!q||(r.BNB_ID||'').toLowerCase().includes(q)||(r.MemberName||'').toLowerCase().includes(q)||(r.Team||'').toLowerCase().includes(q);
-    return mq&&(!f||r.Status===f);
-  });
-  const cnt=document.getElementById('aapp-row-count');if(cnt)cnt.textContent=list.length+' รายการ';
-  if(!list.length){tb.innerHTML='<tr><td colspan="8" style="text-align:center;padding:30px;color:var(--text-dim);">🔍 ไม่พบข้อมูล</td></tr>';return;}
-  tb.innerHTML=list.map((r,i)=>{
-    const id=r.Id||r.id,isT=(r.DesiredPosition||'')==='เทรดเดอร์';
-    const sOpts=['Pending','Approved','Rejected','Editing'].map(s=>`<option value="${s}" ${(r.Status||'Pending')===s?'selected':''}>${s==='Pending'?'⏳':s==='Approved'?'✅':s==='Rejected'?'❌':'✏️'} ${s}</option>`).join('');
-    return `<tr style="border-bottom:1px solid rgba(255,255,255,.04);">
-      <td style="padding:9px 10px;color:var(--text-dim);">${i+1}</td>
-      <td style="padding:9px 10px;color:var(--gold);font-family:monospace;font-weight:600;">${r.BNB_ID||'—'}</td>
-      <td style="padding:9px 10px;font-weight:500;">${r.MemberName||'—'}</td>
-      <td style="padding:9px 10px;color:#94a3b8;">${r.Team||'—'}</td>
-      <td style="padding:9px 10px;text-align:center;font-size:.74rem;">
-        <span style="color:${isT?'#60a5fa':'var(--gold)'};">${r.DesiredPosition||'—'}</span><br>
-        <span style="color:var(--text-dim);">${r.TargetMonths||'—'}เดือน|${r.TargetMembers||'—'}คน</span></td>
-      <td style="padding:9px 10px;text-align:center;color:var(--text-dim);font-size:.74rem;">${(r.SubmittedAt||'—').slice(0,10)}</td>
-      <td style="padding:9px 10px;text-align:center;">
-        <select style="padding:4px 8px;background:#0b0e11;border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.74rem;cursor:pointer;" onchange="adminUpdApp(${id},this.value)">${sOpts}</select></td>
-      <td style="padding:9px 10px;text-align:center;"><button class="btn btn-outline btn-sm" onclick="openAppDetail(${id})">🔍</button></td>
-    </tr>`;
-  }).join('');
-}
-async function adminUpdApp(id,status){
-  try{
-    await fetch(`${WORKER_URL}/api/applications/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({Status:status,UpdatedAt:new Date().toISOString()})});
-    const i=_APPS.findIndex(r=>(r.Id||r.id)===id);if(i>=0)_APPS[i].Status=status;
-    updateAppStats();tccNotif('success','อัปเดตสถานะ','เปลี่ยนเป็น '+status);
-  }catch(e){tccNotif('error','อัปเดตไม่สำเร็จ',e.message);}
-}
-async function adminSaveAppNote(id){
-  const inp=document.getElementById(`anote-${id}`)||document.getElementById(`anote-m-${id}`);if(!inp)return;
-  try{
-    await fetch(`${WORKER_URL}/api/applications/${id}`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({AdminNote:inp.value,UpdatedAt:new Date().toISOString()})});
-    const i=_APPS.findIndex(r=>(r.Id||r.id)===id);if(i>=0)_APPS[i].AdminNote=inp.value;
-    tccNotif('success','บันทึกหมายเหตุ','');
-  }catch(e){tccNotif('error','บันทึกไม่สำเร็จ',e.message);}
-}
-function updateAppStats(){
-  const se=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
-  se('aapp-total',_APPS.length);se('aapp-pending',_APPS.filter(r=>!r.Status||r.Status==='Pending').length);
-  se('aapp-approved',_APPS.filter(r=>r.Status==='Approved').length);se('aapp-rejected',_APPS.filter(r=>r.Status==='Rejected').length);
-  se('aapp-editing',_APPS.filter(r=>r.Status==='Editing').length);
-}
-function openAppDetail(id){
-  const r=_APPS.find(x=>(x.Id||x.id)===id);if(!r)return;
-  const modal=document.getElementById('aapp-detail-modal'),cont=document.getElementById('aapp-detail-content');if(!modal||!cont)return;
-  const isT=(r.DesiredPosition||'')==='เทรดเดอร์';
-  // [FIX-2] ใช้ != null แทน truthy check เพื่อให้ 0 แสดงเป็น "0.00" ไม่ใช่ช่องว่าง
-  const fv=v=>(v!=null&&v!=='')? tcFmtNum(v):'';
-  // [งาน 3] แบ่งชัดเจน: ข้อมูลสมาชิก (read-only) vs ข้อมูลใบสมัคร (admin แก้ได้)
-  const inpStyle='width:100%;padding:7px 10px;background:#0b0e11;border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.78rem;box-sizing:border-box;';
-  const selStyle=inpStyle+'cursor:pointer;';
-  cont.innerHTML=`
-    <div style="font-family:'Rajdhani',sans-serif;font-size:1.05rem;font-weight:700;color:var(--gold);margin-bottom:12px;">📋 จัดการใบสมัคร — ${r.BNB_ID}</div>
-
-    <!-- ── ข้อมูลสมาชิก (Read-Only) ── -->
-    <div style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 12px;margin-bottom:14px;">
-      <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:8px;font-weight:600;letter-spacing:.5px;">🔒 ข้อมูลสมาชิก (ไม่สามารถแก้ไขได้)</div>
-      <div style="display:grid;grid-template-columns:130px 1fr;gap:5px 12px;font-size:.79rem;">
-        <span style="color:var(--text-dim);">ชื่อ-สกุล</span><span style="font-weight:600;">${r.MemberName||'—'}</span>
-        <span style="color:var(--text-dim);">BNB ID</span><span style="font-family:monospace;color:var(--gold);">${r.BNB_ID||'—'}</span>
-        <span style="color:var(--text-dim);">ทีม</span><span>${r.Team||'—'}</span>
-        <span style="color:var(--text-dim);">เบอร์โทร</span><span>${r.Phone||'—'}</span>
-        <span style="color:var(--text-dim);">ยื่นวันที่</span><span>${(r.SubmittedAt||'—').slice(0,10)}</span>
-        <span style="color:var(--text-dim);">สถานะ</span><span>${tcBadge(r.Status||'Pending')}</span>
-      </div>
-    </div>
-
-    <!-- ── ข้อมูลใบสมัคร (Admin แก้ไขได้) ── -->
-    <div style="font-size:.72rem;color:var(--gold);margin-bottom:8px;font-weight:600;letter-spacing:.5px;">✏️ ข้อมูลใบสมัคร (แอดมินแก้ไขได้)</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-      <div>
-        <label style="font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:3px;">ตำแหน่งที่ต้องการ</label>
-        <select id="adm-pos-${id}" style="${selStyle}" onchange="admToggleTrader(${id})">
-          ${['เทรดเดอร์','ผู้บริหารองค์กร','ผู้บริหารทีม','หัวหน้างาน','อื่นๆ'].map(v=>`<option value="${v}" ${(r.DesiredPosition||'')===v?'selected':''}>${v}</option>`).join('')}
-        </select>
-      </div>
-      <div id="adm-monthly-wrap-${id}" ${isT?'style="display:none;"':''}>
-        <label style="font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:3px;">ค่าบริหารรายเดือน (฿)</label>
-        <input id="adm-monthly-${id}" style="${inpStyle}" type="text" value="${fv(r.MonthlyFee)}" placeholder="เช่น 15,000">
-      </div>
-    </div>
-    <div id="adm-goal-wrap-${id}" ${isT?'style="display:none;"':''}>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-        <div>
-          <label style="font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:3px;">ระยะเวลา (เดือน)</label>
-          <input id="adm-months-${id}" style="${inpStyle}" type="text" value="${r.TargetMonths||''}" placeholder="เช่น 3">
-        </div>
-        <div>
-          <label style="font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:3px;">สมาชิกเป้าหมาย (คน)</label>
-          <input id="adm-mems-${id}" style="${inpStyle}" type="text" value="${r.TargetMembers||''}" placeholder="เช่น 20">
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
-        <div>
-          <label style="font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:3px;">วงเงินเทรด (USDT)</label>
-          <input id="adm-vol-${id}" style="${inpStyle}" type="text" value="${fv(r.TargetVolume)}" placeholder="เช่น 10,000">
-        </div>
-        <div>
-          <label style="font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:3px;">ค่าบริหารทีม (฿)</label>
-          <input id="adm-bonus-${id}" style="${inpStyle}" type="text" value="${fv(r.BonusAmount)}" placeholder="เช่น 50,000">
-        </div>
-      </div>
-    </div>
-    <div style="margin-bottom:8px;">
-      <label style="font-size:.72rem;color:var(--text-dim);display:block;margin-bottom:3px;">หมายเหตุสมาชิก (บันทึกเพิ่มเติม)</label>
-      <textarea id="adm-note-${id}" style="${inpStyle}height:52px;resize:vertical;" placeholder="ระบุ...">${r.ExtraNote||''}</textarea>
-    </div>
-    <button class="btn btn-gold btn-sm" style="width:100%;margin-bottom:10px;" onclick="adminSaveAppFields(${id})">💾 บันทึกข้อมูลใบสมัคร</button>
-
-    <!-- ── เปลี่ยนสถานะ ── -->
-    <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:10px;margin-top:2px;">
-      <label style="font-size:.72rem;color:var(--text-dim);margin-bottom:6px;display:block;">เปลี่ยนสถานะ:</label>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;">
-        ${['Pending','Approved','Rejected','Editing'].map(s=>`<button class="btn ${(r.Status||'Pending')===s?'btn-gold':'btn-outline'} btn-sm" onclick="adminUpdApp(${id},'${s}');closeAppDetail()">${s==='Pending'?'⏳':s==='Approved'?'✅':s==='Rejected'?'❌':'✏️'} ${s}</button>`).join('')}
-      </div>
-      <label style="font-size:.72rem;color:var(--text-dim);margin-bottom:4px;display:block;">AdminNote (แสดงให้สมาชิกเห็น):</label>
-      <textarea class="app-note-inp" id="anote-m-${id}" rows="2">${r.AdminNote||''}</textarea>
-      <button class="btn btn-gold btn-sm" style="margin-top:6px;width:100%;" onclick="adminSaveAppNote(${id});closeAppDetail()">💾 บันทึก AdminNote</button>
-    </div>`;
-  modal.style.display='flex';
-}
-
-// [งาน 3] toggle goal section ใน admin modal
-function admToggleTrader(id){
-  const pos=document.getElementById(`adm-pos-${id}`)?.value||'';
-  const isT=pos==='เทรดเดอร์';
-  const gw=document.getElementById(`adm-goal-wrap-${id}`);
-  const mw=document.getElementById(`adm-monthly-wrap-${id}`);
-  if(gw)gw.style.display=isT?'none':'';
-  if(mw)mw.style.display=isT?'none':'';
-}
-
-// [งาน 3] บันทึกเฉพาะ field ใบสมัคร — ไม่แตะ Members sheet
-async function adminSaveAppFields(id){
-  const g=sfx=>document.getElementById(`adm-${sfx}-${id}`)?.value?.trim()||'';
-  const parseN=v=>parseFloat(String(v).replace(/,/g,''))||0;
-  const pos=g('pos');
-  const isT=pos==='เทรดเดอร์';
-  const payload={
-    DesiredPosition: pos,
-    ExtraNote:       g('note'),
-    UpdatedAt:       new Date().toISOString(),
-    ...(isT?{}:{
-      TargetMonths:   g('months'),
-      TargetMembers:  g('mems'),
-      TargetVolume:   g('vol')  !==''? parseN(g('vol'))   : undefined,
-      BonusAmount:    g('bonus')!==''? parseN(g('bonus')) : undefined,
-      // [FIX-3] ใช้ empty-string check แทน falsy check
-      // parseN('') = 0 → 0||undefined จะลบ key ออก → ค่าไม่ถูกอัปเดต
-      // ถ้า admin กรอก "0" หรือมีค่า → ส่งตัวเลขตรงๆ; ถ้าปล่อยว่าง → undefined = preserve เดิม
-      MonthlyFee:     g('monthly')!==''? parseN(g('monthly')) : undefined,
-    })
-  };
-  // ลบ key ที่ undefined ออก
-  Object.keys(payload).forEach(k=>payload[k]===undefined&&delete payload[k]);
-  try{
-    const res=await fetch(`${WORKER_URL}/api/applications/${id}`,{
-      method:'PATCH',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify(payload)
-    });
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    // อัปเดต local cache
-    const i=_APPS.findIndex(r=>(r.Id||r.id)===id);
-    if(i>=0)_APPS[i]={..._APPS[i],...payload};
-    tccNotif('success','บันทึกข้อมูลใบสมัครเรียบร้อย','');
-    closeAppDetail();
-  }catch(e){
-    tccNotif('error','บันทึกไม่สำเร็จ',e.message);
-  }
-}
-function closeAppDetail(){const m=document.getElementById('aapp-detail-modal');if(m)m.style.display='none';}
-function exportAppsCSV(){
-  if(!_APPS.length){tccNotif('warn','ไม่มีข้อมูล','');return;}
-  const cols=['Title','BNB_ID','MemberName','Phone','Team','TargetMonths','TargetMembers','TargetVolume','BonusAmount','MonthlyFee','DesiredPosition','Status','AdminNote','SubmittedAt','UpdatedAt'];
-  const rows=[cols.join(',')].concat(_APPS.map(r=>cols.map(c=>`"${(r[c]||'').toString().replace(/"/g,'""')}"`).join(',')));
-  const blob=new Blob(['\uFEFF'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`TCC_Applications_${new Date().toISOString().slice(0,10)}.csv`;a.click();
-}
 // ════ END TC APPLICATION FLOW v4 ════
 </script>
