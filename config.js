@@ -4,6 +4,9 @@
 //  Deploy: วางไฟล์นี้ใน root เดียวกับ index.html และ admin.html
 // ═══════════════════════════════════════════════════════════════
 
+// ── SES Guard — ป้องกัน re-declaration จาก lockdown-install.js (MetaMask/Wallet extension)
+if (typeof WORKER_URL === 'undefined') {
+
 // ── API Endpoint + Keys ───────────────────────────────────────
 const WORKER_URL = 'https://tradercafeclub.tradercafeclub.workers.dev';
 const SYSTEM_WALLET_DEFAULT = { label:'กระเป๋าหลัก', addr:'0xfd1A5bc82603a702a9AF38426FfAC0d6BE5aEeef', qr:'https://i.ibb.co/d0T7YJfy/line-oa-chat-260203-125428.jpg', active:true };
@@ -188,4 +191,5 @@ function applyDashboardStats(){
 // ── Shared Data Arrays (used by both index + admin) ──────────
 let MEMBERS=[], TEAMS=[], PAYMENTS=[];
 let currentMemberPayments=[], selectedAdminMember=null, tradeRows=[];
-let currentMemberPayments=[], selectedAdminMember=null, tradeRows=[];
+
+} // end SES guard — if (typeof WORKER_URL === 'undefined')
