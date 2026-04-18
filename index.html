@@ -10130,7 +10130,7 @@ function renderMonthlySummary(year,month){
   const statusEl=document.getElementById('jan-pay-status');
   if(statusEl){
     if(new Date()>payDue){
-      statusEl.textContent='✅ ครบกำหนดจ่าย';
+      statusEl.textContent='✅ จ่ายแล้ว';
       statusEl.className='comm-paid';
     } else {
       const days=Math.ceil((payDue-new Date())/(1000*60*60*24));
