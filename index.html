@@ -10468,7 +10468,7 @@ function renderCommDashboard(monthKey, page){
   let deadlineStr='ทุกเดือน';
   if(commDashMonth){
     const[y,m]=commDashMonth.split('-');
-    deadlineStr=`เดือน ${getThaiMonth(parseInt(m))} ${parseInt(y)+543}`;
+    deadlineStr=`@ ${getThaiMonth(parseInt(m))} ${parseInt(y)+543}`;
   }
 
   const totalPages=Math.ceil(allRows.length/COMM_DASH_PAGE_SIZE);
