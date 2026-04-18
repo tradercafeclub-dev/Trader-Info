@@ -3682,9 +3682,7 @@ function buildYourTeamCommission(){
   const wrap=document.getElementById('yourteam_comm_wrap');
   if(!wrap) return;
   wrap.innerHTML=`
-  <div style="border-top:2px solid var(--border);padding-top:16px;margin-bottom:10px;">
-    <div class="noco-title" style="font-size:1.05rem;margin-bottom:14px;">💰 ค่าคอมมิชั่นทีม (Commission Dashboard)</div>
-  </div>
+ 
   
 <div>
   <div class="page-title"><h1>💰 ค่าคอมมิชั่นทีม</h1><p>สรุปค่าคอมมิชั่นรายทีมแยกตามเดือน</p></div>
@@ -3944,7 +3942,7 @@ function buildYourTeamCommission(){
   <div class="jan-banner" id="jan-summary-section">
     <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
       <div style="flex:1;min-width:0;">
-        <div style="font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--gold);letter-spacing:2px;margin-bottom:8px;">📅 สรุปค่าคอมมิชั่นรายเดือน</div>
+        <div style="font-family:'Orbitron',monospace;font-size:0.9rem;color:var(--gold);letter-spacing:2px;margin-bottom:8px;">📅 สรุปค่าคอมมิชั่น</div>
         <!-- Dropdown month selector -->
         <div style="position:relative;display:inline-block;">
           <select id="comm-month-dropdown" onchange="onCommMonthDropdownChange(this.value)"
