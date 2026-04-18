@@ -3679,9 +3679,7 @@ function buildYourTeamCommission(){
   const wrap=document.getElementById('yourteam_comm_wrap');
   if(!wrap) return;
   wrap.innerHTML=`
-  <div style="border-top:2px solid var(--border);padding-top:16px;margin-bottom:10px;">
-    <div class="noco-title" style="font-size:1.05rem;margin-bottom:14px;">💰 ค่าคอมมิชั่นทีม (Commission Dashboard)</div>
-  </div>
+ 
   
 <div>
   <div class="page-title"><h1>💰 ค่าคอมมิชั่นทีม</h1><p>สรุปค่าคอมมิชั่นรายทีมแยกตามเดือน</p></div>
@@ -3732,7 +3730,7 @@ function buildYourTeamCommission(){
       <span style="font-size:1.3rem;">🏆</span>
       <div>
         <div style="font-size:0.92rem;font-weight:800;color:var(--gold);letter-spacing:.5px;">Team League</div>
-        <div style="font-size:0.72rem;color:var(--muted);margin-top:1px;">อันดับค่าคอมมิชั่นทีมทั้งหมด</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:1px;">ตารางรายได้ค่าคอมมิชั่น</div>
       </div>
     </div>
     <!-- Per-team breakdown table — desktop -->
@@ -3745,7 +3743,7 @@ function buildYourTeamCommission(){
           <th style="color:var(--green);">Level A (15%)</th>
           <th style="color:var(--blue);">Level B (10%)</th>
           <th style="color:var(--gold);font-weight:900;">รวมโอน</th>
-          <th>กำหนดจ่าย</th>
+          <th>ประจำเดือน</th>
         </tr></thead>
         <tbody id="comm-dash-team-table"></tbody>
       </table>
@@ -10474,7 +10472,7 @@ function renderCommDashboard(monthKey, page){
   let deadlineStr='ทุกเดือน';
   if(commDashMonth){
     const[y,m]=commDashMonth.split('-');
-    deadlineStr=`ประจำเดือน ${getThaiMonth(parseInt(m))} ${parseInt(y)+543}`;
+    deadlineStr=`# ${getThaiMonth(parseInt(m))} ${parseInt(y)+543}`;
   }
 
   const totalPages=Math.ceil(allRows.length/COMM_DASH_PAGE_SIZE);
