@@ -5023,15 +5023,15 @@ async function msbSynthesize() {
 
   const prompt = `คุณคือ Master Signal AI สรุปสัญญาณเทรด crypto จาก 4 แหล่งข้อมูลด้านล่าง
 
-📰 แหล่งที่ 1 — ForexFactory Economic Calendar:
+📰 แหล่งที่ 1 — Financial Economic Calendar:
 Direction: ${st.newsDir} | Confidence: ${st.newsConf}%
 ${(st.newsText||'ไม่มีข้อมูล').slice(0,250)}
 
-📡 แหล่งที่ 2 — Sharpe News (Bloomberg/Reuters/CoinDesk/The Block):
+📡 แหล่งที่ 2 — TCC Data (Bloomberg/Reuters/CoinDesk/The Block):
 Direction: ${st.sharpeDir} | Confidence: ${st.sharpeConf}%
 ${(st.sharpeText||'ไม่มีข้อมูล').slice(0,300)}
 
-📋 แหล่งที่ 3 — Google Sheet (Historical Whale Data):
+📋 แหล่งที่ 3 — Binance Data (Historical Whale Data):
 Direction: ${st.sheetDir} | Confidence: ${st.sheetConf}%
 ${(st.sheetSummary||'ไม่มีข้อมูล').replace(/^DIRECTION[^\n]*\n?/im,'').replace(/^CONFIDENCE[^\n]*\n?/im,'').trim().slice(0,200)}
 
