@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>🐋 TCC Whale Tracker — Live v16</title>
+<title>TCC Whale Tracker — Live v16</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐋</text></svg>"/>
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐋</text></svg>"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -1102,13 +1102,13 @@ td{padding:5px 10px;font-family:var(--mono);font-size:11px;vertical-align:middle
 
     <!-- HL API error banner -->
     <div id="fcHlBanner" style="display:none;background:rgba(255,61,87,.08);border:1px solid rgba(255,61,87,.3);border-radius:8px;padding:10px 14px;font-family:var(--mono);font-size:11px;color:var(--r);flex-shrink:0;">
-      ⚠️ <strong>Hyperliquid API มีปัญหา (HTTP 500)</strong> — ข้อมูล Live อาจไม่ครบ · ระบบใช้ข้อมูลจาก Google Sheet แทน · <span id="fcHlBannerTime"></span>
+      ⚠️ <strong>Hyperliquid API มีปัญหา (HTTP 500)</strong> — ข้อมูล Live อาจไม่ครบ · ระบบใช้ข้อมูลจาก TCC Data แทน · <span id="fcHlBannerTime"></span>
     </div>
 
     <!-- Data source info bar (v12) -->
     <div id="fcInfoBar" style="font-family:var(--mono);font-size:10px;color:var(--t2);flex-shrink:0;display:flex;gap:12px;flex-wrap:wrap;align-items:center;background:var(--bg1);border:1px solid var(--border);border-radius:6px;padding:7px 12px;">
       <span style="color:var(--b);font-weight:700;">📡 แหล่งข้อมูล:</span>
-      <span id="fcInfoSrc" style="color:var(--t1);">Live WebSocket/REST (Hyperliquid) + Google Sheet</span>
+      <span id="fcInfoSrc" style="color:var(--t1);">Live (Hyperliquid Data) + TCC Data</span>
       <span id="fcInfoLiveCnt" style="color:var(--g);"></span>
       <span id="fcInfoSheetCnt" style="color:var(--b);"></span>
       <!-- MSB mirror IDs (hidden) -->
@@ -1154,13 +1154,13 @@ td{padding:5px 10px;font-family:var(--mono);font-size:11px;vertical-align:middle
       <div class="msb-header">
         <div>
           <div class="msb-title">🎯 MASTER SIGNAL</div>
-          <div class="msb-subtitle" id="msbSubtitle">กด วิเคราะห์ เพื่อรับสัญญาณรวม 3 แหล่งข้อมูล</div>
+          <div class="msb-subtitle" id="msbSubtitle">กด วิเคราะห์ เพื่อรับสัญญาณรวม 4 แหล่งข้อมูล</div>
         </div>
         <div class="msb-src-pills">
-          <span class="msb-src-pill news">📰 ForexFactory</span>
-          <span class="msb-src-pill" style="background:rgba(41,182,246,.12);color:var(--b);border:1px solid rgba(41,182,246,.3);">📡 Sharpe News</span>
-          <span class="msb-src-pill sheet">📋 Google Sheet</span>
-          <span class="msb-src-pill live">⚡ Hyperliquid Live</span>
+          <span class="msb-src-pill news">📰 Financail Data </span>
+          <span class="msb-src-pill" style="background:rgba(41,182,246,.12);color:var(--b);border:1px solid rgba(41,182,246,.3);">📡 Sharpe Data</span>
+          <span class="msb-src-pill sheet">📋 Binancr Data</span>
+          <span class="msb-src-pill live">⚡ Hyperliquid Data</span>
           <span class="msb-src-pill ai">🤖 AI Synthesis</span>
         </div>
       </div>
@@ -1177,7 +1177,7 @@ td{padding:5px 10px;font-family:var(--mono);font-size:11px;vertical-align:middle
         <!-- 3-source Confidence Bars -->
         <div class="msb-confidence-col">
           <div class="msb-conf-row">
-            <span class="msb-conf-label">📰 FF News</span>
+            <span class="msb-conf-label">📰 Financial </span>
             <div class="msb-conf-track">
               <div class="msb-conf-fill" id="msbConfNews"
                 style="width:0%;background:rgba(255,255,255,0.12);"></div>
@@ -1185,7 +1185,7 @@ td{padding:5px 10px;font-family:var(--mono);font-size:11px;vertical-align:middle
             <span class="msb-conf-pct" id="msbConfNewsPct" style="color:var(--t2);">—</span>
           </div>
           <div class="msb-conf-row">
-            <span class="msb-conf-label">📡 Sharpe</span>
+            <span class="msb-conf-label">📡TCC Data</span>
             <div class="msb-conf-track">
               <div class="msb-conf-fill" id="msbConfSharpe"
                 style="width:0%;background:rgba(255,255,255,0.12);"></div>
@@ -1193,7 +1193,7 @@ td{padding:5px 10px;font-family:var(--mono);font-size:11px;vertical-align:middle
             <span class="msb-conf-pct" id="msbConfSharpePct" style="color:var(--t2);">—</span>
           </div>
           <div class="msb-conf-row">
-            <span class="msb-conf-label">📋 Sheet</span>
+            <span class="msb-conf-label">📋 Binance </span>
             <div class="msb-conf-track">
               <div class="msb-conf-fill" id="msbConfSheet"
                 style="width:0%;background:rgba(255,255,255,0.12);"></div>
@@ -4051,7 +4051,7 @@ async function fcRun(runAI = true) {
   // Update info bar
   const durH = Math.round((endMs - startMs) / 3600000 * 10) / 10;
   // ✅ FIX v12: แสดงแหล่งข้อมูลชัดเจน — Live + Sheet แยกกัน
-  document.getElementById('fcInfoSrc').textContent  = 'Live WebSocket/REST (Hyperliquid) + Google Sheet';
+  document.getElementById('fcInfoSrc').textContent  = 'Live(Hyperliquid Data) + TCC Data';
   document.getElementById('fcInfoLiveCnt').textContent = '🟢 Live: ' + allTrades.filter(t=>t.usd>=100000).length + ' trades';
   document.getElementById('fcInfoSheetCnt').textContent = '📋 Sheet: ' + AN_ALL.length + ' trades';
   // ✅ FIX v24: แสดงชัดเจน — ช่วงข้อมูล vs ช่วงคาดการณ์
@@ -4575,7 +4575,7 @@ async function msbAnalyzeSheet(data, buckets) {
   const st = window._msbState;
   const resultEl = document.getElementById('msbSheetResult');
   resultEl.className = 'msb-signal-result loading';
-  resultEl.textContent = '⏳ AI กำลังวิเคราะห์ข้อมูล Google Sheet...';
+  resultEl.textContent = '⏳ AI กำลังวิเคราะห์ข้อมูล Binancer Data...';
   msbSetColDir('msbSheetDir', null);
 
   const tot  = data.reduce((s,t)=>s+t.usd, 0);
